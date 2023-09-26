@@ -124,6 +124,9 @@ return $noticias;
     {
         //
         $noticias = Noticias::find($id);
+        if(!$noticias){
+            return "Notícia não encontrada";
+        }
         return $noticias;
     }
 
@@ -149,6 +152,9 @@ return $noticias;
     {
         //
         $noticias = Noticias::find($id);
+        if(!$noticias){
+            return "Notícia não encontrada";
+        }
         $noticias->titulo = $request->titulo;
         $noticias->subtitulo = $request->subtitulo;
         $noticias->resumo = $request->resumo;
@@ -170,7 +176,6 @@ return $noticias;
     {
         //
         Noticias::destroy($id);
-
         return "Anunciante eliminado com sucesso!";
     }
 }

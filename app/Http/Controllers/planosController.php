@@ -71,6 +71,10 @@ class planosController extends Controller
     {
         //
         $planos = Planos::find($id);
+          if(!$planos){
+            return "Plano não encontrado";
+        }
+        
         return $planos;
     }
 
@@ -95,7 +99,12 @@ class planosController extends Controller
     public function update(Request $request, $id)
     {
         //
+
         $planos = Planos::find($id);
+
+        if(!$planos){
+            return "Plano não encontrado";
+        }
         $planos->nome = $request->nome;
         $planos->activo = $request->activo;
         $planos->quantidade_anuncios = $request->quantidade_anuncios;
@@ -108,7 +117,9 @@ class planosController extends Controller
         $planos->texto_plano = $request->texto_plano;
         $planos->quantidade_fotos = $request->quantidade_fotos;
         $planos->link_pagamento = $request->link_pagamento;
-       
+
+        
+
         $planos->save();
         return $planos;
     }
@@ -123,6 +134,10 @@ class planosController extends Controller
     {
         //
         Planos::destroy($id);
+
+        if(!$planos){
+            return "Plano não encontrado";
+        }
         return "Plano eliminado com sucesso!";
     }
 }

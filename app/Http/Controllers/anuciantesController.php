@@ -92,6 +92,9 @@ class anuciantesController extends Controller
     {
         //
         $anunciantes = Anunciantes::find($id);
+        if(!$anunciantes){
+            return "Anunciante não encontrado";
+        }
         return $anunciantes;
     }
 
@@ -117,6 +120,9 @@ class anuciantesController extends Controller
     {
         //
         $anunciantes = Anunciantes::find($id);
+        if(!$anunciantes){
+            return "Anunciante não encontrado";
+        }
         $anunciantes->nome = $request->nome;
         $anunciantes->tipo = $request->tipo;
         $anunciantes->responsavel = $request->responsavel;

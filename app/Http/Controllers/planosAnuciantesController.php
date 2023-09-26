@@ -61,6 +61,10 @@ class planosAnuciantesController extends Controller
     {
         //
         $planosAnunciantes = PlanosAnunciantes::find($id);
+
+        if(!$planosAnunciantes){
+            return "Plano de anunciantes não encontrado";
+        }
         return $planosAnunciantes;
     }
 
@@ -87,10 +91,13 @@ class planosAnuciantesController extends Controller
     {
         //
         $planosAnunciantes = PlanosAnunciantes::find($id);
+
+        if(!$planosAnunciantes){
+            return "Plano de anunciantes não encontrado";
+        }
         
         $planosAnunciantes->plano_id = $request->plano_id;
         $planosAnunciantes->anunciante_id = $request->anunciante_id;
-
         $planosAnunciantes->save();
 
         return $planosAnunciantes;

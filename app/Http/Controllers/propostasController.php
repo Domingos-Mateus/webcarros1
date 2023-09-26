@@ -63,6 +63,11 @@ class propostasController extends Controller
     public function show($id)
     {
         //
+        $proposta = Propostas::find($id);
+        if(!$proposta){
+            return "Proposta não encontrada";
+        }
+        return $proposta;
     }
 
     /**
@@ -74,8 +79,6 @@ class propostasController extends Controller
     public function edit($id)
     {
         //
-        $proposta = Propostas::find($id);
-        return $proposta;
     }
 
     /**
@@ -89,6 +92,9 @@ class propostasController extends Controller
     {
         //
         $proposta = Propostas::find($id);
+        if(!$proposta){
+            return "Proposta não encontrada";
+        }
         $proposta->titulo = $request->titulo;
         $proposta->anuncio_id = $request->anuncio_id;
         $proposta->nome = $request->nome;

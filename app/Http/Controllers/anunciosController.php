@@ -258,6 +258,9 @@ class anunciosController extends Controller
     {
         //
         $anuncios = Anuncios::find($id);
+        if(!$anuncios){
+            return "Anúncio não encontrado";
+        }
         return $anuncios;
     }
 
@@ -283,6 +286,9 @@ class anunciosController extends Controller
     {
         //
         $anuncios = Anuncios::find($id);
+        if(!$anuncios){
+            return "Anúncio não encontrado";
+        }
         $anuncios->titulo = $request->titulo;
         $anuncios->numero_cliques = $request->numero_cliques;
         $anuncios->anunciante_id = $request->anunciante_id;
