@@ -78,7 +78,7 @@ class categoriasController extends Controller
         //
         $categorias = Categorias::find($id);
         if(!$categorias){
-            return "Categoria não encontrada";
+            return response(['message'=>'Categoria não encontrado'], 404);
         }
         return $categorias;
     }
@@ -107,7 +107,7 @@ class categoriasController extends Controller
         //
         $categorias = Categorias::find($id);
         if(!$categorias){
-            return "Categoria não encontrada";
+            return response(['message'=>'Categoria não encontrado'], 404);
         }
         $categorias->nome = $request->nome;
         $categorias->descricao = $request->descricao;

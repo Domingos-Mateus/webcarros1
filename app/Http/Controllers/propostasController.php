@@ -65,7 +65,7 @@ class propostasController extends Controller
         //
         $proposta = Propostas::find($id);
         if(!$proposta){
-            return "Proposta não encontrada";
+            return response(['message'=>'Proposta não encontrada'], 404);
         }
         return $proposta;
     }
@@ -93,7 +93,7 @@ class propostasController extends Controller
         //
         $proposta = Propostas::find($id);
         if(!$proposta){
-            return "Proposta não encontrada";
+            return response(['message'=>'Proposta não encontrada'], 404);
         }
         $proposta->titulo = $request->titulo;
         $proposta->anuncio_id = $request->anuncio_id;

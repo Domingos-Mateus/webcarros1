@@ -71,8 +71,8 @@ class planosController extends Controller
     {
         //
         $planos = Planos::find($id);
-          if(!$planos){
-            return "Plano não encontrado";
+        if(!$planos){
+            return response(['message'=>'Plano não encontrado'], 404);
         }
         
         return $planos;
@@ -103,7 +103,7 @@ class planosController extends Controller
         $planos = Planos::find($id);
 
         if(!$planos){
-            return "Plano não encontrado";
+            return response(['message'=>'Plano não encontrado'], 404);
         }
         $planos->nome = $request->nome;
         $planos->activo = $request->activo;

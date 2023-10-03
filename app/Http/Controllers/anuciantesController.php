@@ -20,8 +20,24 @@ class anuciantesController extends Controller
     {
         //
         $anunciantes = Anunciantes::all();
+ // Personalização dos campos da base de dados
+ $dadosPersonalizados = [];
 
-        return $anunciantes;
+ foreach ($anunciantes as $anunciantes) {
+     // Personalize os campos conforme necessário
+     $dadosPersonalizados[] = [
+         'id' => $anunciantes->id,
+         'nome' => $anunciantes->nome,
+         'tipo' => $anunciantes->tipo,
+         'responsavel' => $anunciantes->responsavel,
+         'email' => $anunciantes->email,
+         'telefone' => $anunciantes->telefone,
+         'cpf' => $anunciantes->cpf,
+         'foto' => $anunciantes->foto ? env('URL_BASE_SERVIDOR') . $anunciantes->foto : null,
+         // Adicione mais campos personalizados conforme necessário
+     ];
+ }
+    return response()->json($dadosPersonalizados);
     }
 
     /**
@@ -91,11 +107,26 @@ class anuciantesController extends Controller
     public function show($id)
     {
         //
-        $anunciantes = Anunciantes::find($id);
-        if(!$anunciantes){
-            return "Anunciante não encontrado";
+        $anunciante = Anunciantes::find($id);
+        $dadosPersonalizados = [];
+        if(!$anunciante){
+            return response(['message'=>'Anunciante não encontrado'], 404);
         }
-        return $anunciantes;
+
+ 
+            // Personalize os campos conforme necessário
+            $dadosPersonalizados[] = [
+                'id' => $anunciante->id,
+                'nome' => $anunciante->nome,
+                'tipo' => $anunciante->tipo,
+                'responsavel' => $anunciante->responsavel,
+                'email' => $anunciante->email,
+                'telefone' => $anunciante->telefone,
+                'cpf' => $anunciante->cpf,
+                'foto' => $anunciante->foto ? env('URL_BASE_SERVIDOR') . $anunciante->foto : null,
+                // Adicione mais campos personalizados conforme necessário
+            ];
+            return response()->json($dadosPersonalizados);
     }
 
     /**
@@ -121,7 +152,7 @@ class anuciantesController extends Controller
         //
         $anunciantes = Anunciantes::find($id);
         if(!$anunciantes){
-            return "Anunciante não encontrado";
+            return response(['message'=>'Anunciante não encontrado'], 404);
         }
         $anunciantes->nome = $request->nome;
         $anunciantes->tipo = $request->tipo;

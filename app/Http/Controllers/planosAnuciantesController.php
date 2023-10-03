@@ -63,7 +63,7 @@ class planosAnuciantesController extends Controller
         $planosAnunciantes = PlanosAnunciantes::find($id);
 
         if(!$planosAnunciantes){
-            return "Plano de anunciantes não encontrado";
+            return response(['message'=>'Plano de anunciantes não encontrado'], 404);
         }
         return $planosAnunciantes;
     }
@@ -93,7 +93,7 @@ class planosAnuciantesController extends Controller
         $planosAnunciantes = PlanosAnunciantes::find($id);
 
         if(!$planosAnunciantes){
-            return "Plano de anunciantes não encontrado";
+            return response(['message'=>'Plano de anunciantes não encontrado'], 404);
         }
         
         $planosAnunciantes->plano_id = $request->plano_id;

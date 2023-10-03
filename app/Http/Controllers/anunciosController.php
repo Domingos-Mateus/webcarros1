@@ -17,11 +17,52 @@ class anunciosController extends Controller
      */
     public function index()
     {
-        //
         $anuncios = Anuncios::all();
 
-        return $anuncios;
+        // Personalização dos campos da base de dados
+        $dadosPersonalizados = [];
+
+        foreach ($anuncios as $anuncio) {
+            // Personalize os campos conforme necessário
+            $dadosPersonalizados[] = [
+                'id' => $anuncio->id,
+                'marca' => $anuncio->titulo,
+                'modelo' => $anuncio->modelo,
+                'numero_cliques' => $anuncio->numero_cliques,
+                'anunciantes_id' => $anuncio->anunciantes_id,
+                'categoria_id' => $anuncio->categoria_id,
+                'data_inicio' => $anuncio->data_inicio,
+                'data_fim' => $anuncio->data_fim,
+                'ordenacao' => $anuncio->ordenacao,
+                'status_publicacao' => $anuncio->status_publicacao,
+                'status_pagamento' => $anuncio->status_pagamento,
+                'tipo' => $anuncio->tipo,
+                'vendido' => $anuncio->vendido,
+                'vitrine' => $anuncio->vitrine,
+                'destaque_busca' => $anuncio->destaque_busca,
+                'estado_id' => $anuncio->estado_id,
+                'cidade_id' => $anuncio->cidade_id,
+                'empresa' => $anuncio->empresa,
+                'tipo_preco' => $anuncio->tipo_preco,
+                'valor_preco' => $anuncio->valor_preco,
+                'decricao' => $anuncio->decricao,
+                'foto1' => $anuncio->foto1 ? env('URL_BASE_SERVIDOR') . $anuncio->foto1 : null,
+                'foto2' => $anuncio->foto2 ? env('URL_BASE_SERVIDOR') . $anuncio->foto2 : null,
+                'foto3' => $anuncio->foto3 ? env('URL_BASE_SERVIDOR') . $anuncio->foto3 : null,
+                'foto4' => $anuncio->foto4 ? env('URL_BASE_SERVIDOR') . $anuncio->foto4 : null,
+                'foto5' => $anuncio->foto5 ? env('URL_BASE_SERVIDOR') . $anuncio->foto5 : null,
+                'foto6' => $anuncio->foto6 ? env('URL_BASE_SERVIDOR') . $anuncio->foto6 : null,
+                'foto7' => $anuncio->foto7 ? env('URL_BASE_SERVIDOR') . $anuncio->foto7 : null,
+                'foto8' => $anuncio->foto8 ? env('URL_BASE_SERVIDOR') . $anuncio->foto8 : null,
+                'foto9' => $anuncio->foto9 ? env('URL_BASE_SERVIDOR') . $anuncio->foto9 : null,
+                'foto10' => $anuncio->foto10 ? env('URL_BASE_SERVIDOR') . $anuncio->foto10 : null,
+                // Adicione mais campos personalizados conforme necessário
+            ];
+        }
+        // Retorna a resposta JSON com os dados personalizados
+        return response()->json($dadosPersonalizados);
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -44,6 +85,7 @@ class anunciosController extends Controller
         //
         $anuncios = new Anuncios;
         $anuncios->titulo = $request->titulo;
+        $anuncios->modelo = $request->modelo;
         $anuncios->numero_cliques = $request->numero_cliques;
         $anuncios->anunciante_id = $request->anunciante_id;
         $anuncios->categoria_id = $request->categoria_id;
@@ -61,6 +103,7 @@ class anunciosController extends Controller
         $anuncios->empresa = $request->empresa;
         $anuncios->tipo_preco = $request->tipo_preco;
         $anuncios->valor_preco = $request->valor_preco;
+        $anuncios->descricao = $request->descricao;
 
         $anuncios->save();
         return $anuncios;
@@ -70,6 +113,7 @@ class anunciosController extends Controller
     {
         //
         $anuncios = Anuncios::find($id);
+     
         $anuncios->foto1 = $request->foto1;
         $anuncios->foto2 = $request->foto2;
         $anuncios->foto3 = $request->foto3;
@@ -244,7 +288,8 @@ class anunciosController extends Controller
                     }
 
         $anuncios->save();
-        return "Foto carregada com sucesso!";
+        return $anuncios;
+
 
     }
 
@@ -257,11 +302,52 @@ class anunciosController extends Controller
     public function show($id)
     {
         //
-        $anuncios = Anuncios::find($id);
-        if(!$anuncios){
-            return "Anúncio não encontrado";
+        $anuncio = Anuncios::find($id);
+        $dadosPersonalizados = [];
+        if(!$anuncio){
+            return response(['message'=>'Anúncio não encontrado'], 404);
         }
-        return $anuncios;
+        // Personalização dos campos da base de dados
+
+
+            // Personalize os campos conforme necessário
+            $dadosPersonalizados[] = [
+                'id' => $anuncio->id,
+                'marca' => $anuncio->titulo,
+                'modelo' => $anuncio->modelo,
+                'numero_cliques' => $anuncio->numero_cliques,
+                'anunciantes_id' => $anuncio->anunciantes_id,
+                'categoria_id' => $anuncio->categoria_id,
+                'data_inicio' => $anuncio->data_inicio,
+                'data_fim' => $anuncio->data_fim,
+                'ordenacao' => $anuncio->ordenacao,
+                'status_publicacao' => $anuncio->status_publicacao,
+                'status_pagamento' => $anuncio->status_pagamento,
+                'tipo' => $anuncio->tipo,
+                'vendido' => $anuncio->vendido,
+                'vitrine' => $anuncio->vitrine,
+                'destaque_busca' => $anuncio->destaque_busca,
+                'estado_id' => $anuncio->estado_id,
+                'cidade_id' => $anuncio->cidade_id,
+                'empresa' => $anuncio->empresa,
+                'tipo_preco' => $anuncio->tipo_preco,
+                'valor_preco' => $anuncio->valor_preco,
+                'descricao' => $anuncio->descricao,
+                'foto1' => $anuncio->foto1 ? env('URL_BASE_SERVIDOR') . $anuncio->foto1 : null,
+                'foto2' => $anuncio->foto2 ? env('URL_BASE_SERVIDOR') . $anuncio->foto2 : null,
+                'foto3' => $anuncio->foto3 ? env('URL_BASE_SERVIDOR') . $anuncio->foto3 : null,
+                'foto4' => $anuncio->foto4 ? env('URL_BASE_SERVIDOR') . $anuncio->foto4 : null,
+                'foto5' => $anuncio->foto5 ? env('URL_BASE_SERVIDOR') . $anuncio->foto5 : null,
+                'foto6' => $anuncio->foto6 ? env('URL_BASE_SERVIDOR') . $anuncio->foto6 : null,
+                'foto7' => $anuncio->foto7 ? env('URL_BASE_SERVIDOR') . $anuncio->foto7 : null,
+                'foto8' => $anuncio->foto8 ? env('URL_BASE_SERVIDOR') . $anuncio->foto8 : null,
+                'foto9' => $anuncio->foto9 ? env('URL_BASE_SERVIDOR') . $anuncio->foto9 : null,
+                'foto10' => $anuncio->foto10 ? env('URL_BASE_SERVIDOR') . $anuncio->foto10 : null,
+                // Adicione mais campos personalizados conforme necessário
+            ];
+
+        // Retorna a resposta JSON com os dados personalizados
+        return response()->json($dadosPersonalizados);
     }
 
     /**
@@ -287,9 +373,10 @@ class anunciosController extends Controller
         //
         $anuncios = Anuncios::find($id);
         if(!$anuncios){
-            return "Anúncio não encontrado";
+            return response(['message'=>'Anúncio não encontrado'], 404);
         }
         $anuncios->titulo = $request->titulo;
+        $anuncios->modelo = $request->modelo;
         $anuncios->numero_cliques = $request->numero_cliques;
         $anuncios->anunciante_id = $request->anunciante_id;
         $anuncios->categoria_id = $request->categoria_id;
@@ -307,6 +394,7 @@ class anunciosController extends Controller
         $anuncios->empresa = $request->empresa;
         $anuncios->tipo_preco = $request->tipo_preco;
         $anuncios->valor_preco = $request->valor_preco;
+        $anuncios->descricao = $request->descricao;
 
         $anuncios->save();
         return $anuncios;

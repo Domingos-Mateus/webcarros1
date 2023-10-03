@@ -58,14 +58,17 @@ Route::get('/propostas/visualizar_proposta/{id}', 'App\Http\Controllers\proposta
 Route::put('/editar_proposta/update/{id}', 'App\Http\Controllers\propostasController@update');
 Route::get('/eliminar_proposta/{id}', 'App\Http\Controllers\propostasController@destroy');
 
+//login
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout']);
 
-
-
-
-
-
-Route::post('register', [AuthController::class, 'register']);
-Route::post('login', [AuthController::class, 'login']);
+Route::middleware(['auth:sanctum'])->group(
+	function () {
+    Route::get('/teste', [AuthController::class,'teste']);
+    
+    Route::post('logout', [AuthController::class, 'logout']);
+}); // Fim da verificação de autenticação
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

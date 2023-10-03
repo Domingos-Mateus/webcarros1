@@ -23,11 +23,27 @@ class noticiasController extends Controller
         ->join('categorias','categorias.id','noticias.categoria_id')
         ->select('noticias.*', 'categorias.nome as nome_categoria')
         ->get();
-
-
 $noticias = Noticias::all();
 
-return $noticias;
+// Personalização dos campos da base de dados
+$dadosPersonalizados = [];
+
+foreach ($noticias as $noticias) {
+    // Personalize os campos conforme necessário
+    $dadosPersonalizados[] = [
+        'id' => $noticias->id,
+        'titulo' => $noticias->titulo,
+        'subtitulo' => $noticias->subtitulo,
+        'foto_capa' => $noticias->foto_capa ? env('URL_BASE_SERVIDOR') . $noticias->foto_capa : null,
+        'foto_artigo' => $noticias->foto_artigo ? env('URL_BASE_SERVIDOR') . $noticias->foto_artigo : null,
+        'resumo' => $noticias->resumo,
+        'status' => $noticias->status,
+        'categoria_id' => $noticias->categoria_id,
+        'descricao' => $noticias->descricao,
+        // Adicione mais campos personalizados conforme necessário
+    ];
+}
+   return response()->json($dadosPersonalizados);
     }
 
     /**
@@ -123,11 +139,25 @@ return $noticias;
     public function show($id)
     {
         //
-        $noticias = Noticias::find($id);
-        if(!$noticias){
-            return "Notícia não encontrada";
+        $noticia = Noticias::find($id);
+        $dadosPersonalizados = [];
+        if(!$noticia){
+            return response(['message'=>'Notícias não encontrada'], 404);
         }
-        return $noticias;
+        // Personalização dos campos da base de dados
+    // Personalize os campos conforme necessário
+    $dadosPersonalizados[] = [
+        'id' => $noticia->id,
+        'titulo' => $noticia->titulo,
+        'subtitulo' => $noticia->subtitulo,
+        'foto_capa' => $noticia->foto_capa ? env('URL_BASE_SERVIDOR') . $noticia->foto_capa : null,
+        'foto_artigo' => $noticia->foto_artigo ? env('URL_BASE_SERVIDOR') . $noticia->foto_artigo : null,
+        'status' => $noticia->status,
+        'categoria_id' => $noticia->categoria_id,
+        'descricao' => $noticia->descricao,
+        // Adicione mais campos personalizados conforme necessário
+    ];
+   return response()->json($dadosPersonalizados);
     }
 
     /**
@@ -153,7 +183,7 @@ return $noticias;
         //
         $noticias = Noticias::find($id);
         if(!$noticias){
-            return "Notícia não encontrada";
+            return response(['message'=>'Notícias não encontrada'], 404);
         }
         $noticias->titulo = $request->titulo;
         $noticias->subtitulo = $request->subtitulo;
