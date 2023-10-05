@@ -11,6 +11,7 @@ class CreateAnunciosTable extends Migration
         Schema::create('anuncios', function (Blueprint $table) {
             $table->increments('id');
             $table->string('titulo', 100);
+            $table->string('modelo', 100);
             $table->integer('numero_cliques');
             $table->integer('anunciante_id')->unsigned();
             $table->integer('categoria_id')->unsigned();
@@ -28,6 +29,7 @@ class CreateAnunciosTable extends Migration
             $table->string('empresa', 100)->nullable();
             $table->integer('tipo_preco');
             $table->string('valor_preco', 100)->nullable();
+            $table->string('descricao', 100);
             $table->string('foto1')->nullable();
             $table->string('foto2')->nullable();
             $table->string('foto3')->nullable();

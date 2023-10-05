@@ -45,7 +45,7 @@ class anunciosController extends Controller
                 'empresa' => $anuncio->empresa,
                 'tipo_preco' => $anuncio->tipo_preco,
                 'valor_preco' => $anuncio->valor_preco,
-                'decricao' => $anuncio->decricao,
+                'descricao' => $anuncio->descricao,
                 'foto1' => $anuncio->foto1 ? env('URL_BASE_SERVIDOR') . $anuncio->foto1 : null,
                 'foto2' => $anuncio->foto2 ? env('URL_BASE_SERVIDOR') . $anuncio->foto2 : null,
                 'foto3' => $anuncio->foto3 ? env('URL_BASE_SERVIDOR') . $anuncio->foto3 : null,
