@@ -10,8 +10,9 @@ class CreateAnunciosTable extends Migration
     {
         Schema::create('anuncios', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('titulo', 100);
-            $table->string('modelo', 100);
+            $table->string('titulo');
+            $table->integer('marca_id')->unsigned();
+            $table->integer('modelo_id')->unsigned();
             $table->integer('numero_cliques');
             $table->integer('anunciante_id')->unsigned();
             $table->integer('categoria_id')->unsigned();
@@ -44,6 +45,8 @@ class CreateAnunciosTable extends Migration
 
             $table->foreign('anunciante_id')->references('id')->on('anunciantes');
             $table->foreign('categoria_id')->references('id')->on('categorias');
+            $table->foreign('marca_id')->references('id')->on('marcas');
+            $table->foreign('modelo_id')->references('id')->on('modelos');
         });
     }
 

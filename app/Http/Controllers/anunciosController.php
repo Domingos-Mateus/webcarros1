@@ -19,6 +19,15 @@ class anunciosController extends Controller
     {
         $anuncios = Anuncios::all();
 
+        $anuncios = DB::table('anuncios')
+                ->join('marcas','marcas.id','anuncios.marca_id')
+                ->join('modelos','modelos.id','anuncios.modelo_id')
+                ->join('categorias','categorias.id','anuncios.categoria_id')
+                ->join('anunciantes','anunciantes.id','anuncios.anunciante_id')
+                ->select('anuncios.*', 'marcas.nome_marca', 'modelos.nome_modelo','categorias.nome as nome_categoria', 'anunciantes.nome as nome_anunciante')
+                ->get();
+        //return $anuncios;
+
         // Personalização dos campos da base de dados
         $dadosPersonalizados = [];
 
@@ -26,11 +35,12 @@ class anunciosController extends Controller
             // Personalize os campos conforme necessário
             $dadosPersonalizados[] = [
                 'id' => $anuncio->id,
-                'marca' => $anuncio->titulo,
-                'modelo' => $anuncio->modelo,
+                'titutlo' => $anuncio->titulo,
+                'nome_marca' => $anuncio->nome_marca,
+                'nome_modelo' => $anuncio->nome_modelo,
                 'numero_cliques' => $anuncio->numero_cliques,
-                'anunciantes_id' => $anuncio->anunciantes_id,
-                'categoria_id' => $anuncio->categoria_id,
+                'nome_anunciante' => $anuncio->nome_anunciante,
+                'nome_categoria' => $anuncio->nome_categoria,
                 'data_inicio' => $anuncio->data_inicio,
                 'data_fim' => $anuncio->data_fim,
                 'ordenacao' => $anuncio->ordenacao,
@@ -85,7 +95,8 @@ class anunciosController extends Controller
         //
         $anuncios = new Anuncios;
         $anuncios->titulo = $request->titulo;
-        $anuncios->modelo = $request->modelo;
+        $anuncios->marca_id = $request->marca_id;
+        $anuncios->modelo_id = $request->modelo_id;
         $anuncios->numero_cliques = $request->numero_cliques;
         $anuncios->anunciante_id = $request->anunciante_id;
         $anuncios->categoria_id = $request->categoria_id;
@@ -376,7 +387,8 @@ class anunciosController extends Controller
             return response(['message'=>'Anúncio não encontrado'], 404);
         }
         $anuncios->titulo = $request->titulo;
-        $anuncios->modelo = $request->modelo;
+        $anuncios->marca_id = $request->marca_id;
+        $anuncios->modelo_id = $request->modelo_id;
         $anuncios->numero_cliques = $request->numero_cliques;
         $anuncios->anunciante_id = $request->anunciante_id;
         $anuncios->categoria_id = $request->categoria_id;

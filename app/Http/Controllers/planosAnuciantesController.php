@@ -19,8 +19,23 @@ class planosAnuciantesController extends Controller
     {
         //
         $planosAnunciantes = PlanosAnunciantes::all();
+  
+        $planosAnunciantes = DB::table('planos_anunciantes')
+                ->join('planos','planos.id','planos_anunciantes.plano_id')
+                ->join('anunciantes','anunciantes.id','planos_anunciantes.anunciante_id')
+                ->select('planos_anunciantes.*', 'planos.nome as nome_plano', 'anunciantes.nome as nome_anunciantes')
+                ->get();
+         $dadosPersonalizados = [];
 
-        return $planosAnunciantes;
+        foreach ($planosAnunciantes as $planosAnunciante) {
+            // Personalize os campos conforme necessário
+            $dadosPersonalizados[] = [
+                'id' => $planosAnunciante->id,
+                'nome_plano' => $planosAnunciante->nome_plano,
+                'nome_anunciantes' => $planosAnunciante->nome_anunciantes,
+            ];
+        }
+        return response()->json($dadosPersonalizados);
     }
 
     /**

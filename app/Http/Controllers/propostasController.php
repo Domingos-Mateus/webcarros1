@@ -17,9 +17,29 @@ class propostasController extends Controller
     public function index()
     {
         //
-        $proposta = Propostas::all();
+        $propostas = Propostas::all();
 
-        return $proposta;
+        $propostas = DB::table('propostas')
+        ->join('anuncios','anuncios.id','propostas.anuncio_id')
+        ->select('propostas.*', 'anuncios.titulo as anuncio_titulo')
+        ->get();
+
+$dadosPersonalizados = [];
+
+foreach ($propostas as $proposta) {
+    // Personalize os campos conforme necessário
+    $dadosPersonalizados[] = [
+        'id' => $proposta->id,
+        'titulo' => $proposta->titulo,
+        'anuncio_titulo' => $proposta->anuncio_titulo,
+        'nome' => $proposta->nome,
+        'email' => $proposta->email,
+        'ddd' => $proposta->ddd,
+        'telefone' => $proposta->telefone,
+        'mensagem' => $proposta->mensagem,
+    ];
+}
+return response()->json($dadosPersonalizados);
     }
 
     /**

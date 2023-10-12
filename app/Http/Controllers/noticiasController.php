@@ -38,7 +38,7 @@ foreach ($noticias as $noticias) {
         'foto_artigo' => $noticias->foto_artigo ? env('URL_BASE_SERVIDOR') . $noticias->foto_artigo : null,
         'resumo' => $noticias->resumo,
         'status' => $noticias->status,
-        'categoria_id' => $noticias->categoria_id,
+        'nome_categoria' => $noticias->nome_categoria,
         'descricao' => $noticias->descricao,
         // Adicione mais campos personalizados conforme necessário
     ];

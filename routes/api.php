@@ -4,7 +4,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 
-
 //Categorias
 Route::get('/categorias/listar_categorias', 'App\Http\Controllers\categoriasController@index');
 Route::post('/categorias/registar_categorias', 'App\Http\Controllers\categoriasController@store');
@@ -58,6 +57,21 @@ Route::get('/propostas/visualizar_proposta/{id}', 'App\Http\Controllers\proposta
 Route::put('/editar_proposta/update/{id}', 'App\Http\Controllers\propostasController@update');
 Route::get('/eliminar_proposta/{id}', 'App\Http\Controllers\propostasController@destroy');
 
+//Marcas
+Route::get('/marcas/listar_marcas', 'App\Http\Controllers\marcasController@index');
+Route::post('/marcas/registar_marcas', 'App\Http\Controllers\marcasController@store');
+Route::get('/marcas/visualizar_marca/{id}', 'App\Http\Controllers\marcasController@show');
+Route::put('/editar_marca/update/{id}', 'App\Http\Controllers\marcasController@update');
+Route::get('/eliminar_marca/{id}', 'App\Http\Controllers\marcasController@destroy');
+
+//Modelo
+Route::get('/modelos/listar_modelos', 'App\Http\Controllers\modeloController@index');
+Route::post('/modelos/registar_modelos', 'App\Http\Controllers\modeloController@store');
+Route::get('/modelos/visualizar_modelo/{id}', 'App\Http\Controllers\modeloController@show');
+Route::put('/editar_modelo/update/{id}', 'App\Http\Controllers\modeloController@update');
+Route::get('/eliminar_modelo/{id}', 'App\Http\Controllers\modeloController@destroy');
+
+
 //login
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -69,7 +83,6 @@ Route::middleware(['auth:sanctum'])->group(
     
     Route::post('logout', [AuthController::class, 'logout']);
 }); // Fim da verificação de autenticação
-
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
