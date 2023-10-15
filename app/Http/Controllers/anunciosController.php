@@ -10,32 +10,46 @@ use DB;
 
 class anunciosController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
+
     public function index()
     {
-        $anuncios = Anuncios::all();
 
-        $anuncios = DB::table('anuncios')
-                ->join('marcas','marcas.id','anuncios.marca_id')
-                ->join('modelos','modelos.id','anuncios.modelo_id')
-                ->join('categorias','categorias.id','anuncios.categoria_id')
-                ->join('anunciantes','anunciantes.id','anuncios.anunciante_id')
-                ->select('anuncios.*', 'marcas.nome_marca', 'modelos.nome_modelo','categorias.nome as nome_categoria', 'anunciantes.nome as nome_anunciante')
-                ->get();
-        //return $anuncios;
+        // Começa a construir a consulta ao banco de dados
+        $query = DB::table('anuncios')
+            ->join('marcas','marcas.id','anuncios.marca_id')
+            ->join('modelos','modelos.id','anuncios.modelo_id')
+            ->join('categorias','categorias.id','anuncios.categoria_id')
+            ->join('anunciantes','anunciantes.id','anuncios.anunciante_id')
+            ->select('anuncios.*', 'marcas.nome_marca', 'modelos.nome_modelo','categorias.nome as nome_categoria', 'anunciantes.nome as nome_anunciante');
 
-        // Personalização dos campos da base de dados
+        // Adiciona os filtros conforme os parâmetros passados
+        if (request('nome_marca')) {
+            $query->where('marcas.nome_marca', 'LIKE', '%' . request('nome_marca') . '%');
+        }
+
+        if (request('nome_modelo')) {
+            $query->where('modelos.nome_modelo', 'LIKE', '%' . request('nome_modelo') . '%');
+        }
+
+        if (request('nome_anunciante')) {
+            $query->where('anunciantes.nome', 'LIKE', '%' . request('nome_anunciante') . '%');
+        }
+
+        if (request('estado_id')) {
+            $query->where('anuncios.estado_id', request('estado_id'));
+        }
+
+        // Executa a consulta
+        $anuncios = $query->get();
+
+        // Processamento dos dados para personalizar a resposta
         $dadosPersonalizados = [];
 
         foreach ($anuncios as $anuncio) {
-            // Personalize os campos conforme necessário
             $dadosPersonalizados[] = [
                 'id' => $anuncio->id,
-                'titutlo' => $anuncio->titulo,
+                'titulo' => $anuncio->titulo,
                 'nome_marca' => $anuncio->nome_marca,
                 'nome_modelo' => $anuncio->nome_modelo,
                 'numero_cliques' => $anuncio->numero_cliques,
@@ -69,6 +83,7 @@ class anunciosController extends Controller
                 // Adicione mais campos personalizados conforme necessário
             ];
         }
+
         // Retorna a resposta JSON com os dados personalizados
         return response()->json($dadosPersonalizados);
     }
@@ -124,7 +139,7 @@ class anunciosController extends Controller
     {
         //
         $anuncios = Anuncios::find($id);
-     
+
         $anuncios->foto1 = $request->foto1;
         $anuncios->foto2 = $request->foto2;
         $anuncios->foto3 = $request->foto3;
@@ -176,7 +191,7 @@ class anunciosController extends Controller
                 }
             }
             $anuncios->save();
-    
+
             if ($request->foto3) {
                 File::move($foto3, public_path().'/imagens_anuncios/imagem3/imagens'.$anuncios->id.'.'.$extensaoimg);
                 $anuncios->foto3 = '/imagens_anuncios/imagem3/imagens'.$anuncios->id.'.'.$extensaoimg;
@@ -192,7 +207,7 @@ class anunciosController extends Controller
                 }
             }
             $anuncios->save();
-    
+
             if ($request->foto4) {
                 File::move($foto4, public_path().'/imagens_anuncios/imagem4/imagens'.$anuncios->id.'.'.$extensaoimg);
                 $anuncios->foto4 = '/imagens_anuncios/imagem3/imagens'.$anuncios->id.'.'.$extensaoimg;
@@ -208,7 +223,7 @@ class anunciosController extends Controller
                 }
             }
             $anuncios->save();
-    
+
             if ($request->foto5) {
                 File::move($foto5, public_path().'/imagens_anuncios/imagem5/imagens'.$anuncios->id.'.'.$extensaoimg);
                 $anuncios->foto5 = '/imagens_anuncios/imagem5/imagens'.$anuncios->id.'.'.$extensaoimg;
@@ -224,7 +239,7 @@ class anunciosController extends Controller
                 }
             }
             $anuncios->save();
-    
+
             if ($request->foto6) {
                 File::move($foto6, public_path().'/imagens_anuncios/imagem6/imagens'.$anuncios->id.'.'.$extensaoimg);
                 $anuncios->foto6 = '/imagens_anuncios/imagem6/imagens'.$anuncios->id.'.'.$extensaoimg;
@@ -240,7 +255,7 @@ class anunciosController extends Controller
                     }
                 }
                 $anuncios->save();
-        
+
                 if ($request->foto7) {
                     File::move($foto7, public_path().'/imagens_anuncios/imagem7/imagens'.$anuncios->id.'.'.$extensaoimg);
                     $anuncios->foto7 = '/imagens_anuncios/imagem7/imagens'.$anuncios->id.'.'.$extensaoimg;
@@ -256,7 +271,7 @@ class anunciosController extends Controller
                         }
                     }
                     $anuncios->save();
-            
+
                     if ($request->foto8) {
                         File::move($foto8, public_path().'/imagens_anuncios/imagem8/imagens'.$anuncios->id.'.'.$extensaoimg);
                         $anuncios->foto8 = '/imagens_anuncios/imagem8/imagens'.$anuncios->id.'.'.$extensaoimg;
@@ -264,7 +279,7 @@ class anunciosController extends Controller
                     }
 
 
-                    
+
                     //Foto9
                     if($request->foto9){
                         $foto9 = $request->foto9;
@@ -274,7 +289,7 @@ class anunciosController extends Controller
                         }
                     }
                     $anuncios->save();
-            
+
                     if ($request->foto9) {
                         File::move($foto9, public_path().'/imagens_anuncios/imagem9/imagens'.$anuncios->id.'.'.$extensaoimg);
                         $anuncios->foto9 = '/imagens_anuncios/imagem9/imagens'.$anuncios->id.'.'.$extensaoimg;
@@ -291,7 +306,7 @@ class anunciosController extends Controller
                         }
                     }
                     $anuncios->save();
-            
+
                     if ($request->foto10) {
                         File::move($foto10, public_path().'/imagens_anuncios/imagem10/imagens'.$anuncios->id.'.'.$extensaoimg);
                         $anuncios->foto10 = '/imagens_anuncios/imagem10/imagens'.$anuncios->id.'.'.$extensaoimg;
