@@ -26,7 +26,6 @@ class planosAnuciantesController extends Controller
                 ->select('planos_anunciantes.*', 'planos.nome as nome_plano', 'anunciantes.nome as nome_anunciantes')
                 ->get();
          $dadosPersonalizados = [];
-
         foreach ($planosAnunciantes as $planosAnunciante) {
             // Personalize os campos conforme necessário
             $dadosPersonalizados[] = [
@@ -92,7 +91,6 @@ class planosAnuciantesController extends Controller
     public function edit($id)
     {
         //
-        
     }
 
     /**

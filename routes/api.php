@@ -19,6 +19,9 @@ Route::get('/noticias/visualizar_noticias/{id}', 'App\Http\Controllers\noticiasC
 Route::get('/eliminar_noticias/{id}', 'App\Http\Controllers\noticiasController@destroy');
 Route::post('/noticias/upload_foto_capa/{id}', 'App\Http\Controllers\noticiasController@foto_capa');
 Route::post('/noticias/upload_foto_artigo/{id}', 'App\Http\Controllers\noticiasController@foto_artigo');
+Route::delete('/noticias/eliminar_foto_artigo/{id}', 'App\Http\Controllers\noticiasController@destroyFotoArtigo');
+Route::delete('/noticias/eliminar_foto_capa/{id}', 'App\Http\Controllers\noticiasController@destroyFotoCapa');
+
 
 //Anuciantes
 Route::get('/anunciantes/listar_anuciantes', 'App\Http\Controllers\anuciantesController@index');
@@ -27,6 +30,8 @@ Route::post('/anunciantes/uploadFoto_anuciantes/{id}', 'App\Http\Controllers\anu
 Route::get('/anunciantes/visualizar_anuciantes/{id}', 'App\Http\Controllers\anuciantesController@show');
 Route::put('/editar_anuciantes/update/{id}', 'App\Http\Controllers\anuciantesController@update');
 Route::get('/eliminar_anuciantes/{id}', 'App\Http\Controllers\anuciantesController@destroy');
+Route::delete('/anunciantes/eliminar_foto/{id}', 'App\Http\Controllers\anuciantesController@destroyFoto');
+
 
 //Anuncios
 Route::get('/anuncios/listar_anuncios', 'App\Http\Controllers\anunciosController@index');
@@ -35,6 +40,18 @@ Route::post('/anuncios/uploadFoto1_anuncios/{id}', 'App\Http\Controllers\anuncio
 Route::put('/editar_anuncios/update/{id}', 'App\Http\Controllers\anunciosController@update');
 Route::get('/anuncios/visualizar_anuncios/{id}', 'App\Http\Controllers\anunciosController@show');
 Route::get('/eliminar_anuncios/{id}', 'App\Http\Controllers\anunciosController@destroy');
+
+Route::delete('/anuncios/eliminar_foto1/{id}', 'App\Http\Controllers\anunciosController@destroyFoto1');
+Route::delete('/anuncios/eliminar_foto2/{id}', 'App\Http\Controllers\anunciosController@destroyFoto2');
+Route::delete('/anuncios/eliminar_foto3/{id}', 'App\Http\Controllers\anunciosController@destroyFoto3');
+Route::delete('/anuncios/eliminar_foto4/{id}', 'App\Http\Controllers\anunciosController@destroyFoto4');
+Route::delete('/anuncios/eliminar_foto5/{id}', 'App\Http\Controllers\anunciosController@destroyFoto5');
+Route::delete('/anuncios/eliminar_foto6/{id}', 'App\Http\Controllers\anunciosController@destroyFoto6');
+Route::delete('/anuncios/eliminar_foto7/{id}', 'App\Http\Controllers\anunciosController@destroyFoto7');
+Route::delete('/anuncios/eliminar_foto8/{id}', 'App\Http\Controllers\anunciosController@destroyFoto8');
+Route::delete('/anuncios/eliminar_foto9/{id}', 'App\Http\Controllers\anunciosController@destroyFoto9');
+Route::delete('/anuncios/eliminar_foto10/{id}', 'App\Http\Controllers\anunciosController@destroyFoto10');
+
 
 //Planos
 Route::get('/planos/listar_planos', 'App\Http\Controllers\planosController@index');
@@ -70,7 +87,6 @@ Route::post('/modelos/registar_modelos', 'App\Http\Controllers\modeloController@
 Route::get('/modelos/visualizar_modelo/{id}', 'App\Http\Controllers\modeloController@show');
 Route::put('/editar_modelo/update/{id}', 'App\Http\Controllers\modeloController@update');
 Route::get('/eliminar_modelo/{id}', 'App\Http\Controllers\modeloController@destroy');
-
 
 //login
 Route::post('/register', [AuthController::class, 'register']);

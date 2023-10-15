@@ -318,6 +318,10 @@ class anunciosController extends Controller
         if(!$anuncio){
             return response(['message'=>'Anúncio não encontrado'], 404);
         }
+
+        //Para incrementar o número de cliques
+        $anuncio->increment('numero_cliques');
+        
         // Personalização dos campos da base de dados
 
 
@@ -424,4 +428,218 @@ class anunciosController extends Controller
         Anuncios::destroy($id);
         return "Anúncio eliminado com sucesso!";
     }
+
+
+    public function destroyFoto1($id)
+{
+    $anuncios = Anuncios::find($id);
+
+    if (!$anuncios) {
+        return response()->json(['message' => 'Anunciantes não encontrado'], 404);
+    }
+
+    $pathFoto = public_path() .  $anuncios->foto1;
+    if (File::exists($pathFoto)) {
+        File::delete($pathFoto);
+        $anuncios->foto1 = '';
+        $anuncios->save();
+        return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
+    } 
+    
+    else {
+        return response()->json(['message' => 'Foto não encontrada'], 404);
+    }
+}
+
+public function destroyFoto2($id)
+{
+    $anuncios = Anuncios::find($id);
+
+    if (!$anuncios) {
+        return response()->json(['message' => 'Anunciantes não encontrado'], 404);
+    }
+
+    $pathFoto = public_path() .  $anuncios->foto2;
+    if (File::exists($pathFoto)) {
+        File::delete($pathFoto);
+        $anuncios->foto2 = '';
+        $anuncios->save();
+        return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
+    } 
+    
+    else {
+        return response()->json(['message' => 'Foto não encontrada'], 404);
+    }
+}
+
+public function destroyFoto3($id)
+{
+    $anuncios = Anuncios::find($id);
+
+    if (!$anuncios) {
+        return response()->json(['message' => 'Anunciantes não encontrado'], 404);
+    }
+
+    $pathFoto = public_path() .  $anuncios->foto1;
+    if (File::exists($pathFoto)) {
+        File::delete($pathFoto);
+        $anuncios->foto3 = '';
+        $anuncios->save();
+        return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
+    } 
+    
+    else {
+        return response()->json(['message' => 'Foto não encontrada'], 404);
+    }
+}
+
+public function destroyFoto4($id)
+{
+    $anuncios = Anuncios::find($id);
+
+    if (!$anuncios) {
+        return response()->json(['message' => 'Anunciantes não encontrado'], 404);
+    }
+
+    $pathFoto = public_path() .  $anuncios->foto1;
+    if (File::exists($pathFoto)) {
+        File::delete($pathFoto);
+        $anuncios->foto4 = '';
+        $anuncios->save();
+        return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
+    } 
+    
+    else {
+        return response()->json(['message' => 'Foto não encontrada'], 404);
+    }
+}
+
+public function destroyFoto5($id)
+{
+    $anuncios = Anuncios::find($id);
+
+    if (!$anuncios) {
+        return response()->json(['message' => 'Anunciantes não encontrado'], 404);
+    }
+
+    $pathFoto = public_path() .  $anuncios->foto5;
+    if (File::exists($pathFoto)) {
+        File::delete($pathFoto);
+        $anuncios->foto5 = '';
+        $anuncios->save();
+        return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
+    } 
+    
+    else {
+        return response()->json(['message' => 'Foto não encontrada'], 404);
+    }
+}
+
+public function destroyFoto6($id)
+{
+    $anuncios = Anuncios::find($id);
+
+    if (!$anuncios) {
+        return response()->json(['message' => 'Anunciantes não encontrado'], 404);
+    }
+
+    $pathFoto = public_path() .  $anuncios->foto6;
+    if (File::exists($pathFoto)) {
+        File::delete($pathFoto);
+        $anuncios->foto6 = '';
+        $anuncios->save();
+        return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
+    } 
+    
+    else {
+        return response()->json(['message' => 'Foto não encontrada'], 404);
+    }
+}
+
+public function destroyFoto7($id)
+{
+    $anuncios = Anuncios::find($id);
+
+    if (!$anuncios) {
+        return response()->json(['message' => 'Anunciantes não encontrado'], 404);
+    }
+
+    $pathFoto = public_path() .  $anuncios->foto7;
+    if (File::exists($pathFoto)) {
+        File::delete($pathFoto);
+        $anuncios->foto7 = '';
+        $anuncios->save();
+        return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
+    } 
+    
+    else {
+        return response()->json(['message' => 'Foto não encontrada'], 404);
+    }
+}
+
+
+public function destroyFoto8($id)
+{
+    $anuncios = Anuncios::find($id);
+
+    if (!$anuncios) {
+        return response()->json(['message' => 'Anunciantes não encontrado'], 404);
+    }
+
+    $pathFoto = public_path() .  $anuncios->foto8;
+    if (File::exists($pathFoto)) {
+        File::delete($pathFoto);
+        $anuncios->foto8 = '';
+        $anuncios->save();
+        return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
+    } 
+    
+    else {
+        return response()->json(['message' => 'Foto não encontrada'], 404);
+    }
+}
+
+
+public function destroyFoto9($id)
+{
+    $anuncios = Anuncios::find($id);
+
+    if (!$anuncios) {
+        return response()->json(['message' => 'Anunciantes não encontrado'], 404);
+    }
+
+    $pathFoto = public_path() .  $anuncios->foto9;
+    if (File::exists($pathFoto)) {
+        File::delete($pathFoto);
+        $anuncios->foto9 = '';
+        $anuncios->save();
+        return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
+    } 
+    
+    else {
+        return response()->json(['message' => 'Foto não encontrada'], 404);
+    }
+}
+
+
+public function destroyFoto10($id)
+{
+    $anuncios = Anuncios::find($id);
+
+    if (!$anuncios) {
+        return response()->json(['message' => 'Anunciantes não encontrado'], 404);
+    }
+
+    $pathFoto = public_path() .  $anuncios->foto10;
+    if (File::exists($pathFoto)) {
+        File::delete($pathFoto);
+        $anuncios->foto10 = '';
+        $anuncios->save();
+        return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
+    } 
+    
+    else {
+        return response()->json(['message' => 'Foto não encontrada'], 404);
+    }
+}
 }

@@ -78,26 +78,27 @@ class anuciantesController extends Controller
     {
         //
         $anunciantes = Anunciantes::find($id);
+        if(!$anunciantes){
+            return response(['message'=>'Anunciante não encontrado'], 404);
+        }
         if($request->foto){
             $foto = $request->foto;
             $extensaoimg = $foto->getClientOriginalExtension();
             if($extensaoimg !='jpg' && $extensaoimg != 'jpg' && $extensaoimg != 'png'){
                 return back()->with('Erro', 'imagem com formato inválido');
             }
+           
         }
-
         $anunciantes->save();
 
         if ($request->foto) {
             File::move($foto, public_path().'/imagens_anunciantes/imagens'.$anunciantes->id.'.'.$extensaoimg);
             $anunciantes->foto = '/imagens_anunciantes/imagens'.$anunciantes->id.'.'.$extensaoimg;
-
             $anunciantes->save();
         }
         $anunciantes->save();
         return "Foto carregada com sucesso!";
     }
-
     /**
      * Display the specified resource.
      *
@@ -112,8 +113,6 @@ class anuciantesController extends Controller
         if(!$anunciante){
             return response(['message'=>'Anunciante não encontrado'], 404);
         }
-
- 
             // Personalize os campos conforme necessário
             $dadosPersonalizados[] = [
                 'id' => $anunciante->id,
@@ -179,4 +178,32 @@ class anuciantesController extends Controller
         //
         Anunciantes::destroy($id);
     }
+
+    public function destroyFoto($id)
+{
+    $anunciantes = Anunciantes::find($id);
+
+    if (!$anunciantes) {
+        return response()->json(['message' => 'Anunciantes não encontrado'], 404);
+    }
+
+    // Para achar o caminho da foto
+    $pathFoto = public_path() .  $anunciantes->foto;
+    // Verificar se o arquivo existe
+    if (File::exists($pathFoto)) {
+        // Deletar o arquivo
+        File::delete($pathFoto);
+
+        // Atualizar ou zerar a coluna da foto no banco de dados
+        $anunciantes->foto = '';
+        $anunciantes->save();
+
+        return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
+        
+    } 
+    
+    else {
+        return response()->json(['message' => 'Foto não encontrada'], 404);
+    }
+}
 }

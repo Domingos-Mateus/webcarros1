@@ -127,7 +127,7 @@ foreach ($noticias as $noticias) {
             $noticias->save();
         }
 
-        return "Foto de artigo carregada com sucesso";
+        return "Foto de Capa carregada com sucesso";
     }
 
     /**
@@ -208,4 +208,66 @@ foreach ($noticias as $noticias) {
         Noticias::destroy($id);
         return "Anunciante eliminado com sucesso!";
     }
+
+
+
+    
+    public function destroyFotoArtigo($id)
+{
+    $noticia = Noticias::find($id);
+
+    if (!$noticia) {
+        return response()->json(['message' => 'Notícia não encontrada'], 404);
+    }
+
+    // Para achar o caminho da foto
+    $pathFoto = public_path() .  $noticia->foto_artigo;
+    //return $pathFoto;
+    // Verificar se o arquivo existe
+    if (File::exists($pathFoto)) {
+        // Deletar o arquivo
+        File::delete($pathFoto);
+
+        // Atualizar ou zerar a coluna da foto no banco de dados
+        $noticia->foto_artigo = '';
+        $noticia->save();
+
+        return response()->json(['message' => 'Foto do artigo eliminada com sucesso'], 200);
+        
+    } 
+    
+    else {
+        return response()->json(['message' => 'Foto não encontrada'], 404);
+    }
+}
+
+
+public function destroyFotoCapa($id)
+{
+    $noticia = Noticias::find($id);
+
+    if (!$noticia) {
+        return response()->json(['message' => 'Notícia não encontrada'], 404);
+    }
+
+    // Para achar o caminho da foto
+    $pathFoto = public_path() .  $noticia->foto_capa;
+    //return $pathFoto;
+    // Verificar se o arquivo existe
+    if (File::exists($pathFoto)) {
+        // Deletar o arquivo
+        File::delete($pathFoto);
+
+        // Atualizar ou zerar a coluna da foto no banco de dados
+        $noticia->foto_capa = '';
+        $noticia->save();
+
+        return response()->json(['message' => 'Foto de capa eliminada com sucesso'], 200);
+        
+    } 
+    
+    else {
+        return response()->json(['message' => 'Foto não encontrada'], 404);
+    }
+}
 }
