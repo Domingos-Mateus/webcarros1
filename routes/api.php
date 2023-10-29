@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\appController;
 
 //Categorias
 Route::get('/categorias/listar_categorias', 'App\Http\Controllers\categoriasController@index');
@@ -96,10 +97,13 @@ Route::post('/logout', [AuthController::class, 'logout']);
 Route::middleware(['auth:sanctum'])->group(
 	function () {
     Route::get('/teste', [AuthController::class,'teste']);
-    
+
     Route::post('logout', [AuthController::class, 'logout']);
 }); // Fim da verificação de autenticação
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+// buscar endereço por CEP
+Route::get('/verificar_cep/{id}', [appController::class,'verificar_cep']);
