@@ -151,21 +151,31 @@ class anunciosController extends Controller
         $anuncios->foto9 = $request->foto9;
         $anuncios->foto10 = $request->foto10;
 
-         //Foto1
-        if($request->foto1){
-            $foto1 = $request->foto1;
-            $extensaoimg = $foto1->getClientOriginalExtension();
-            if($extensaoimg !='jpg' && $extensaoimg != 'jpg' && $extensaoimg != 'png'){
-                return back()->with('Erro', 'imagem com formato inválido');
-            }
-        }
-        $anuncios->save();
-
-        if ($request->foto1) {
-            File::move($foto1, public_path().'/imagens_anuncios/imagem1/imagens'.$anuncios->id.'.'.$extensaoimg);
-            $anuncios->foto1 = '/imagens_anuncios/imagem1/imagens'.$anuncios->id.'.'.$extensaoimg;
+        if($request->hasfile('foto1'))
+        {
+            $file = $request->file('foto1');
+            $extension = $file->getClientOriginalExtension();
+            $filename = time().'.'.$extension;
+            $file->move('uploads/imagem1/'.$filename);
+            $anuncios->foto1 = 'uploads/imagem1/'.$filename;
             $anuncios->save();
         }
+
+         //Foto1
+        // if($request->foto1){
+        //     $foto1 = $request->foto1;
+        //     $extensaoimg = $foto1->getClientOriginalExtension();
+        //     if($extensaoimg !='jpg' && $extensaoimg != 'jpg' && $extensaoimg != 'png'){
+        //         return back()->with('Erro', 'imagem com formato inválido');
+        //     }
+        // }
+        // $anuncios->save();
+
+        // if ($request->foto1) {
+        //     File::move($foto1, public_path().'/imagens_anuncios/imagem1/imagens'.$anuncios->id.'.'.$extensaoimg);
+        //     $anuncios->foto1 = '/imagens_anuncios/imagem1/imagens'.$anuncios->id.'.'.$extensaoimg;
+        //     $anuncios->save();
+        // }
         //Foto2
         if($request->foto2){
             $foto2 = $request->foto2;
