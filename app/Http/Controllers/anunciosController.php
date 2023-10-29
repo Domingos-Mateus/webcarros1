@@ -195,8 +195,8 @@ class anunciosController extends Controller
             $file = $request->file('foto1');
             $extension = $file->getClientOriginalExtension();
             $filename = time().'.'.$extension;
-            $file->move('uploads/imagem1/'.$filename);
-            $anuncios->foto1 = 'uploads/imagem1/'.$filename;
+            $file->move('/uploads/imagem1/'.$filename);
+            $anuncios->foto1 = '/uploads/imagem1/'.$filename;
             $anuncios->save();
         }
 
