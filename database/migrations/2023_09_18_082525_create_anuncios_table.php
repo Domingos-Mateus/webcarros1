@@ -10,10 +10,11 @@ class CreateAnunciosTable extends Migration
     {
         Schema::create('anuncios', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('titulo');
+            $table->string('tipo_veiculo');
             $table->integer('marca_id')->unsigned();
             $table->integer('modelo_id')->unsigned();
             $table->integer('numero_cliques');
+            $table->integer('situacao_veiculo');
             $table->integer('anunciante_id')->unsigned();
             $table->integer('categoria_id')->unsigned();
             $table->string('data_inicio', 20);
@@ -25,11 +26,29 @@ class CreateAnunciosTable extends Migration
             $table->boolean('vendido')->default(0);
             $table->boolean('vitrine')->default(0);
             $table->boolean('destaque_busca')->default(0);
+            $table->string('cep', 50);
             $table->integer('estado_id');
             $table->integer('cidade_id');
             $table->string('empresa', 100)->nullable();
             $table->integer('tipo_preco');
             $table->string('valor_preco', 100)->nullable();
+            $table->string('fabricacao', 100)->nullable();
+            $table->string('ano_fabricacao', 100)->nullable();
+            $table->string('ano_modelo', 100)->nullable();
+            $table->string('carroceria', 100)->nullable();
+            $table->string('estilo', 100)->nullable();
+            $table->integer('portas')->nullable();
+            $table->integer('cilindros')->nullable();
+            $table->float('motor')->nullable();
+            $table->string('cor', 100)->nullable();
+            $table->string('transmissao', 100)->nullable();
+            $table->string('combustivel', 100)->nullable();
+            $table->string('placa', 100)->nullable();
+            $table->string('km', 100)->nullable();
+            $table->string('sinistrado', 100)->nullable();
+            $table->string('conforto', 255)->nullable();
+            $table->string('seguranca', 255)->nullable();
+            $table->string('som', 255)->nullable();
             $table->string('descricao', 100);
             $table->string('foto1')->nullable();
             $table->string('foto2')->nullable();

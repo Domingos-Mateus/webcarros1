@@ -23,7 +23,11 @@ class noticiasController extends Controller
         ->join('categorias','categorias.id','noticias.categoria_id')
         ->select('noticias.*', 'categorias.nome as nome_categoria')
         ->get();
-$noticias = Noticias::all();
+
+        if (request('nome_categoria')) {
+            $query->where('anuncios.nome_categoria', request('nome_categoria'));
+        }
+//$noticias = Noticias::all();
 
 // Personalização dos campos da base de dados
 $dadosPersonalizados = [];

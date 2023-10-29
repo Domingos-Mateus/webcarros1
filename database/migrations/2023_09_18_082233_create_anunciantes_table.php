@@ -21,6 +21,7 @@ class CreateAnunciantesTable extends Migration
             $table->string('email', 50);
             $table->string('telefone', 50);
             $table->string('cpf', 50);
+            $table->string('cep', 50);
             $table->string('foto', 100)->nullable();
             $table->integer('plano_id')->nullable();
             $table->integer('estado_id');
