@@ -22,7 +22,7 @@ class modeloController extends Controller
         //$modelos = Modelos::all();
         $query = DB::table('modelos')
                 ->join('marcas','marcas.id','modelos.marca_id')
-                ->select('modelos.*', 'marcas.nome_marca');
+                ->select('modelos.*', 'marcas.nome_marca','marcas.id as id_marcas');
           // Adiciona os filtros conforme os parâmetros passados
           if (request('nome_marca')) {
             $query->where('marcas.nome_marca', 'LIKE', '%' . request('nome_marca') . '%');
@@ -37,6 +37,7 @@ class modeloController extends Controller
                 'id' => $modelo->id,
                 'nome_modelo' => $modelo->nome_modelo,
                 'nome_marca' => $modelo->nome_marca,
+                'id_marcas' => $modelo->id,
                 'descricaoS' => $modelo->descricao,
             ];
         }

@@ -23,7 +23,7 @@ class planosAnuciantesController extends Controller
         $planosAnunciantes = DB::table('planos_anunciantes')
                 ->join('planos','planos.id','planos_anunciantes.plano_id')
                 ->join('anunciantes','anunciantes.id','planos_anunciantes.anunciante_id')
-                ->select('planos_anunciantes.*', 'planos.nome as nome_plano', 'anunciantes.nome as nome_anunciantes')
+                ->select('planos_anunciantes.*', 'planos.nome as nome_plano','planos.id as id_planos', 'anunciantes.nome as nome_anunciantes','anunciantes.id as id_anunciante')
                 ->get();
          $dadosPersonalizados = [];
         foreach ($planosAnunciantes as $planosAnunciante) {
@@ -31,7 +31,10 @@ class planosAnuciantesController extends Controller
             $dadosPersonalizados[] = [
                 'id' => $planosAnunciante->id,
                 'nome_plano' => $planosAnunciante->nome_plano,
+                'id_planos' => $planosAnunciante->id,
+                'nome_plano' => $planosAnunciante->nome_plano,
                 'nome_anunciantes' => $planosAnunciante->nome_anunciantes,
+                'id_anunciantes' => $planosAnunciante->id
             ];
         }
         return response()->json($dadosPersonalizados);

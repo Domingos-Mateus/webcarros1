@@ -21,7 +21,7 @@ class noticiasController extends Controller
         //
         $noticias = DB::table('noticias')
         ->join('categorias','categorias.id','noticias.categoria_id')
-        ->select('noticias.*', 'categorias.nome as nome_categoria')
+        ->select('noticias.*', 'categorias.nome as nome_categoria','categorias.id as id_categorias')
         ->get();
 
         if (request('nome_categoria')) {
@@ -43,6 +43,7 @@ foreach ($noticias as $noticias) {
         'resumo' => $noticias->resumo,
         'status' => $noticias->status,
         'nome_categoria' => $noticias->nome_categoria,
+        'id_categorias' => $noticias->id,
         'descricao' => $noticias->descricao,
         // Adicione mais campos personalizados conforme necessário
     ];

@@ -21,7 +21,7 @@ class propostasController extends Controller
 
         $propostas = DB::table('propostas')
         ->join('anuncios','anuncios.id','propostas.anuncio_id')
-        ->select('propostas.*', 'anuncios.titulo as anuncio_titulo')
+        ->select('propostas.*', 'anuncios.tipo_veiculo', 'anuncios.id as id_anuncios')
         ->get();
 
 $dadosPersonalizados = [];
@@ -31,7 +31,8 @@ foreach ($propostas as $proposta) {
     $dadosPersonalizados[] = [
         'id' => $proposta->id,
         'titulo' => $proposta->titulo,
-        'anuncio_titulo' => $proposta->anuncio_titulo,
+        'tipo_veiculo' => $proposta->tipo_veiculo,
+        'id_anuncios' => $proposta->id,
         'nome' => $proposta->nome,
         'email' => $proposta->email,
         'ddd' => $proposta->ddd,

@@ -22,7 +22,7 @@ class anunciosController extends Controller
             ->join('modelos','modelos.id','anuncios.modelo_id')
             ->join('categorias','categorias.id','anuncios.categoria_id')
             ->join('anunciantes','anunciantes.id','anuncios.anunciante_id')
-            ->select('anuncios.*', 'marcas.nome_marca', 'modelos.nome_modelo','categorias.nome as nome_categoria', 'anunciantes.nome as nome_anunciante');
+            ->select('anuncios.*', 'marcas.nome_marca', 'marcas.id as id_marcas', 'modelos.nome_modelo', 'modelos.id as id_m','categorias.nome as nome_categoria', 'categorias.id as id_categoria', 'anunciantes.nome as nome_anunciante', 'anunciantes.id as id_anunciatentes');
 
         // Adiciona os filtros conforme os parâmetros passados
         if (request('nome_marca')) {
@@ -52,11 +52,15 @@ class anunciosController extends Controller
                 'id' => $anuncio->id,
                 'tipo_veiculo' => $anuncio->tipo_veiculo,
                 'nome_marca' => $anuncio->nome_marca,
+                'id_marca' => $anuncio->id,
                 'nome_modelo' => $anuncio->nome_modelo,
+                'id_m' => $anuncio->id,
                 'numero_cliques' => $anuncio->numero_cliques,
                 'situacao_veiculo' => $anuncio->situacao_veiculo,
                 'nome_anunciante' => $anuncio->nome_anunciante,
+                'id_anunciatentes' => $anuncio->id,
                 'nome_categoria' => $anuncio->nome_categoria,
+                'id_categoria' => $anuncio->id,
                 'data_inicio' => $anuncio->data_inicio,
                 'data_fim' => $anuncio->data_fim,
                 'ordenacao' => $anuncio->ordenacao,
@@ -164,8 +168,8 @@ class anunciosController extends Controller
         $anuncios->combustivel = $request->combustivel;
         $anuncios->placa = $request->placa;
         $anuncios->km = $request->km;
-        $anuncios->conforto = $request->conforto;
-        $anuncios->seguranca = $request->seguranca;
+        $anuncios->conforto = json_encode($request->conforto);
+        $anuncios->seguranca = json_encode($request->seguranca);
         $anuncios->som = $request->som;
         $anuncios->sinistrado = $request->sinistrado;
         $anuncios->descricao = $request->descricao;
