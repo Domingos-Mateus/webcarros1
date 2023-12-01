@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Models\Categorias;
+use App\Models\Tecnologia;
 
-class categoriasController extends Controller
+
+class tecnologiaController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,9 +17,8 @@ class categoriasController extends Controller
     public function index()
     {
         //
-        $categorias = Categorias::all();
-        return $categorias;
-
+        $tecnologia = Tecnologia::all();
+        return $tecnologia;
     }
 
     /**
@@ -29,14 +29,6 @@ class categoriasController extends Controller
     public function create()
     {
         //
-        $categorias = new Categorias;
-
-        $categorias->nome = $request->nome;
-        $categorias->sobrenome = $request->descricao;
-
-        $categorias->save();
-
-        return $categorias;
     }
 
     /**
@@ -48,21 +40,14 @@ class categoriasController extends Controller
     public function store(Request $request)
     {
         //
-        $categorias = new Categorias;
+        $tecnologia = new Tecnologia;
 
-        $categorias->nome = $request->nome;
-        $categorias->descricao = $request->descricao;
-/*
-        $categorias = [
-            'nome' => 'teste1',
-            'descricao' => 'Testando',
-        ];
-    
-        return new JsonResponse($categorias);
-*/
-        $categorias->save();
+        $tecnologia->tecnologia = $request->tecnologia;
+        $tecnologia->descricao = $request->descricao;
 
-        return $categorias;
+        $tecnologia->save();
+
+        return $tecnologia;
     }
 
     /**
@@ -74,11 +59,11 @@ class categoriasController extends Controller
     public function show($id)
     {
         //
-        $categorias = Categorias::find($id);
-        if(!$categorias){
-            return response(['message'=>'Categoria não encontrado'], 404);
+        $tecnologia = Tecnologia::find($id);
+        if(!$tecnologia){
+            return response(['message'=>'Tecnologia não encontrado'], 404);
         }
-        return $categorias;
+        return $tecnologia;
     }
 
     /**
@@ -90,7 +75,7 @@ class categoriasController extends Controller
     public function edit($id)
     {
         //
-       
+        
     }
 
     /**
@@ -103,16 +88,15 @@ class categoriasController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $categorias = Categorias::find($id);
-        if(!$categorias){
-            return response(['message'=>'Categoria não encontrado'], 404);
+        $tecnologia = Tecnologia::find($id);
+        if(!$tecnologia){
+            return response(['message'=>'Tecnologia não encontrado'], 404);
         }
-        $categorias->nome = $request->nome;
-        $categorias->descricao = $request->descricao;
+        $tecnologia->tecnologia = $request->tecnologia;
+        $tecnologia->descricao = $request->descricao;
 
-        $categorias->save();
-
-        return $categorias;
+        $tecnologia->save();
+        return $tecnologia;
     }
 
     /**
@@ -124,6 +108,6 @@ class categoriasController extends Controller
     public function destroy($id)
     {
         //
-        Categorias::destroy($id);
+        Tecnologia::destroy($id);
     }
 }

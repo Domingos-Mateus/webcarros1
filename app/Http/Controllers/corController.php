@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Models\Categorias;
+use App\Models\Cor;
 
-class categoriasController extends Controller
+
+class corController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,9 +17,8 @@ class categoriasController extends Controller
     public function index()
     {
         //
-        $categorias = Categorias::all();
-        return $categorias;
-
+        $cor = Cor::all();
+        return $cor;
     }
 
     /**
@@ -29,14 +29,6 @@ class categoriasController extends Controller
     public function create()
     {
         //
-        $categorias = new Categorias;
-
-        $categorias->nome = $request->nome;
-        $categorias->sobrenome = $request->descricao;
-
-        $categorias->save();
-
-        return $categorias;
     }
 
     /**
@@ -48,21 +40,14 @@ class categoriasController extends Controller
     public function store(Request $request)
     {
         //
-        $categorias = new Categorias;
+        $cor = new Cor;
 
-        $categorias->nome = $request->nome;
-        $categorias->descricao = $request->descricao;
-/*
-        $categorias = [
-            'nome' => 'teste1',
-            'descricao' => 'Testando',
-        ];
-    
-        return new JsonResponse($categorias);
-*/
-        $categorias->save();
+        $cor->cor = $request->cor;
+        $cor->descricao = $request->descricao;
 
-        return $categorias;
+        $cor->save();
+
+        return $cor;
     }
 
     /**
@@ -74,11 +59,11 @@ class categoriasController extends Controller
     public function show($id)
     {
         //
-        $categorias = Categorias::find($id);
-        if(!$categorias){
-            return response(['message'=>'Categoria não encontrado'], 404);
+        $cor = Cor::find($id);
+        if(!$cor){
+            return response(['message'=>'Tipo de veiculo não encontrado'], 404);
         }
-        return $categorias;
+        return $cor;
     }
 
     /**
@@ -90,7 +75,6 @@ class categoriasController extends Controller
     public function edit($id)
     {
         //
-       
     }
 
     /**
@@ -103,16 +87,16 @@ class categoriasController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $categorias = Categorias::find($id);
-        if(!$categorias){
-            return response(['message'=>'Categoria não encontrado'], 404);
+        $cor = Cor::find($id);
+        if(!$cor){
+            return response(['message'=>'Tipo de veiculo não encontrado'], 404);
         }
-        $categorias->nome = $request->nome;
-        $categorias->descricao = $request->descricao;
+        $cor->cor = $request->cor;
+        $cor->descricao = $request->descricao;
 
-        $categorias->save();
+        $cor->save();
 
-        return $categorias;
+        return $cor;
     }
 
     /**
@@ -124,6 +108,7 @@ class categoriasController extends Controller
     public function destroy($id)
     {
         //
-        Categorias::destroy($id);
+        Cor::destroy($id);
+
     }
 }

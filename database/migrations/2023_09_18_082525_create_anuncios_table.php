@@ -10,7 +10,8 @@ class CreateAnunciosTable extends Migration
     {
         Schema::create('anuncios', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('tipo_veiculo');
+            $table->integer('tipo_veiculo_id')->unsigned();
+            $table->integer('tecnologia_id')->unsigned();
             $table->integer('marca_id')->unsigned();
             $table->integer('modelo_id')->unsigned();
             $table->integer('numero_cliques');
@@ -40,9 +41,9 @@ class CreateAnunciosTable extends Migration
             $table->integer('portas')->nullable();
             $table->integer('cilindros')->nullable();
             $table->float('motor')->nullable();
-            $table->string('cor', 100)->nullable();
-            $table->string('transmissao', 100)->nullable();
-            $table->string('combustivel', 100)->nullable();
+            $table->integer('cor_id')->unsigned();
+            $table->integer('transmissao_id')->unsigned();
+            $table->integer('combustivel_id')->unsigned();
             $table->string('placa', 100)->nullable();
             $table->string('km', 100)->nullable();
             $table->string('sinistrado', 100)->nullable();
@@ -66,6 +67,11 @@ class CreateAnunciosTable extends Migration
             $table->foreign('categoria_id')->references('id')->on('categorias');
             $table->foreign('marca_id')->references('id')->on('marcas');
             $table->foreign('modelo_id')->references('id')->on('modelos');
+            $table->foreign('tipo_veiculo_id')->references('id')->on('tipos_veiculos');
+            $table->foreign('tecnologia_id')->references('id')->on('tecnologias');
+            $table->foreign('cor_id')->references('id')->on('cors');
+            $table->foreign('combustivel_id')->references('id')->on('combustivels');
+            $table->foreign('transmissao_id')->references('id')->on('transmissaos');
         });
     }
 

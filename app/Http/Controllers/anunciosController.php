@@ -22,7 +22,12 @@ class anunciosController extends Controller
             ->join('modelos','modelos.id','anuncios.modelo_id')
             ->join('categorias','categorias.id','anuncios.categoria_id')
             ->join('anunciantes','anunciantes.id','anuncios.anunciante_id')
-            ->select('anuncios.*', 'marcas.nome_marca', 'marcas.id as id_marcas', 'modelos.nome_modelo', 'modelos.id as id_m','categorias.nome as nome_categoria', 'categorias.id as id_categoria', 'anunciantes.nome as nome_anunciante', 'anunciantes.id as id_anunciatentes');
+            ->join('tipos_veiculos','tipos_veiculos.id','anuncios.tipo_veiculo_id')
+            ->join('tecnologias','tecnologias.id','anuncios.tecnologia_id')
+            ->join('cors','cors.id','anuncios.cor_id')
+            ->join('transmissaos','transmissaos.id','anuncios.transmissao_id')
+            ->join('combustivels','combustivels.id','anuncios.combustivel_id')
+            ->select('anuncios.*', 'marcas.nome_marca', 'marcas.id as id_marcas', 'modelos.nome_modelo', 'modelos.id as id_m','categorias.nome as nome_categoria', 'categorias.id as id_categoria', 'anunciantes.nome as nome_anunciante', 'anunciantes.id as id_anunciatentes','tipos_veiculos.tipo_veiculo','tipos_veiculos.id as id_tipos_veiculo', 'cors.cor','cors.id as id_cor','tecnologias.tecnologia','tecnologias.id as idtecnologia','combustivels.combustivel','combustivels.id as id_combustivel','transmissaos.transmissao','transmissaos.id as id_transmissao');
 
         // Adiciona os filtros conforme os parâmetros passados
         if (request('nome_marca')) {
@@ -40,6 +45,21 @@ class anunciosController extends Controller
         if (request('estado_id')) {
             $query->where('anuncios.estado_id', request('estado_id'));
         }
+        if (request('tipo_veiculo_id')) {
+            $query->where('anuncios.tipo_veiculo_id', request('tipo_veiculo_id'));
+        }
+        if (request('tecnologia_id')) {
+            $query->where('anuncios.tecnologia_id', request('tecnologia_id'));
+        }
+        if (request('cor_id')) {
+            $query->where('anuncios.cor_id', request('cor_id'));
+        }
+        if (request('transmissao_id')) {
+            $query->where('anuncios.transmissao_id', request('transmissao_id'));
+        }
+        if (request('combustivel_id')) {
+            $query->where('anuncios.combustivel_id', request('combustivel_id'));
+        }
 
         // Executa a consulta
         $anuncios = $query->get();
@@ -50,7 +70,8 @@ class anunciosController extends Controller
         foreach ($anuncios as $anuncio) {
             $dadosPersonalizados[] = [
                 'id' => $anuncio->id,
-                'tipo_veiculo' => $anuncio->tipo_veiculo,
+                'tipo_veiculo_id' => $anuncio->tipo_veiculo,
+                'tecnologia_id' => $anuncio->tecnologia,
                 'nome_marca' => $anuncio->nome_marca,
                 'id_marca' => $anuncio->id,
                 'nome_modelo' => $anuncio->nome_modelo,
@@ -108,6 +129,8 @@ class anunciosController extends Controller
             ];
         }
 
+
+
         // Retorna a resposta JSON com os dados personalizados
         return response()->json($dadosPersonalizados);
     }
@@ -133,7 +156,8 @@ class anunciosController extends Controller
     {
         //
         $anuncios = new Anuncios;
-        $anuncios->tipo_veiculo = $request->tipo_veiculo;
+        $anuncios->tipo_veiculo_id = $request->tipo_veiculo;
+        $anuncios->tecnologia_id = $request->tecnologia;
         $anuncios->marca_id = $request->marca_id;
         $anuncios->modelo_id = $request->modelo_id;
         $anuncios->numero_cliques = $request->numero_cliques;
@@ -163,9 +187,9 @@ class anunciosController extends Controller
         $anuncios->portas = $request->portas;
         $anuncios->cilindros = $request->cilindros;
         $anuncios->motor = $request->motor;
-        $anuncios->cor = $request->cor;
-        $anuncios->transmissao = $request->transmissao;
-        $anuncios->combustivel = $request->combustivel;
+        $anuncios->cor_id = $request->cor;
+        $anuncios->transmissao_id = $request->transmissao;
+        $anuncios->combustivel_id = $request->combustivel;
         $anuncios->placa = $request->placa;
         $anuncios->km = $request->km;
         $anuncios->conforto = json_encode($request->conforto);
@@ -183,6 +207,7 @@ class anunciosController extends Controller
         //
         $anuncios = Anuncios::find($id);
 
+        //return $anuncios;
         $anuncios->foto1 = $anuncios->foto1;
         $anuncios->foto2 = $anuncios->foto2;
         $anuncios->foto3 = $anuncios->foto3;
@@ -199,8 +224,8 @@ class anunciosController extends Controller
             $file = $request->file('foto1');
             $extension = $file->getClientOriginalExtension();
             $filename = time().'.'.$extension;
-            $file->move('/uploads/imagem1/'.$filename);
-            $anuncios->foto1 = '/uploads/imagem1/'.$filename;
+            $file->move('/imagens_anuncios/imagem1/'.$filename);
+            $anuncios->foto1 = '/imagens_anuncios/imagem1/'.$filename;
             $anuncios->save();
         }
 
@@ -493,7 +518,8 @@ class anunciosController extends Controller
             return response(['message'=>'Anunciante não encontrado'], 404);
         }
 
-        $anuncios->tipo_veiculo = $request->tipo_veiculo;
+        $anuncios->tipo_veiculo_id = $request->tipo_veiculo;
+        $anuncios->tecnologia_id = $request->tecnologia;
         $anuncios->marca_id = $request->marca_id;
         $anuncios->modelo_id = $request->modelo_id;
         $anuncios->numero_cliques = $request->numero_cliques;
@@ -523,17 +549,16 @@ class anunciosController extends Controller
         $anuncios->portas = $request->portas;
         $anuncios->cilindros = $request->cilindros;
         $anuncios->motor = $request->motor;
-        $anuncios->cor = $request->cor;
-        $anuncios->transmissao = $request->transmissao;
-        $anuncios->combustivel = $request->combustivel;
+        $anuncios->cor_id = $request->cor;
+        $anuncios->transmissao_id = $request->transmissao;
+        $anuncios->combustivel_id = $request->combustivel;
         $anuncios->placa = $request->placa;
         $anuncios->km = $request->km;
-        $anuncios->sinistrado = $request->sinistrado;
-        $anuncios->conforto = $request->conforto;
-        $anuncios->seguranca = $request->seguranca;
+        $anuncios->conforto = json_encode($request->conforto);
+        $anuncios->seguranca = json_encode($request->seguranca);
         $anuncios->som = $request->som;
+        $anuncios->sinistrado = $request->sinistrado;
         $anuncios->descricao = $request->descricao;
-
         $anuncios->save();
         return $anuncios;
     }

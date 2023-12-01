@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Models\Categorias;
+use App\Models\Combustivel;
 
-class categoriasController extends Controller
+class combustivelController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,9 +16,8 @@ class categoriasController extends Controller
     public function index()
     {
         //
-        $categorias = Categorias::all();
-        return $categorias;
-
+        $combustivel = Combustivel::all();
+        return $combustivel;
     }
 
     /**
@@ -29,14 +28,7 @@ class categoriasController extends Controller
     public function create()
     {
         //
-        $categorias = new Categorias;
-
-        $categorias->nome = $request->nome;
-        $categorias->sobrenome = $request->descricao;
-
-        $categorias->save();
-
-        return $categorias;
+        
     }
 
     /**
@@ -48,21 +40,14 @@ class categoriasController extends Controller
     public function store(Request $request)
     {
         //
-        $categorias = new Categorias;
+        $combustivel = new Combustivel;
 
-        $categorias->nome = $request->nome;
-        $categorias->descricao = $request->descricao;
-/*
-        $categorias = [
-            'nome' => 'teste1',
-            'descricao' => 'Testando',
-        ];
-    
-        return new JsonResponse($categorias);
-*/
-        $categorias->save();
+        $combustivel->combustivel = $request->combustivel;
+        $combustivel->descricao = $request->descricao;
 
-        return $categorias;
+        $combustivel->save();
+
+        return $combustivel;
     }
 
     /**
@@ -74,11 +59,11 @@ class categoriasController extends Controller
     public function show($id)
     {
         //
-        $categorias = Categorias::find($id);
-        if(!$categorias){
-            return response(['message'=>'Categoria não encontrado'], 404);
+        $combustivel = Combustivel::find($id);
+        if(!$combustivel){
+            return response(['message'=>'combustivel não encontrado'], 404);
         }
-        return $categorias;
+        return $combustivel;
     }
 
     /**
@@ -90,7 +75,6 @@ class categoriasController extends Controller
     public function edit($id)
     {
         //
-       
     }
 
     /**
@@ -103,16 +87,16 @@ class categoriasController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $categorias = Categorias::find($id);
-        if(!$categorias){
-            return response(['message'=>'Categoria não encontrado'], 404);
+        $combustivel = Combustivel::find($id);
+        if(!$combustivel){
+            return response(['message'=>'combustivel não encontrado'], 404);
         }
-        $categorias->nome = $request->nome;
-        $categorias->descricao = $request->descricao;
+        $combustivel->combustivel = $request->combustivel;
+        $combustivel->descricao = $request->descricao;
 
-        $categorias->save();
+        $combustivel->save();
 
-        return $categorias;
+        return $combustivel;
     }
 
     /**
@@ -124,6 +108,6 @@ class categoriasController extends Controller
     public function destroy($id)
     {
         //
-        Categorias::destroy($id);
+        Combustivel::destroy($id);
     }
 }
