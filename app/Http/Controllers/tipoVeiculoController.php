@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\TiposVeiculos;
 
-use App\Models\Categorias;
-
-class categoriasController extends Controller
+class tipoVeiculoController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,9 +15,8 @@ class categoriasController extends Controller
     public function index()
     {
         //
-        $categorias = Categorias::all();
-        return $categorias;
-
+        $tipos_veiculos = TiposVeiculos::all();
+        return $tipos_veiculos;
     }
 
     /**
@@ -29,14 +27,6 @@ class categoriasController extends Controller
     public function create()
     {
         //
-        $categorias = new Categorias;
-
-        $categorias->nome = $request->nome;
-        $categorias->sobrenome = $request->descricao;
-
-        $categorias->save();
-
-        return $categorias;
     }
 
     /**
@@ -48,21 +38,14 @@ class categoriasController extends Controller
     public function store(Request $request)
     {
         //
-        $categorias = new Categorias;
+        $tipos_veiculos = new TiposVeiculos;
 
-        $categorias->nome = $request->nome;
-        $categorias->descricao = $request->descricao;
-/*
-        $categorias = [
-            'nome' => 'teste1',
-            'descricao' => 'Testando',
-        ];
-    
-        return new JsonResponse($categorias);
-*/
-        $categorias->save();
+        $tipos_veiculos->tipo_veiculo = $request->tipo_veiculo;
+        $tipos_veiculos->descricao = $request->descricao;
 
-        return $categorias;
+        $tipos_veiculos->save();
+
+        return $tipos_veiculos;
     }
 
     /**
@@ -74,11 +57,11 @@ class categoriasController extends Controller
     public function show($id)
     {
         //
-        $categorias = Categorias::find($id);
-        if(!$categorias){
-            return response(['message'=>'Categoria não encontrado'], 404);
+        $tipos_veiculos = TiposVeiculos::find($id);
+        if(!$tipos_veiculos){
+            return response(['message'=>'Tipo de veiculo não encontrado'], 404);
         }
-        return $categorias;
+        return $tipos_veiculos;
     }
 
     /**
@@ -90,7 +73,6 @@ class categoriasController extends Controller
     public function edit($id)
     {
         //
-       
     }
 
     /**
@@ -103,16 +85,17 @@ class categoriasController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $categorias = Categorias::find($id);
-        if(!$categorias){
-            return response(['message'=>'Categoria não encontrado'], 404);
+
+        $tipos_veiculos = TiposVeiculos::find($id);
+        if(!$tipos_veiculos){
+            return response(['message'=>'Tipo de veiculo não encontrado'], 404);
         }
-        $categorias->nome = $request->nome;
-        $categorias->descricao = $request->descricao;
+        $tipos_veiculos->tipo_veiculo = $request->tipo_veiculo;
+        $tipos_veiculos->descricao = $request->descricao;
 
-        $categorias->save();
+        $tipos_veiculos->save();
 
-        return $categorias;
+        return $tipos_veiculos;
     }
 
     /**
@@ -124,6 +107,6 @@ class categoriasController extends Controller
     public function destroy($id)
     {
         //
-        Categorias::destroy($id);
+        TiposVeiculos::destroy($id);
     }
 }

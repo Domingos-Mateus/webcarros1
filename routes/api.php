@@ -89,6 +89,45 @@ Route::get('/modelos/visualizar_modelo/{id}', 'App\Http\Controllers\modeloContro
 Route::put('/editar_modelo/update/{id}', 'App\Http\Controllers\modeloController@update');
 Route::get('/eliminar_modelo/{id}', 'App\Http\Controllers\modeloController@destroy');
 
+//Tipo de veiculo
+Route::get('/tipo_veiculo/listar_tipos_veiculos', 'App\Http\Controllers\tipoVeiculoController@index');
+Route::post('/tipo_veiculo/registar_tipos_veiculos', 'App\Http\Controllers\tipoVeiculoController@store');
+Route::get('/tipo_veiculo/visualizar_tipos_veiculos/{id}', 'App\Http\Controllers\tipoVeiculoController@show');
+Route::put('/editar_tipos_veiculos/update/{id}', 'App\Http\Controllers\tipoVeiculoController@update');
+Route::get('/eliminar_tipos_veiculos/{id}', 'App\Http\Controllers\tipoVeiculoController@destroy');
+
+
+//Tecnologia
+Route::get('/tecnologia/listar_tecnologia', 'App\Http\Controllers\tecnologiaController@index');
+Route::post('/tecnologia/registar_tecnologia', 'App\Http\Controllers\tecnologiaController@store');
+Route::get('/tecnologia/visualizar_tecnologia/{id}', 'App\Http\Controllers\tecnologiaController@show');
+Route::put('/editar_tecnologia/update/{id}', 'App\Http\Controllers\tecnologiaController@update');
+Route::get('/eliminar_tecnologia/{id}', 'App\Http\Controllers\tecnologiaController@destroy');
+
+
+//Cor
+Route::get('/cor/listar_cor', 'App\Http\Controllers\corController@index');
+Route::post('/cor/registar_cor', 'App\Http\Controllers\corController@store');
+Route::get('/cor/visualizar_cor/{id}', 'App\Http\Controllers\corController@show');
+Route::put('/editar_cor/update/{id}', 'App\Http\Controllers\corController@update');
+Route::get('/eliminar_cor/{id}', 'App\Http\Controllers\corController@destroy');
+
+
+//Combustivel
+Route::get('/combustivel/listar_combustivel', 'App\Http\Controllers\combustivelController@index');
+Route::post('/combustivel/registar_combustivel', 'App\Http\Controllers\combustivelController@store');
+Route::get('/combustivel/visualizar_combustivel/{id}', 'App\Http\Controllers\combustivelController@show');
+Route::put('/editar_combustivel/update/{id}', 'App\Http\Controllers\combustivelController@update');
+Route::get('/eliminar_combustivel/{id}', 'App\Http\Controllers\combustivelController@destroy');
+
+
+//Transmissão
+Route::get('/transmissao/listar_transmissao', 'App\Http\Controllers\transmissaoController@index');
+Route::post('/transmissao/registar_transmissao', 'App\Http\Controllers\transmissaoController@store');
+Route::get('/transmissao/visualizar_transmissao/{id}', 'App\Http\Controllers\transmissaoController@show');
+Route::put('/editar_transmissao/update/{id}', 'App\Http\Controllers\transmissaoController@update');
+Route::get('/eliminar_transmissao/{id}', 'App\Http\Controllers\transmissaoController@destroy');
+
 //login
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
