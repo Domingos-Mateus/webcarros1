@@ -59,7 +59,7 @@ Route::get('/planos/listar_planos', 'App\Http\Controllers\planosController@index
 Route::post('/planos/registar_planos', 'App\Http\Controllers\planosController@store');
 Route::put('/editar_planos/update/{id}', 'App\Http\Controllers\planosController@update');
 Route::get('/planos/visualizar_planos/{id}', 'App\Http\Controllers\planosController@show');
-Route::get('/eliminar_planos/{id}', 'App\Http\Controllers\planosController@destroy');
+Route::delete('/eliminar_planos', 'App\Http\Controllers\planosController@destroy');
 
 //Planos Anuciantes
 Route::get('/planos_anuciantes/listar_planos_anuciantes', 'App\Http\Controllers\planosAnuciantesController@index');
@@ -107,3 +107,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 // buscar endereço por CEP
 Route::get('/verificar_cep/{id}', [appController::class,'verificar_cep']);
+Route::get('/verificar_cnpj/{id}', [appController::class,'verificar_cnpj']);

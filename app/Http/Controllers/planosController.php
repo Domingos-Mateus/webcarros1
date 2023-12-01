@@ -55,7 +55,7 @@ class planosController extends Controller
         $planos->texto_plano = $request->texto_plano;
         $planos->quantidade_fotos = $request->quantidade_fotos;
         $planos->link_pagamento = $request->link_pagamento;
-       
+
 
         $planos->save();
         return $planos;
@@ -74,7 +74,7 @@ class planosController extends Controller
         if(!$planos){
             return response(['message'=>'Plano não encontrado'], 404);
         }
-        
+
         return $planos;
     }
 
@@ -118,7 +118,7 @@ class planosController extends Controller
         $planos->quantidade_fotos = $request->quantidade_fotos;
         $planos->link_pagamento = $request->link_pagamento;
 
-        
+
 
         $planos->save();
         return $planos;
@@ -130,14 +130,14 @@ class planosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
         //
-        Planos::destroy($id);
-
-        if(!$planos){
-            return "Plano não encontrado";
+        if(!$request->plano_id){
+            return response(['message'=>'Plano não encontrado'], 404);
         }
-        return "Plano eliminado com sucesso!";
+
+        Planos::destroy($request->plano_id);
+        return response(['message'=>'Plano eliminado com sucesso!'], 200);
     }
 }

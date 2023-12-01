@@ -22,7 +22,7 @@ class anunciosController extends Controller
             ->join('modelos','modelos.id','anuncios.modelo_id')
             ->join('categorias','categorias.id','anuncios.categoria_id')
             ->join('anunciantes','anunciantes.id','anuncios.anunciante_id')
-            ->select('anuncios.*', 'marcas.nome_marca', 'marcas.id as id_marcas', 'modelos.nome_modelo', 'modelos.id as id_m','categorias.nome as nome_categoria', 'categorias.id as id_categoria', 'anunciantes.nome as nome_anunciante', 'anunciantes.id as id_anunciatentes');
+            ->select('anuncios.*', 'marcas.nome_marca', 'marcas.id as id_marca', 'modelos.nome_modelo', 'modelos.id as id_modelo','categorias.nome as nome_categoria', 'categorias.id as id_categoria', 'anunciantes.nome as nome_anunciante', 'anunciantes.id as id_anunciante');
 
         // Adiciona os filtros conforme os parâmetros passados
         if (request('nome_marca')) {
@@ -52,15 +52,15 @@ class anunciosController extends Controller
                 'id' => $anuncio->id,
                 'tipo_veiculo' => $anuncio->tipo_veiculo,
                 'nome_marca' => $anuncio->nome_marca,
-                'id_marca' => $anuncio->id,
+                'id_marca' => $anuncio->id_marca,
                 'nome_modelo' => $anuncio->nome_modelo,
-                'id_m' => $anuncio->id,
+                'id_modelo' => $anuncio->id_modelo,
                 'numero_cliques' => $anuncio->numero_cliques,
                 'situacao_veiculo' => $anuncio->situacao_veiculo,
                 'nome_anunciante' => $anuncio->nome_anunciante,
-                'id_anunciatentes' => $anuncio->id,
+                'id_anunciante' => $anuncio->id_anunciante,
                 'nome_categoria' => $anuncio->nome_categoria,
-                'id_categoria' => $anuncio->id,
+                'id_categoria' => $anuncio->id_categoria,
                 'data_inicio' => $anuncio->data_inicio,
                 'data_fim' => $anuncio->data_fim,
                 'ordenacao' => $anuncio->ordenacao,
@@ -94,16 +94,16 @@ class anunciosController extends Controller
                 'seguranca' => $anuncio->seguranca,
                 'som' => $anuncio->som,
                 'descricao' => $anuncio->descricao,
-                'foto1' => $anuncio->foto1 ? env('URL_BASE_SERVIDOR') . $anuncio->foto1 : null,
-                'foto2' => $anuncio->foto2 ? env('URL_BASE_SERVIDOR') . $anuncio->foto2 : null,
-                'foto3' => $anuncio->foto3 ? env('URL_BASE_SERVIDOR') . $anuncio->foto3 : null,
-                'foto4' => $anuncio->foto4 ? env('URL_BASE_SERVIDOR') . $anuncio->foto4 : null,
-                'foto5' => $anuncio->foto5 ? env('URL_BASE_SERVIDOR') . $anuncio->foto5 : null,
-                'foto6' => $anuncio->foto6 ? env('URL_BASE_SERVIDOR') . $anuncio->foto6 : null,
-                'foto7' => $anuncio->foto7 ? env('URL_BASE_SERVIDOR') . $anuncio->foto7 : null,
-                'foto8' => $anuncio->foto8 ? env('URL_BASE_SERVIDOR') . $anuncio->foto8 : null,
-                'foto9' => $anuncio->foto9 ? env('URL_BASE_SERVIDOR') . $anuncio->foto9 : null,
-                'foto10' => $anuncio->foto10 ? env('URL_BASE_SERVIDOR') . $anuncio->foto10 : null,
+                'foto1' => $anuncio->foto1 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto1 : null,
+                'foto2' => $anuncio->foto2 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto2 : null,
+                'foto3' => $anuncio->foto3 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto3 : null,
+                'foto4' => $anuncio->foto4 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto4 : null,
+                'foto5' => $anuncio->foto5 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto5 : null,
+                'foto6' => $anuncio->foto6 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto6 : null,
+                'foto7' => $anuncio->foto7 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto7 : null,
+                'foto8' => $anuncio->foto8 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto8 : null,
+                'foto9' => $anuncio->foto9 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto9 : null,
+                'foto10' => $anuncio->foto10 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto10 : null,
                 // Adicione mais campos personalizados conforme necessário
             ];
         }
@@ -183,26 +183,37 @@ class anunciosController extends Controller
         //
         $anuncios = Anuncios::find($id);
 
-        $anuncios->foto1 = $anuncios->foto1;
-        $anuncios->foto2 = $anuncios->foto2;
-        $anuncios->foto3 = $anuncios->foto3;
-        $anuncios->foto4 = $anuncios->foto4;
-        $anuncios->foto5 = $anuncios->foto5;
-        $anuncios->foto6 = $anuncios->foto6;
-        $anuncios->foto7 = $anuncios->foto7;
-        $anuncios->foto8 = $anuncios->foto8;
-        $anuncios->foto9 = $anuncios->foto9;
-        $anuncios->foto10 = $anuncios->foto10;
+        // $anuncios->foto1 = $anuncios->foto1;
+        // $anuncios->foto2 = $anuncios->foto2;
+        // $anuncios->foto3 = $anuncios->foto3;
+        // $anuncios->foto4 = $anuncios->foto4;
+        // $anuncios->foto5 = $anuncios->foto5;
+        // $anuncios->foto6 = $anuncios->foto6;
+        // $anuncios->foto7 = $anuncios->foto7;
+        // $anuncios->foto8 = $anuncios->foto8;
+        // $anuncios->foto9 = $anuncios->foto9;
+        // $anuncios->foto10 = $anuncios->foto10;
+
 
         if($request->hasfile('foto1'))
         {
             $file = $request->file('foto1');
-            $extension = $file->getClientOriginalExtension();
-            $filename = time().'.'.$extension;
-            $file->move('/uploads/imagem1/'.$filename);
-            $anuncios->foto1 = '/uploads/imagem1/'.$filename;
+            $extenstion = $file->getClientOriginalExtension();
+            $filename = time().'.'.$extenstion;
+            $file->move('uploads/anuncios/imagens/', $filename);
+            $anuncios->foto1 = 'uploads/anuncios/imagens/'.$filename;
             $anuncios->save();
         }
+
+        // if($request->hasfile('imagem'))
+        // {
+        //     $file = $request->file('imagem');
+        //     $extenstion = $file->getClientOriginalExtension();
+        //     $filename = time().'.'.$extenstion;
+        //     $file->move('uploads/modelos/', $filename);
+        //     $modelos->imagem = 'uploads/modelos/'.$filename;
+        //     $modelos->save();
+        // }
 
          //Foto1
         // if($request->foto1){
@@ -219,152 +230,100 @@ class anunciosController extends Controller
         //     $anuncios->foto1 = '/imagens_anuncios/imagem1/imagens'.$anuncios->id.'.'.$extensaoimg;
         //     $anuncios->save();
         // }
-        //Foto2
-        if($request->foto2){
-            $foto2 = $request->foto2;
-            $extensaoimg = $foto2->getClientOriginalExtension();
-            if($extensaoimg !='jpg' && $extensaoimg != 'jpg' && $extensaoimg != 'png'){
-                return back()->with('Erro', 'imagem com formato inválido');
-            }
-        }
-        $anuncios->save();
 
-        if ($request->foto2) {
-            File::move($foto2, public_path().'/imagens_anuncios/imagem2/imagens'.$anuncios->id.'.'.$extensaoimg);
-            $anuncios->foto2 = '/imagens_anuncios/imagem2/imagens'.$anuncios->id.'.'.$extensaoimg;
+        if($request->hasfile('foto2'))
+        {
+            $file = $request->file('foto2');
+            $extenstion = $file->getClientOriginalExtension();
+            $filename = time().'.'.$extenstion;
+            $file->move('uploads/anuncios/imagens/', $filename);
+            $anuncios->foto2 = 'uploads/anuncios/imagens/'.$filename;
             $anuncios->save();
         }
 
-             //Foto3
-             if($request->foto3){
-                $foto3 = $request->foto3;
-                $extensaoimg = $foto3->getClientOriginalExtension();
-                if($extensaoimg !='jpg' && $extensaoimg != 'jpg' && $extensaoimg != 'png'){
-                    return back()->with('Erro', 'imagem com formato inválido');
-                }
-            }
+        if($request->hasfile('foto3'))
+        {
+            $file = $request->file('foto3');
+            $extenstion = $file->getClientOriginalExtension();
+            $filename = time().'.'.$extenstion;
+            $file->move('uploads/anuncios/imagens/', $filename);
+            $anuncios->foto3 = 'uploads/anuncios/imagens/'.$filename;
             $anuncios->save();
+        }
 
-            if ($request->foto3) {
-                File::move($foto3, public_path().'/imagens_anuncios/imagem3/imagens'.$anuncios->id.'.'.$extensaoimg);
-                $anuncios->foto3 = '/imagens_anuncios/imagem3/imagens'.$anuncios->id.'.'.$extensaoimg;
-                $anuncios->save();
-            }
-
-             //Foto4
-             if($request->foto4){
-                $foto4 = $request->foto4;
-                $extensaoimg = $foto4->getClientOriginalExtension();
-                if($extensaoimg !='jpg' && $extensaoimg != 'jpg' && $extensaoimg != 'png'){
-                    return back()->with('Erro', 'imagem com formato inválido');
-                }
-            }
+        if($request->hasfile('foto4'))
+        {
+            $file = $request->file('foto4');
+            $extenstion = $file->getClientOriginalExtension();
+            $filename = time().'.'.$extenstion;
+            $file->move('uploads/anuncios/imagens/', $filename);
+            $anuncios->foto4 = 'uploads/anuncios/imagens/'.$filename;
             $anuncios->save();
+        }
 
-            if ($request->foto4) {
-                File::move($foto4, public_path().'/imagens_anuncios/imagem4/imagens'.$anuncios->id.'.'.$extensaoimg);
-                $anuncios->foto4 = '/imagens_anuncios/imagem3/imagens'.$anuncios->id.'.'.$extensaoimg;
-                $anuncios->save();
-            }
-
-            //Foto5
-            if($request->foto5){
-                $foto5 = $request->foto5;
-                $extensaoimg = $foto5->getClientOriginalExtension();
-                if($extensaoimg !='jpg' && $extensaoimg != 'jpg' && $extensaoimg != 'png'){
-                    return back()->with('Erro', 'imagem com formato inválido');
-                }
-            }
+        if($request->hasfile('foto5'))
+        {
+            $file = $request->file('foto5');
+            $extenstion = $file->getClientOriginalExtension();
+            $filename = time().'.'.$extenstion;
+            $file->move('uploads/anuncios/imagens/', $filename);
+            $anuncios->foto5 = 'uploads/anuncios/imagens/'.$filename;
             $anuncios->save();
+        }
 
-            if ($request->foto5) {
-                File::move($foto5, public_path().'/imagens_anuncios/imagem5/imagens'.$anuncios->id.'.'.$extensaoimg);
-                $anuncios->foto5 = '/imagens_anuncios/imagem5/imagens'.$anuncios->id.'.'.$extensaoimg;
-                $anuncios->save();
-            }
 
-              //Foto6
-              if($request->foto6){
-                $foto6 = $request->foto6;
-                $extensaoimg = $foto6->getClientOriginalExtension();
-                if($extensaoimg !='jpg' && $extensaoimg != 'jpg' && $extensaoimg != 'png'){
-                    return back()->with('Erro', 'imagem com formato inválido');
-                }
-            }
+        if($request->hasfile('foto6'))
+        {
+            $file = $request->file('foto6');
+            $extenstion = $file->getClientOriginalExtension();
+            $filename = time().'.'.$extenstion;
+            $file->move('uploads/anuncios/imagens/', $filename);
+            $anuncios->foto6 = 'uploads/anuncios/imagens/'.$filename;
             $anuncios->save();
-
-            if ($request->foto6) {
-                File::move($foto6, public_path().'/imagens_anuncios/imagem6/imagens'.$anuncios->id.'.'.$extensaoimg);
-                $anuncios->foto6 = '/imagens_anuncios/imagem6/imagens'.$anuncios->id.'.'.$extensaoimg;
-                $anuncios->save();
-            }
-
-                  //Foto7
-                  if($request->foto7){
-                    $foto7 = $request->foto7;
-                    $extensaoimg = $foto7->getClientOriginalExtension();
-                    if($extensaoimg !='jpg' && $extensaoimg != 'jpg' && $extensaoimg != 'png'){
-                        return back()->with('Erro', 'imagem com formato inválido');
-                    }
-                }
-                $anuncios->save();
-
-                if ($request->foto7) {
-                    File::move($foto7, public_path().'/imagens_anuncios/imagem7/imagens'.$anuncios->id.'.'.$extensaoimg);
-                    $anuncios->foto7 = '/imagens_anuncios/imagem7/imagens'.$anuncios->id.'.'.$extensaoimg;
-                    $anuncios->save();
-                }
-
-                    //Foto8
-                    if($request->foto8){
-                        $foto8 = $request->foto8;
-                        $extensaoimg = $foto8->getClientOriginalExtension();
-                        if($extensaoimg !='jpg' && $extensaoimg != 'jpg' && $extensaoimg != 'png'){
-                            return back()->with('Erro', 'imagem com formato inválido');
-                        }
-                    }
-                    $anuncios->save();
-
-                    if ($request->foto8) {
-                        File::move($foto8, public_path().'/imagens_anuncios/imagem8/imagens'.$anuncios->id.'.'.$extensaoimg);
-                        $anuncios->foto8 = '/imagens_anuncios/imagem8/imagens'.$anuncios->id.'.'.$extensaoimg;
-                        $anuncios->save();
-                    }
+        }
 
 
+        if($request->hasfile('foto7'))
+        {
+            $file = $request->file('foto7');
+            $extenstion = $file->getClientOriginalExtension();
+            $filename = time().'.'.$extenstion;
+            $file->move('uploads/anuncios/imagens/', $filename);
+            $anuncios->foto7 = 'uploads/anuncios/imagens/'.$filename;
+            $anuncios->save();
+        }
 
-                    //Foto9
-                    if($request->foto9){
-                        $foto9 = $request->foto9;
-                        $extensaoimg = $foto9->getClientOriginalExtension();
-                        if($extensaoimg !='jpg' && $extensaoimg != 'jpg' && $extensaoimg != 'png'){
-                            return back()->with('Erro', 'imagem com formato inválido');
-                        }
-                    }
-                    $anuncios->save();
-
-                    if ($request->foto9) {
-                        File::move($foto9, public_path().'/imagens_anuncios/imagem9/imagens'.$anuncios->id.'.'.$extensaoimg);
-                        $anuncios->foto9 = '/imagens_anuncios/imagem9/imagens'.$anuncios->id.'.'.$extensaoimg;
-                        $anuncios->save();
-                    }
+        if($request->hasfile('foto8'))
+        {
+            $file = $request->file('foto8');
+            $extenstion = $file->getClientOriginalExtension();
+            $filename = time().'.'.$extenstion;
+            $file->move('uploads/anuncios/imagens/', $filename);
+            $anuncios->foto8 = 'uploads/anuncios/imagens/'.$filename;
+            $anuncios->save();
+        }
 
 
-                     //Foto10
-                     if($request->foto10){
-                        $foto10 = $request->foto10;
-                        $extensaoimg = $foto10->getClientOriginalExtension();
-                        if($extensaoimg !='jpg' && $extensaoimg != 'jpg' && $extensaoimg != 'png'){
-                            return back()->with('Erro', 'imagem com formato inválido');
-                        }
-                    }
-                    $anuncios->save();
+        if($request->hasfile('foto9'))
+        {
+            $file = $request->file('foto9');
+            $extenstion = $file->getClientOriginalExtension();
+            $filename = time().'.'.$extenstion;
+            $file->move('uploads/anuncios/imagens/', $filename);
+            $anuncios->foto9 = 'uploads/anuncios/imagens/'.$filename;
+            $anuncios->save();
+        }
 
-                    if ($request->foto10) {
-                        File::move($foto10, public_path().'/imagens_anuncios/imagem10/imagens'.$anuncios->id.'.'.$extensaoimg);
-                        $anuncios->foto10 = '/imagens_anuncios/imagem10/imagens'.$anuncios->id.'.'.$extensaoimg;
-                        $anuncios->save();
-                    }
+        if($request->hasfile('foto10'))
+        {
+            $file = $request->file('foto10');
+            $extenstion = $file->getClientOriginalExtension();
+            $filename = time().'.'.$extenstion;
+            $file->move('uploads/anuncios/imagens/', $filename);
+            $anuncios->foto10 = 'uploads/anuncios/imagens/'.$filename;
+            $anuncios->save();
+        }
+
 
         $anuncios->save();
         return $anuncios;
@@ -389,7 +348,7 @@ class anunciosController extends Controller
 
         //Para incrementar o número de cliques
         $anuncio->increment('numero_cliques');
-        
+
         // Personalização dos campos da base de dados
 
 
@@ -435,16 +394,16 @@ class anunciosController extends Controller
                 'seguranca' => $anuncio->seguranca,
                 'som' => $anuncio->som,
                 'descricao' => $anuncio->descricao,
-                'foto1' => $anuncio->foto1 ? env('URL_BASE_SERVIDOR') . $anuncio->foto1 : null,
-                'foto2' => $anuncio->foto2 ? env('URL_BASE_SERVIDOR') . $anuncio->foto2 : null,
-                'foto3' => $anuncio->foto3 ? env('URL_BASE_SERVIDOR') . $anuncio->foto3 : null,
-                'foto4' => $anuncio->foto4 ? env('URL_BASE_SERVIDOR') . $anuncio->foto4 : null,
-                'foto5' => $anuncio->foto5 ? env('URL_BASE_SERVIDOR') . $anuncio->foto5 : null,
-                'foto6' => $anuncio->foto6 ? env('URL_BASE_SERVIDOR') . $anuncio->foto6 : null,
-                'foto7' => $anuncio->foto7 ? env('URL_BASE_SERVIDOR') . $anuncio->foto7 : null,
-                'foto8' => $anuncio->foto8 ? env('URL_BASE_SERVIDOR') . $anuncio->foto8 : null,
-                'foto9' => $anuncio->foto9 ? env('URL_BASE_SERVIDOR') . $anuncio->foto9 : null,
-                'foto10' => $anuncio->foto10 ? env('URL_BASE_SERVIDOR') . $anuncio->foto10 : null,
+                'foto1' => $anuncio->foto1 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto1 : null,
+                'foto2' => $anuncio->foto2 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto2 : null,
+                'foto3' => $anuncio->foto3 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto3 : null,
+                'foto4' => $anuncio->foto4 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto4 : null,
+                'foto5' => $anuncio->foto5 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto5 : null,
+                'foto6' => $anuncio->foto6 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto6 : null,
+                'foto7' => $anuncio->foto7 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto7 : null,
+                'foto8' => $anuncio->foto8 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto8 : null,
+                'foto9' => $anuncio->foto9 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto9 : null,
+                'foto10' => $anuncio->foto10 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto10 : null,
                 // Adicione mais campos personalizados conforme necessário
             ];
 
@@ -567,8 +526,8 @@ class anunciosController extends Controller
         $anuncios->foto1 = '';
         $anuncios->save();
         return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
-    } 
-    
+    }
+
     else {
         return response()->json(['message' => 'Foto não encontrada'], 404);
     }
@@ -588,8 +547,8 @@ public function destroyFoto2($id)
         $anuncios->foto2 = '';
         $anuncios->save();
         return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
-    } 
-    
+    }
+
     else {
         return response()->json(['message' => 'Foto não encontrada'], 404);
     }
@@ -609,8 +568,8 @@ public function destroyFoto3($id)
         $anuncios->foto3 = '';
         $anuncios->save();
         return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
-    } 
-    
+    }
+
     else {
         return response()->json(['message' => 'Foto não encontrada'], 404);
     }
@@ -630,8 +589,8 @@ public function destroyFoto4($id)
         $anuncios->foto4 = '';
         $anuncios->save();
         return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
-    } 
-    
+    }
+
     else {
         return response()->json(['message' => 'Foto não encontrada'], 404);
     }
@@ -651,8 +610,8 @@ public function destroyFoto5($id)
         $anuncios->foto5 = '';
         $anuncios->save();
         return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
-    } 
-    
+    }
+
     else {
         return response()->json(['message' => 'Foto não encontrada'], 404);
     }
@@ -672,8 +631,8 @@ public function destroyFoto6($id)
         $anuncios->foto6 = '';
         $anuncios->save();
         return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
-    } 
-    
+    }
+
     else {
         return response()->json(['message' => 'Foto não encontrada'], 404);
     }
@@ -693,8 +652,8 @@ public function destroyFoto7($id)
         $anuncios->foto7 = '';
         $anuncios->save();
         return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
-    } 
-    
+    }
+
     else {
         return response()->json(['message' => 'Foto não encontrada'], 404);
     }
@@ -715,8 +674,8 @@ public function destroyFoto8($id)
         $anuncios->foto8 = '';
         $anuncios->save();
         return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
-    } 
-    
+    }
+
     else {
         return response()->json(['message' => 'Foto não encontrada'], 404);
     }
@@ -737,8 +696,8 @@ public function destroyFoto9($id)
         $anuncios->foto9 = '';
         $anuncios->save();
         return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
-    } 
-    
+    }
+
     else {
         return response()->json(['message' => 'Foto não encontrada'], 404);
     }
@@ -759,8 +718,8 @@ public function destroyFoto10($id)
         $anuncios->foto10 = '';
         $anuncios->save();
         return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
-    } 
-    
+    }
+
     else {
         return response()->json(['message' => 'Foto não encontrada'], 404);
     }
