@@ -65,8 +65,8 @@ class anunciosController extends Controller
         foreach ($anuncios as $anuncio) {
             $dadosPersonalizados[] = [
                 'id' => $anuncio->id,
-                'tipo_veiculo_id' => $anuncio->tipo_veiculo,
-                'tecnologia_id' => $anuncio->tecnologia,
+                'tipo_veiculo_id' => $anuncio->tipo_veiculo_id,
+                'tecnologia_id' => $anuncio->tecnologia_id,
                 'nome_marca' => $anuncio->nome_marca,
                 'id_marca' => $anuncio->id_marca,
                 'nome_modelo' => $anuncio->nome_modelo,
@@ -100,9 +100,9 @@ class anunciosController extends Controller
                 'portas' => $anuncio->portas,
                 'cilindros' => $anuncio->cilindros,
                 'motor' => $anuncio->motor,
-                'cor' => $anuncio->cor,
-                'transmissao' => $anuncio->transmissao,
-                'combustivel' => $anuncio->combustivel,
+                'cor' => $anuncio->cor_id,
+                'transmissao' => $anuncio->transmissao_id,
+                'combustivel' => $anuncio->combustivel_id,
                 'placa' => $anuncio->placa,
                 'km' => $anuncio->km,
                 'sinistrado' => $anuncio->sinistrado,
