@@ -128,6 +128,22 @@ Route::get('/transmissao/visualizar_transmissao/{id}', 'App\Http\Controllers\tra
 Route::put('/editar_transmissao/update/{id}', 'App\Http\Controllers\transmissaoController@update');
 Route::get('/eliminar_transmissao/{id}', 'App\Http\Controllers\transmissaoController@destroy');
 
+
+//Estado
+Route::get('/estados/listar_estados', 'App\Http\Controllers\estadoController@index');
+Route::post('/estados/registar_estados', 'App\Http\Controllers\estadoController@store');
+Route::get('/estados/visualizar_estado/{id}', 'App\Http\Controllers\estadoController@show');
+Route::put('/editar_estado/update/{id}', 'App\Http\Controllers\estadoController@update');
+Route::get('/eliminar_estado/{id}', 'App\Http\Controllers\estadoController@destroy');
+
+
+//Regiao
+Route::get('/regiao/listar_regiao', 'App\Http\Controllers\regiaoController@index');
+Route::post('/regiao/registar_regiao', 'App\Http\Controllers\regiaoController@store');
+Route::get('/regiao/visualizar_regiao/{id}', 'App\Http\Controllers\regiaoController@show');
+Route::put('/editar_regiao/update/{id}', 'App\Http\Controllers\regiaoController@update');
+Route::get('/eliminar_regiao/{id}', 'App\Http\Controllers\regiaoController@destroy');
+
 //login
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
