@@ -144,6 +144,18 @@ Route::get('/regiao/visualizar_regiao/{id}', 'App\Http\Controllers\regiaoControl
 Route::put('/editar_regiao/update/{id}', 'App\Http\Controllers\regiaoController@update');
 Route::get('/eliminar_regiao/{id}', 'App\Http\Controllers\regiaoController@destroy');
 
+
+
+//Cidade
+Route::get('/cidade/listar_cidades', 'App\Http\Controllers\cidadeController@index');
+Route::post('/cidade/registar_cidade', 'App\Http\Controllers\cidadeController@store');
+Route::get('/cidade/visualizar_cidade/{id}', 'App\Http\Controllers\cidadeController@show');
+Route::put('/editar_cidade/update/{id}', 'App\Http\Controllers\cidadeController@update');
+Route::get('/eliminar_cidade/{id}', 'App\Http\Controllers\cidadeController@destroy');
+
+
+
+
 //login
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
