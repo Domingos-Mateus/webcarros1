@@ -97,7 +97,7 @@ class anunciosController extends Controller
                 'empresa' => $anuncio->empresa,
                 'tipo_preco' => $anuncio->tipo_preco,
                 'valor_preco' => $anuncio->valor_preco,
-                'fabricacao' => $anuncio->fabricacao,
+                'fabricante_id' => $anuncio->fabricante_id,
                 'ano_fabricacao' => $anuncio->ano_fabricacao,
                 'ano_modelo' => $anuncio->ano_modelo,
                 'carroceria' => $anuncio->carroceria,
@@ -111,9 +111,8 @@ class anunciosController extends Controller
                 'placa' => $anuncio->placa,
                 'km' => $anuncio->km,
                 'sinistrado' => $anuncio->sinistrado,
-                'conforto' => $anuncio->conforto,
-                'seguranca' => $anuncio->seguranca,
-                'som' => $anuncio->som,
+                'conforto_id' => $anuncio->conforto_id,
+                'seguranca_id' => $anuncio->seguranca_id,
                 'descricao' => $anuncio->descricao,
                 'foto1' => $anuncio->foto1 ? env('URL_BASE_SERVIDOR') . $anuncio->foto1 : null,
                 'foto2' => $anuncio->foto2 ? env('URL_BASE_SERVIDOR') . $anuncio->foto2 : null,
@@ -179,7 +178,7 @@ class anunciosController extends Controller
         $anuncios->empresa = $request->empresa;
         $anuncios->tipo_preco = $request->tipo_preco;
         $anuncios->valor_preco = $request->valor_preco;
-        $anuncios->fabricacao = $request->fabricacao;
+        $anuncios->fabricante_id = $request->fabricante_id;
         $anuncios->ano_fabricacao = $request->ano_fabricacao;
         $anuncios->ano_modelo = $request->ano_modelo;
         $anuncios->carroceria = $request->carroceria;
@@ -192,9 +191,8 @@ class anunciosController extends Controller
         $anuncios->combustivel_id = $request->combustivel;
         $anuncios->placa = $request->placa;
         $anuncios->km = $request->km;
-        $anuncios->conforto = json_encode($request->conforto);
-        $anuncios->seguranca = json_encode($request->seguranca);
-        $anuncios->som = $request->som;
+        $anuncios->conforto_id = $request->conforto_id;
+        $anuncios->seguranca_id = $request->seguranca_id;
         $anuncios->sinistrado = $request->sinistrado;
         $anuncios->descricao = $request->descricao;
 
@@ -442,7 +440,7 @@ class anunciosController extends Controller
                 'empresa' => $anuncio->empresa,
                 'tipo_preco' => $anuncio->tipo_preco,
                 'valor_preco' => $anuncio->valor_preco,
-                'fabricacao' => $anuncio->fabricacao,
+                'fabricante_id' => $anuncio->fabricante_id,
                 'ano_fabricacao' => $anuncio->ano_fabricacao,
                 'ano_modelo' => $anuncio->ano_modelo,
                 'carroceria' => $anuncio->carroceria,
@@ -456,8 +454,8 @@ class anunciosController extends Controller
                 'placa' => $anuncio->placa,
                 'km' => $anuncio->km,
                 'sinistrado' => $anuncio->sinistrado,
-                'conforto' => $anuncio->conforto,
-                'seguranca' => $anuncio->seguranca,
+                'conforto_id' => $anuncio->conforto_id,
+                'seguranca_id' => $anuncio->seguranca_id,
                 'som' => $anuncio->som,
                 'descricao' => $anuncio->descricao,
                 'foto1' => $anuncio->foto1 ? env('URL_BASE_SERVIDOR') . $anuncio->foto1 : null,
@@ -541,7 +539,7 @@ class anunciosController extends Controller
         $anuncios->empresa = $request->empresa;
         $anuncios->tipo_preco = $request->tipo_preco;
         $anuncios->valor_preco = $request->valor_preco;
-        $anuncios->fabricacao = $request->fabricacao;
+        $anuncios->fabricante_id = $request->fabricante_id;
         $anuncios->ano_fabricacao = $request->ano_fabricacao;
         $anuncios->ano_modelo = $request->ano_modelo;
         $anuncios->carroceria = $request->carroceria;
@@ -554,9 +552,8 @@ class anunciosController extends Controller
         $anuncios->combustivel_id = $request->combustivel;
         $anuncios->placa = $request->placa;
         $anuncios->km = $request->km;
-        $anuncios->conforto = json_encode($request->conforto);
-        $anuncios->seguranca = json_encode($request->seguranca);
-        $anuncios->som = $request->som;
+        $anuncios->conforto_id = $request->conforto_id;
+        $anuncios->seguranca_id = $request->seguranca_id;
         $anuncios->sinistrado = $request->sinistrado;
         $anuncios->descricao = $request->descricao;
         $anuncios->save();

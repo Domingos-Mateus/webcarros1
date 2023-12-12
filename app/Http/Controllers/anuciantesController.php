@@ -29,11 +29,11 @@ class anuciantesController extends Controller
          'id' => $anunciantes->id,
          'nome' => $anunciantes->nome,
          'tipo' => $anunciantes->tipo,
-         'responsavel' => $anunciantes->responsavel,
          'email' => $anunciantes->email,
          'telefone' => $anunciantes->telefone,
-         'cpf' => $anunciantes->cpf,
-         'cep' => $anunciantes->cep,
+         'estado_id' => $anunciantes->estado_id,
+         'regiao_id' => $anunciantes->regiao_id,
+         'cidade_id' => $anunciantes->cidade_id,
          'foto' => $anunciantes->foto ? env('URL_BASE_SERVIDOR') . $anunciantes->foto : null,
          // Adicione mais campos personalizados conforme necessário
      ];
@@ -63,14 +63,12 @@ class anuciantesController extends Controller
         $anunciantes = new Anunciantes;
         $anunciantes->nome = $request->nome;
         $anunciantes->tipo = $request->tipo;
-        $anunciantes->responsavel = $request->responsavel;
         $anunciantes->email = $request->email;
         $anunciantes->telefone = $request->telefone;
-        $anunciantes->cpf = $request->cpf;
-        $anunciantes->cep = $request->cep;
-        $anunciantes->plano_id = $request->plano_id;
         $anunciantes->estado_id = $request->estado_id;
         $anunciantes->cidade_id = $request->cidade_id;
+        $anunciantes->regiao_id = $request->regiao_id;
+        $anunciantes->status = $request->status;
 
         $anunciantes->save();
         return $anunciantes;
@@ -120,11 +118,11 @@ class anuciantesController extends Controller
                 'id' => $anunciante->id,
                 'nome' => $anunciante->nome,
                 'tipo' => $anunciante->tipo,
-                'responsavel' => $anunciante->responsavel,
                 'email' => $anunciante->email,
                 'telefone' => $anunciante->telefone,
-                'cpf' => $anunciante->cpf,
-                'cep' => $anunciante->cep,
+                'estado_id' => $anunciantes->estado_id,
+                'regiao_id' => $anunciantes->regiao_id,
+                'cidade_id' => $anunciantes->cidade_id,
                 'foto' => $anunciante->foto ? env('URL_BASE_SERVIDOR') . $anunciante->foto : null,
                 // Adicione mais campos personalizados conforme necessário
             ];
@@ -158,14 +156,12 @@ class anuciantesController extends Controller
         }
         $anunciantes->nome = $request->nome;
         $anunciantes->tipo = $request->tipo;
-        $anunciantes->responsavel = $request->responsavel;
         $anunciantes->email = $request->email;
         $anunciantes->telefone = $request->telefone;
-        $anunciantes->cpf = $request->cpf;
-        $anunciantes->cep = $request->cep;
-        $anunciantes->plano_id = $request->plano_id;
         $anunciantes->estado_id = $request->estado_id;
         $anunciantes->cidade_id = $request->cidade_id;
+        $anunciantes->regiao_id = $request->regiao_id;
+        $anunciantes->status = $request->status;
 
         $anunciantes->save();
         return $anunciantes;
