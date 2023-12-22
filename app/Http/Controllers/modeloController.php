@@ -37,7 +37,7 @@ class modeloController extends Controller
                 'id' => $modelo->id,
                 'nome_modelo' => $modelo->nome_modelo,
                 'nome_marca' => $modelo->nome_marca,
-                'id_marcas' => $modelo->id,
+                'id_marcas' => $modelo->id_marcas,
                 'descricaoS' => $modelo->descricao,
             ];
         }

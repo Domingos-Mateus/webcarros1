@@ -33,7 +33,7 @@ class CreateAnunciosTable extends Migration
             $table->string('empresa', 100)->nullable();
             $table->integer('tipo_preco');
             $table->string('valor_preco', 100)->nullable();
-            $table->string('fabricacao', 100)->nullable();
+            $table->integer('fabricante_id')->unsigned();
             $table->string('ano_fabricacao', 100)->nullable();
             $table->string('ano_modelo', 100)->nullable();
             $table->string('carroceria', 100)->nullable();
@@ -47,9 +47,8 @@ class CreateAnunciosTable extends Migration
             $table->string('placa', 100)->nullable();
             $table->string('km', 100)->nullable();
             $table->string('sinistrado', 100)->nullable();
-            $table->string('conforto', 255)->nullable();
-            $table->string('seguranca', 255)->nullable();
-            $table->string('som', 255)->nullable();
+            $table->integer('conforto_id')->unsigned();
+            $table->integer('seguranca_id')->unsigned();
             $table->string('descricao', 100);
             $table->string('foto1')->nullable();
             $table->string('foto2')->nullable();
@@ -72,6 +71,9 @@ class CreateAnunciosTable extends Migration
             $table->foreign('cor_id')->references('id')->on('cors');
             $table->foreign('combustivel_id')->references('id')->on('combustivels');
             $table->foreign('transmissao_id')->references('id')->on('transmissaos');
+            $table->foreign('fabricante_id')->references('id')->on('fabricantes');
+            $table->foreign('conforto_id')->references('id')->on('confortos');
+            $table->foreign('seguranca_id')->references('id')->on('segurancas');
         });
     }
 

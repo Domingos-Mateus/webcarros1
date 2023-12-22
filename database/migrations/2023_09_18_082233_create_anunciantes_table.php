@@ -17,16 +17,19 @@ class CreateAnunciantesTable extends Migration
             $table->increments('id');
             $table->string('nome', 50);
             $table->string('tipo', 50);
-            $table->string('responsavel', 50);
             $table->string('email', 50);
             $table->string('telefone', 50);
-            $table->string('cpf', 50);
-            $table->string('cep', 50);
             $table->string('foto', 100)->nullable();
-            $table->integer('plano_id')->nullable();
-            $table->integer('estado_id');
-            $table->integer('cidade_id');
+            $table->integer('estado_id')->unsigned();
+            $table->integer('cidade_id')->unsigned();
+            $table->integer('regiao_id')->unsigned();
+            $table->integer('status');
             $table->timestamps();
+
+
+            $table->foreign('estado_id')->references('id')->on('estados');
+            $table->foreign('cidade_id')->references('id')->on('cidades');
+            $table->foreign('regiao_id')->references('id')->on('regioes');
         });
     }
 

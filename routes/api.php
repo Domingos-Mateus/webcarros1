@@ -128,6 +128,63 @@ Route::get('/transmissao/visualizar_transmissao/{id}', 'App\Http\Controllers\tra
 Route::put('/editar_transmissao/update/{id}', 'App\Http\Controllers\transmissaoController@update');
 Route::get('/eliminar_transmissao/{id}', 'App\Http\Controllers\transmissaoController@destroy');
 
+
+//Estado
+Route::get('/estados/listar_estados', 'App\Http\Controllers\estadoController@index');
+Route::post('/estados/registar_estados', 'App\Http\Controllers\estadoController@store');
+Route::get('/estados/visualizar_estado/{id}', 'App\Http\Controllers\estadoController@show');
+Route::put('/editar_estado/update/{id}', 'App\Http\Controllers\estadoController@update');
+Route::get('/eliminar_estado/{id}', 'App\Http\Controllers\estadoController@destroy');
+
+
+//Regiao
+Route::get('/regiao/listar_regiao', 'App\Http\Controllers\regiaoController@index');
+Route::post('/regiao/registar_regiao', 'App\Http\Controllers\regiaoController@store');
+Route::get('/regiao/visualizar_regiao/{id}', 'App\Http\Controllers\regiaoController@show');
+Route::put('/editar_regiao/update/{id}', 'App\Http\Controllers\regiaoController@update');
+Route::get('/eliminar_regiao/{id}', 'App\Http\Controllers\regiaoController@destroy');
+
+
+
+//Cidade
+Route::get('/cidade/listar_cidades', 'App\Http\Controllers\cidadeController@index');
+Route::post('/cidade/registar_cidade', 'App\Http\Controllers\cidadeController@store');
+Route::get('/cidade/visualizar_cidade/{id}', 'App\Http\Controllers\cidadeController@show');
+Route::put('/editar_cidade/update/{id}', 'App\Http\Controllers\cidadeController@update');
+Route::get('/eliminar_cidade/{id}', 'App\Http\Controllers\cidadeController@destroy');
+
+//Fabricante
+Route::get('/fabricante/listar_fabricantes', 'App\Http\Controllers\fabricanteController@index');
+Route::post('/fabricante/registar_fabricante', 'App\Http\Controllers\fabricanteController@store');
+Route::get('/fabricante/visualizar_fabricante/{id}', 'App\Http\Controllers\fabricanteController@show');
+Route::put('/editar_fabricante/update/{id}', 'App\Http\Controllers\fabricanteController@update');
+Route::get('/eliminar_fabricante/{id}', 'App\Http\Controllers\fabricanteController@destroy');
+
+
+//Conforto
+Route::get('/conforto/listar_confortos', 'App\Http\Controllers\confortoController@index');
+Route::post('/conforto/registar_conforto', 'App\Http\Controllers\confortoController@store');
+Route::get('/conforto/visualizar_conforto/{id}', 'App\Http\Controllers\confortoController@show');
+Route::put('/editar_conforto/update/{id}', 'App\Http\Controllers\confortoController@update');
+Route::get('/eliminar_conforto/{id}', 'App\Http\Controllers\confortoController@destroy');
+
+
+//Segurança
+Route::get('/seguranca/listar_segurancas', 'App\Http\Controllers\segurancaController@index');
+Route::post('/seguranca/registar_seguranca', 'App\Http\Controllers\segurancaController@store');
+Route::get('/seguranca/visualizar_seguranca/{id}', 'App\Http\Controllers\segurancaController@show');
+Route::put('/editar_seguranca/update/{id}', 'App\Http\Controllers\segurancaController@update');
+Route::get('/eliminar_seguranca/{id}', 'App\Http\Controllers\segurancaController@destroy');
+
+
+
+
+
+
+
+
+
+
 //login
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
