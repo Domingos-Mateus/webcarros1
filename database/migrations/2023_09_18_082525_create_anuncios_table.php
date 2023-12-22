@@ -10,6 +10,7 @@ class CreateAnunciosTable extends Migration
     {
         Schema::create('anuncios', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('titulo', 200);
             $table->integer('tipo_veiculo_id')->unsigned();
             $table->integer('tecnologia_id')->unsigned();
             $table->integer('marca_id')->unsigned();
@@ -47,8 +48,8 @@ class CreateAnunciosTable extends Migration
             $table->string('placa', 100)->nullable();
             $table->string('km', 100)->nullable();
             $table->string('sinistrado', 100)->nullable();
-            $table->integer('conforto_id')->unsigned();
-            $table->integer('seguranca_id')->unsigned();
+            $table->string('conforto_id');
+            $table->string('seguranca_id');
             $table->string('descricao', 100);
             $table->string('foto1')->nullable();
             $table->string('foto2')->nullable();
@@ -72,8 +73,6 @@ class CreateAnunciosTable extends Migration
             $table->foreign('combustivel_id')->references('id')->on('combustivels');
             $table->foreign('transmissao_id')->references('id')->on('transmissaos');
             $table->foreign('fabricante_id')->references('id')->on('fabricantes');
-            $table->foreign('conforto_id')->references('id')->on('confortos');
-            $table->foreign('seguranca_id')->references('id')->on('segurancas');
         });
     }
 

@@ -155,6 +155,7 @@ class anunciosController extends Controller
     {
         //
         $anuncios = new Anuncios;
+        $anuncios->titulo = $request->titulo;
         $anuncios->tipo_veiculo_id = $request->tipo_veiculo;
         $anuncios->tecnologia_id = $request->tecnologia;
         $anuncios->marca_id = $request->marca_id;
@@ -188,11 +189,12 @@ class anunciosController extends Controller
         $anuncios->motor = $request->motor;
         $anuncios->cor_id = $request->cor;
         $anuncios->transmissao_id = $request->transmissao;
+        $anuncios->conforto_id = $request->conforto_id;
+        $anuncios->seguranca_id = $request->seguranca_id;
         $anuncios->combustivel_id = $request->combustivel;
         $anuncios->placa = $request->placa;
         $anuncios->km = $request->km;
-        $anuncios->conforto_id = $request->conforto_id;
-        $anuncios->seguranca_id = $request->seguranca_id;
+        
         $anuncios->sinistrado = $request->sinistrado;
         $anuncios->descricao = $request->descricao;
 
@@ -516,6 +518,7 @@ class anunciosController extends Controller
             return response(['message'=>'Anunciante não encontrado'], 404);
         }
 
+        $anuncios->titulo = $request->titulo;
         $anuncios->tipo_veiculo_id = $request->tipo_veiculo;
         $anuncios->tecnologia_id = $request->tecnologia;
         $anuncios->marca_id = $request->marca_id;
