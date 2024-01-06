@@ -5,9 +5,19 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Anuncios;
+use App\Models\Tecnologia;
+use App\Models\TiposVeiculos;
 use App\Models\Marcas;
 use App\Models\Modelos;
 use App\Models\Anunciantes;
+use App\Models\Categorias;
+use App\Models\Estados;
+use App\Models\Cidades;
+use App\Models\Combustivel;
+use App\Models\Cor;
+use App\Models\Transmissao;
+use App\Models\Confortos;
+use App\Models\Fabricantes;
 use File;
 use DB;
 
@@ -97,6 +107,7 @@ class anunciosController extends Controller
                 'empresa' => $anuncio->empresa,
                 'tipo_preco' => $anuncio->tipo_preco,
                 'valor_preco' => $anuncio->valor_preco,
+                'mostrar_preco' => $anuncio->mostrar_preco,
                 'fabricante_id' => $anuncio->fabricante_id,
                 'ano_fabricacao' => $anuncio->ano_fabricacao,
                 'ano_modelo' => $anuncio->ano_modelo,
@@ -154,6 +165,63 @@ class anunciosController extends Controller
     public function store(Request $request)
     {
         //
+        $tipo_veiculo = TiposVeiculos::find($request->tipo_veiculo);
+        $tecnologia = Tecnologia::find($request->tecnologia);
+        $modelo = Modelos::find($request->modelo_id);
+        $marca = Marcas::find($request->marca_id);
+        $anunciante = Anunciantes::find($request->anunciante_id);
+        $categoria = Categorias::find($request->categoria_id);
+        $estado = Estados::find($request->estado_id);
+        $cidade = Cidades::find($request->cidade_id);
+        $fabricante = Fabricantes::find($request->fabricante_id);
+        $cor = Cor::find($request->cor);
+        $transmissao = Transmissao::find($request->transmissao);
+        $combustivel = Combustivel::find($request->combustivel);
+
+
+
+        if(!$tipo_veiculo){
+            return response(['message'=> 'O tipo de veiculo selecionado não existe'], 404);
+        }
+        if(!$tecnologia){
+            return response(['message'=> 'A tecnologia selecionada não existe'], 404);
+        }
+        if(!$marca){
+            return response(['message'=> 'A marca selecionada não existe'], 404);
+        }
+
+        if(!$modelo){
+            return response(['message'=> 'O modelo selecionado não existe'], 404);
+        }
+        if(!$anunciante){
+            return response(['message'=> 'O Anunciante selecionado não existe'], 404);
+        }
+
+        if(!$categoria){
+            return response(['message'=> 'A Categoria selecionada não existe'], 404);
+        }
+        if(!$estado){
+            return response(['message'=> 'O Estado selecionado não existe'], 404);
+        }
+        if(!$cidade){
+            return response(['message'=> 'A Cidade selecionada não existe'], 404);
+        }
+        if(!$fabricante){
+            return response(['message'=> 'O Fabricante selecionado não existe'], 404);
+        }
+        if(!$cor){
+            return response(['message'=> 'A Cor selecionada não existe'], 404);
+        }
+        if(!$transmissao){
+            return response(['message'=> 'A Transmissão selecionada não existe'], 404);
+        }
+        if(!$combustivel){
+            return response(['message'=> 'O Combustível selecionado não existe'], 404);
+        }
+
+
+
+
         $anuncios = new Anuncios;
         $anuncios->titulo = $request->titulo;
         $anuncios->tipo_veiculo_id = $request->tipo_veiculo;
@@ -179,6 +247,7 @@ class anunciosController extends Controller
         $anuncios->empresa = $request->empresa;
         $anuncios->tipo_preco = $request->tipo_preco;
         $anuncios->valor_preco = $request->valor_preco;
+        $anuncios->mostrar_preco = $request->mostrar_preco;
         $anuncios->fabricante_id = $request->fabricante_id;
         $anuncios->ano_fabricacao = $request->ano_fabricacao;
         $anuncios->ano_modelo = $request->ano_modelo;
@@ -194,7 +263,7 @@ class anunciosController extends Controller
         $anuncios->combustivel_id = $request->combustivel;
         $anuncios->placa = $request->placa;
         $anuncios->km = $request->km;
-        
+
         $anuncios->sinistrado = $request->sinistrado;
         $anuncios->descricao = $request->descricao;
 
@@ -414,20 +483,30 @@ class anunciosController extends Controller
 
         //Para incrementar o número de cliques
         $anuncio->increment('numero_cliques');
-        
+        $tipo_veiculo = TiposVeiculos::find($anuncio->tipo_veiculo_id);
+        $marca = Marcas::find($anuncio->marca_id);
+        $modelo = Modelos::find($anuncio->modelo_id);
+        $anunciante = Anunciantes::find($anuncio->anunciante_id);
+        $categoria = Categorias::find($anuncio->categoria_id);
+        $estado = Estados::find($anuncio->estado_id);
+        $cidade = Cidades::find($anuncio->cidade_id);
+        $fabricante = Fabricantes::find($anuncio->fabricante_id);
+        $cor = Cor::find($anuncio->cor_id);
+        $transmissao = Transmissao::find($anuncio->transmissao_id);
+        $combustivel = Combustivel::find($anuncio->combustivel_id);
         // Personalização dos campos da base de dados
 
-
+//return $tipo_veiculo;
             // Personalize os campos conforme necessário
             $dadosPersonalizados[] = [
                 'id' => $anuncio->id,
-                'tipo_veiculo' => $anuncio->tipo_veiculo,
-                'marca' => $anuncio->marca_id,
-                'modelo' => $anuncio->modelo_id,
+                'tipo_veiculo' => $tipo_veiculo->tipo_veiculo,
+                'marca' => $marca->nome_marca,
+                'modelo' => $modelo->nome_modelo,
                 'numero_cliques' => $anuncio->numero_cliques,
                 'situacao_veiculo' => $anuncio->situacao_veiculo,
-                'anunciantes_id' => $anuncio->anunciantes_id,
-                'categoria_id' => $anuncio->categoria_id,
+                'anunciantes' => $anunciante->nome,
+                'categoria_id' => $categoria->nome,
                 'data_inicio' => $anuncio->data_inicio,
                 'data_fim' => $anuncio->data_fim,
                 'ordenacao' => $anuncio->ordenacao,
@@ -437,12 +516,13 @@ class anunciosController extends Controller
                 'vendido' => $anuncio->vendido,
                 'vitrine' => $anuncio->vitrine,
                 'destaque_busca' => $anuncio->destaque_busca,
-                'estado_id' => $anuncio->estado_id,
-                'cidade_id' => $anuncio->cidade_id,
+                'estado' => $estado->estado,
+                'cidade' => $cidade->cidade,
                 'empresa' => $anuncio->empresa,
                 'tipo_preco' => $anuncio->tipo_preco,
                 'valor_preco' => $anuncio->valor_preco,
-                'fabricante_id' => $anuncio->fabricante_id,
+                'mostrar_preco' => $anuncio->mostrar_preco,
+                'fabricante' => $fabricante->fabricante,
                 'ano_fabricacao' => $anuncio->ano_fabricacao,
                 'ano_modelo' => $anuncio->ano_modelo,
                 'carroceria' => $anuncio->carroceria,
@@ -450,9 +530,9 @@ class anunciosController extends Controller
                 'portas' => $anuncio->portas,
                 'cilindros' => $anuncio->cilindros,
                 'motor' => $anuncio->motor,
-                'cor' => $anuncio->cor,
-                'transmissao' => $anuncio->transmissao,
-                'combustivel' => $anuncio->combustivel,
+                'cor' => $cor->cor,
+                'transmissao' => $transmissao->transmissao,
+                'combustivel' => $combustivel->combustivel,
                 'placa' => $anuncio->placa,
                 'km' => $anuncio->km,
                 'sinistrado' => $anuncio->sinistrado,
@@ -542,6 +622,7 @@ class anunciosController extends Controller
         $anuncios->empresa = $request->empresa;
         $anuncios->tipo_preco = $request->tipo_preco;
         $anuncios->valor_preco = $request->valor_preco;
+        $anuncios->mostrar_preco = $request->mostrar_preco;
         $anuncios->fabricante_id = $request->fabricante_id;
         $anuncios->ano_fabricacao = $request->ano_fabricacao;
         $anuncios->ano_modelo = $request->ano_modelo;
@@ -592,8 +673,8 @@ class anunciosController extends Controller
         $anuncios->foto1 = '';
         $anuncios->save();
         return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
-    } 
-    
+    }
+
     else {
         return response()->json(['message' => 'Foto não encontrada'], 404);
     }
@@ -613,8 +694,8 @@ public function destroyFoto2($id)
         $anuncios->foto2 = '';
         $anuncios->save();
         return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
-    } 
-    
+    }
+
     else {
         return response()->json(['message' => 'Foto não encontrada'], 404);
     }
@@ -634,8 +715,8 @@ public function destroyFoto3($id)
         $anuncios->foto3 = '';
         $anuncios->save();
         return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
-    } 
-    
+    }
+
     else {
         return response()->json(['message' => 'Foto não encontrada'], 404);
     }
@@ -655,8 +736,8 @@ public function destroyFoto4($id)
         $anuncios->foto4 = '';
         $anuncios->save();
         return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
-    } 
-    
+    }
+
     else {
         return response()->json(['message' => 'Foto não encontrada'], 404);
     }
@@ -676,8 +757,8 @@ public function destroyFoto5($id)
         $anuncios->foto5 = '';
         $anuncios->save();
         return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
-    } 
-    
+    }
+
     else {
         return response()->json(['message' => 'Foto não encontrada'], 404);
     }
@@ -697,8 +778,8 @@ public function destroyFoto6($id)
         $anuncios->foto6 = '';
         $anuncios->save();
         return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
-    } 
-    
+    }
+
     else {
         return response()->json(['message' => 'Foto não encontrada'], 404);
     }
@@ -718,8 +799,8 @@ public function destroyFoto7($id)
         $anuncios->foto7 = '';
         $anuncios->save();
         return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
-    } 
-    
+    }
+
     else {
         return response()->json(['message' => 'Foto não encontrada'], 404);
     }
@@ -740,8 +821,8 @@ public function destroyFoto8($id)
         $anuncios->foto8 = '';
         $anuncios->save();
         return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
-    } 
-    
+    }
+
     else {
         return response()->json(['message' => 'Foto não encontrada'], 404);
     }
@@ -762,8 +843,8 @@ public function destroyFoto9($id)
         $anuncios->foto9 = '';
         $anuncios->save();
         return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
-    } 
-    
+    }
+
     else {
         return response()->json(['message' => 'Foto não encontrada'], 404);
     }
@@ -784,8 +865,8 @@ public function destroyFoto10($id)
         $anuncios->foto10 = '';
         $anuncios->save();
         return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
-    } 
-    
+    }
+
     else {
         return response()->json(['message' => 'Foto não encontrada'], 404);
     }

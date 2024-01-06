@@ -34,6 +34,7 @@ class CreateAnunciosTable extends Migration
             $table->string('empresa', 100)->nullable();
             $table->integer('tipo_preco');
             $table->string('valor_preco', 100)->nullable();
+            $table->string('mostrar_preco');
             $table->integer('fabricante_id')->unsigned();
             $table->string('ano_fabricacao', 100)->nullable();
             $table->string('ano_modelo', 100)->nullable();

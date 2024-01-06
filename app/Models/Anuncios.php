@@ -12,6 +12,7 @@ class Anuncios extends Model
     protected $fillable = [
         'id',
         'titulo',
+        'tipo_veiculo',
         'marca_id',
         'modelo_id',
         'numero_cliques',
