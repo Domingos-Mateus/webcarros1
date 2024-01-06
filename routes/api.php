@@ -201,6 +201,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+
+
+
 // buscar endereço por CEP
 Route::get('/verificar_cep/{id}', [appController::class,'verificar_cep']);
 
