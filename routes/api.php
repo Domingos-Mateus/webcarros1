@@ -178,6 +178,21 @@ Route::get('/eliminar_seguranca/{id}', 'App\Http\Controllers\segurancaController
 
 
 
+//Categorias Opcionais
+Route::get('/categoria_opcionais/listar_categoria_opcionais', 'App\Http\Controllers\categoriaOpcionaisController@index');
+Route::post('/categoria_opcionais/registar_categoria_opcionais', 'App\Http\Controllers\categoriaOpcionaisController@store');
+Route::get('/categoria_opcionais/visualizar_categoria_opcionais/{id}', 'App\Http\Controllers\categoriaOpcionaisController@show');
+Route::put('/editar_categoria_opcionais/update/{id}', 'App\Http\Controllers\categoriaOpcionaisController@update');
+Route::get('/eliminar_categoria_opcionais/{id}', 'App\Http\Controllers\categoriaOpcionaisController@destroy');
+
+
+
+//Opcionais
+Route::get('/opcionais/listar_opcionais', 'App\Http\Controllers\opcionaisController@index');
+Route::post('/opcionais/registar_opcionais', 'App\Http\Controllers\opcionaisController@store');
+Route::get('/opcionais/visualizar_opcionais/{id}', 'App\Http\Controllers\opcionaisController@show');
+Route::put('/editar_opcionais/update/{id}', 'App\Http\Controllers\opcionaisController@update');
+Route::get('/eliminar_opcionais/{id}', 'App\Http\Controllers\opcionaisController@destroy');
 
 
 

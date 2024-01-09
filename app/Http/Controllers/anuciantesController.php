@@ -87,7 +87,7 @@ class anuciantesController extends Controller
             if($extensaoimg !='jpg' && $extensaoimg != 'jpg' && $extensaoimg != 'png'){
                 return back()->with('Erro', 'imagem com formato inválido');
             }
-           
+
         }
         $anunciantes->save();
 
@@ -177,6 +177,7 @@ class anuciantesController extends Controller
     {
         //
         Anunciantes::destroy($id);
+        return response(['message'=>'Anunciante Eliminado com sucesso'], 200);
     }
 
     public function destroyFoto($id)
@@ -199,11 +200,15 @@ class anuciantesController extends Controller
         $anunciantes->save();
 
         return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
-        
-    } 
-    
+
+    }
+
     else {
         return response()->json(['message' => 'Foto não encontrada'], 404);
     }
+
+
 }
+
+
 }

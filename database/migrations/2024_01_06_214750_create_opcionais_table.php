@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateEstadosTable extends Migration
+class CreateOpcionaisTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,13 @@ class CreateEstadosTable extends Migration
      */
     public function up()
     {
-        Schema::create('estados', function (Blueprint $table) {
+        Schema::create('opcionais', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('uf',4);
-            $table->string('estado',100);
+            $table->integer('categoria_opcional_id')->unsigned();
+            $table->string('nome',50);
             $table->timestamps();
+
+            $table->foreign('categoria_opcional_id')->references('id')->on('categoria_opcionais');
         });
     }
 
@@ -28,6 +30,6 @@ class CreateEstadosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('estados');
+        Schema::dropIfExists('opcionais');
     }
 }

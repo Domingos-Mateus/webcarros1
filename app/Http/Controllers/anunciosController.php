@@ -276,6 +276,9 @@ class anunciosController extends Controller
         //
         $anuncios = Anuncios::find($id);
 
+        if(!$anuncios){
+            return response(['message'=>'Anúncio não encontrado'], 404);
+        }
         //return $anuncios;
         $anuncios->foto1 = $anuncios->foto1;
         $anuncios->foto2 = $anuncios->foto2;
@@ -288,6 +291,8 @@ class anunciosController extends Controller
         $anuncios->foto9 = $anuncios->foto9;
         $anuncios->foto10 = $anuncios->foto10;
 
+
+        /*
         if($request->hasfile('foto1'))
         {
             $file = $request->file('foto1');
@@ -297,22 +302,22 @@ class anunciosController extends Controller
             $anuncios->foto1 = '/imagens_anuncios/imagem1/'.$filename;
             $anuncios->save();
         }
-
+*/
          //Foto1
-        // if($request->foto1){
-        //     $foto1 = $request->foto1;
-        //     $extensaoimg = $foto1->getClientOriginalExtension();
-        //     if($extensaoimg !='jpg' && $extensaoimg != 'jpg' && $extensaoimg != 'png'){
-        //         return back()->with('Erro', 'imagem com formato inválido');
-        //     }
-        // }
-        // $anuncios->save();
+         if($request->foto1){
+            $foto1 = $request->foto1;
+            $extensaoimg = $foto1->getClientOriginalExtension();
+            if($extensaoimg !='jpg' && $extensaoimg != 'jpg' && $extensaoimg != 'png'){
+                 return back()->with('Erro', 'imagem com formato inválido');
+             }
+         }
+         $anuncios->save();
 
-        // if ($request->foto1) {
-        //     File::move($foto1, public_path().'/imagens_anuncios/imagem1/imagens'.$anuncios->id.'.'.$extensaoimg);
-        //     $anuncios->foto1 = '/imagens_anuncios/imagem1/imagens'.$anuncios->id.'.'.$extensaoimg;
-        //     $anuncios->save();
-        // }
+         if ($request->foto1) {
+             File::move($foto1, public_path().'/imagens_anuncios/imagem1/imagens'.$anuncios->id.'.'.$extensaoimg);
+             $anuncios->foto1 = '/imagens_anuncios/imagem1/imagens'.$anuncios->id.'.'.$extensaoimg;
+             $anuncios->save();
+         }
         //Foto2
         if($request->foto2){
             $foto2 = $request->foto2;
@@ -483,6 +488,8 @@ class anunciosController extends Controller
 
         //Para incrementar o número de cliques
         $anuncio->increment('numero_cliques');
+
+        //Para Mostrar os nomes dos relacionamentos
         $tipo_veiculo = TiposVeiculos::find($anuncio->tipo_veiculo_id);
         $marca = Marcas::find($anuncio->marca_id);
         $modelo = Modelos::find($anuncio->modelo_id);
