@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Anunciantes;
+use App\Models\Estados;
+use App\Models\Regioes;
+use App\Models\Cidades;
 use File;
 use DB;
 
@@ -21,24 +24,38 @@ class anuciantesController extends Controller
         //
         $anunciantes = Anunciantes::all();
  // Personalização dos campos da base de dados
- $dadosPersonalizados = [];
+ $query = DB::table('anunciantes')
+    ->join('estados', 'estados.id', '=', 'anunciantes.estado_id')
+    ->join('regioes', 'regioes.id', '=', 'anunciantes.regiao_id')
+    ->join('cidades', 'cidades.id', '=', 'anunciantes.cidade_id')
+    ->select(
+        'anunciantes.*',
+        'estados.estado as estado',
+        'regioes.regiao as regiao',
+        'cidades.cidade as cidade'
+    );
 
- foreach ($anunciantes as $anunciantes) {
-     // Personalize os campos conforme necessário
-     $dadosPersonalizados[] = [
-         'id' => $anunciantes->id,
-         'nome' => $anunciantes->nome,
-         'tipo' => $anunciantes->tipo,
-         'email' => $anunciantes->email,
-         'telefone' => $anunciantes->telefone,
-         'estado_id' => $anunciantes->estado_id,
-         'regiao_id' => $anunciantes->regiao_id,
-         'cidade_id' => $anunciantes->cidade_id,
-         'foto' => $anunciantes->foto ? env('URL_BASE_SERVIDOR') . $anunciantes->foto : null,
-         // Adicione mais campos personalizados conforme necessário
-     ];
- }
-    return response()->json($dadosPersonalizados);
+$anunciantes = $query->get();
+
+$dadosPersonalizados = [];
+
+foreach ($anunciantes as $anunciante) {
+    $dadosPersonalizados[] = [
+        'id' => $anunciante->id,
+        'nome' => $anunciante->nome,
+        'tipo' => $anunciante->tipo,
+        'telefone' => $anunciante->telefone,
+        'email' => $anunciante->email,
+        'regiao_id' => $anunciante->regiao,
+        'estado_id' => $anunciante->estado,
+        'cidade_id' => $anunciante->cidade,
+        'status' => $anunciante->status,
+        'foto' => $anunciante->foto ? env('URL_BASE_SERVIDOR') . $anunciante->foto : null,
+        // Adicione mais campos personalizados conforme necessário
+    ];
+}
+
+return response()->json($dadosPersonalizados);
     }
 
     /**
@@ -60,6 +77,22 @@ class anuciantesController extends Controller
     public function store(Request $request)
     {
         //
+
+        $estado = Estados::find($request->estado_id);
+        $regiao = Regioes::find($request->regiao_id);
+        $cidade = Cidades::find($request->cidade_id);
+
+
+        if(!$estado){
+            return response(['message'=> 'O Estado selecionado não existe'], 404);
+        }if(!$regiao){
+            return response(['message'=> 'A Regiao selecionada não existe'], 404);
+        }
+        if(!$cidade){
+            return response(['message'=> 'A Cidade selecionada não existe'], 404);
+        }
+
+
         $anunciantes = new Anunciantes;
         $anunciantes->nome = $request->nome;
         $anunciantes->tipo = $request->tipo;
@@ -81,23 +114,18 @@ class anuciantesController extends Controller
         if(!$anunciantes){
             return response(['message'=>'Anunciante não encontrado'], 404);
         }
-        if($request->foto){
-            $foto = $request->foto;
-            $extensaoimg = $foto->getClientOriginalExtension();
-            if($extensaoimg !='jpg' && $extensaoimg != 'jpg' && $extensaoimg != 'png'){
-                return back()->with('Erro', 'imagem com formato inválido');
-            }
 
-        }
-        $anunciantes->save();
-
-        if ($request->foto) {
-            File::move($foto, public_path().'/imagens_anunciantes/imagens'.$anunciantes->id.'.'.$extensaoimg);
-            $anunciantes->foto = '/imagens_anunciantes/imagens'.$anunciantes->id.'.'.$extensaoimg;
+        if($request->hasfile('foto'))
+        {
+            $file = $request->file('foto');
+            $extenstion = $file->getClientOriginalExtension();
+            $filename = time().'.'.$extenstion;
+            $file->move('uploads/anunciantes/imagens/', $filename);
+            $anunciantes->foto = 'uploads/anunciantes/imagens/'.$filename;
             $anunciantes->save();
         }
         $anunciantes->save();
-        return "Foto carregada com sucesso!";
+        return $anunciantes;
     }
     /**
      * Display the specified resource.
@@ -113,16 +141,22 @@ class anuciantesController extends Controller
         if(!$anunciante){
             return response(['message'=>'Anunciante não encontrado'], 404);
         }
+
+
+        $estado = Estados::find($anunciante->estado_id);
+        $regiao = Regioes::find($anunciante->regiao_id);
+        $cidade = Cidades::find($anunciante->cidade_id);
             // Personalize os campos conforme necessário
             $dadosPersonalizados[] = [
                 'id' => $anunciante->id,
                 'nome' => $anunciante->nome,
                 'tipo' => $anunciante->tipo,
-                'email' => $anunciante->email,
                 'telefone' => $anunciante->telefone,
-                'estado_id' => $anunciantes->estado_id,
-                'regiao_id' => $anunciantes->regiao_id,
-                'cidade_id' => $anunciantes->cidade_id,
+                'email' => $anunciante->email,
+                'regiao' => $regiao->regiao,
+                'estado' => $estado->estado,
+                'cidade' => $cidade->cidade,
+                'status' => $anunciante->status,
                 'foto' => $anunciante->foto ? env('URL_BASE_SERVIDOR') . $anunciante->foto : null,
                 // Adicione mais campos personalizados conforme necessário
             ];

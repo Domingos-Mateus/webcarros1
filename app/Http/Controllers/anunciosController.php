@@ -280,190 +280,115 @@ class anunciosController extends Controller
             return response(['message'=>'Anúncio não encontrado'], 404);
         }
         //return $anuncios;
-        $anuncios->foto1 = $anuncios->foto1;
-        $anuncios->foto2 = $anuncios->foto2;
-        $anuncios->foto3 = $anuncios->foto3;
-        $anuncios->foto4 = $anuncios->foto4;
-        $anuncios->foto5 = $anuncios->foto5;
-        $anuncios->foto6 = $anuncios->foto6;
-        $anuncios->foto7 = $anuncios->foto7;
-        $anuncios->foto8 = $anuncios->foto8;
-        $anuncios->foto9 = $anuncios->foto9;
-        $anuncios->foto10 = $anuncios->foto10;
 
 
-        /*
         if($request->hasfile('foto1'))
         {
             $file = $request->file('foto1');
-            $extension = $file->getClientOriginalExtension();
-            $filename = time().'.'.$extension;
-            $file->move('/imagens_anuncios/imagem1/'.$filename);
-            $anuncios->foto1 = '/imagens_anuncios/imagem1/'.$filename;
-            $anuncios->save();
-        }
-*/
-         //Foto1
-         if($request->foto1){
-            $foto1 = $request->foto1;
-            $extensaoimg = $foto1->getClientOriginalExtension();
-            if($extensaoimg !='jpg' && $extensaoimg != 'jpg' && $extensaoimg != 'png'){
-                 return back()->with('Erro', 'imagem com formato inválido');
-             }
-         }
-         $anuncios->save();
-
-         if ($request->foto1) {
-             File::move($foto1, public_path().'/imagens_anuncios/imagem1/imagens'.$anuncios->id.'.'.$extensaoimg);
-             $anuncios->foto1 = '/imagens_anuncios/imagem1/imagens'.$anuncios->id.'.'.$extensaoimg;
-             $anuncios->save();
-         }
-        //Foto2
-        if($request->foto2){
-            $foto2 = $request->foto2;
-            $extensaoimg = $foto2->getClientOriginalExtension();
-            if($extensaoimg !='jpg' && $extensaoimg != 'jpg' && $extensaoimg != 'png'){
-                return back()->with('Erro', 'imagem com formato inválido');
-            }
-        }
-        $anuncios->save();
-
-        if ($request->foto2) {
-            File::move($foto2, public_path().'/imagens_anuncios/imagem2/imagens'.$anuncios->id.'.'.$extensaoimg);
-            $anuncios->foto2 = '/imagens_anuncios/imagem2/imagens'.$anuncios->id.'.'.$extensaoimg;
+            $extenstion = $file->getClientOriginalExtension();
+            $filename = time().'.'.$extenstion;
+            $file->move('uploads/anuncios/imagens/', $filename);
+            $anuncios->foto1 = 'uploads/anuncios/imagens/'.$filename;
             $anuncios->save();
         }
 
-             //Foto3
-             if($request->foto3){
-                $foto3 = $request->foto3;
-                $extensaoimg = $foto3->getClientOriginalExtension();
-                if($extensaoimg !='jpg' && $extensaoimg != 'jpg' && $extensaoimg != 'png'){
-                    return back()->with('Erro', 'imagem com formato inválido');
-                }
-            }
+        if($request->hasfile('foto2'))
+        {
+            $file = $request->file('foto2');
+            $extenstion = $file->getClientOriginalExtension();
+            $filename = time().'.'.$extenstion;
+            $file->move('uploads/anuncios/imagens/', $filename);
+            $anuncios->foto2 = 'uploads/anuncios/imagens/'.$filename;
             $anuncios->save();
+        }
 
-            if ($request->foto3) {
-                File::move($foto3, public_path().'/imagens_anuncios/imagem3/imagens'.$anuncios->id.'.'.$extensaoimg);
-                $anuncios->foto3 = '/imagens_anuncios/imagem3/imagens'.$anuncios->id.'.'.$extensaoimg;
-                $anuncios->save();
-            }
-
-             //Foto4
-             if($request->foto4){
-                $foto4 = $request->foto4;
-                $extensaoimg = $foto4->getClientOriginalExtension();
-                if($extensaoimg !='jpg' && $extensaoimg != 'jpg' && $extensaoimg != 'png'){
-                    return back()->with('Erro', 'imagem com formato inválido');
-                }
-            }
+        if($request->hasfile('foto3'))
+        {
+            $file = $request->file('foto3');
+            $extenstion = $file->getClientOriginalExtension();
+            $filename = time().'.'.$extenstion;
+            $file->move('uploads/anuncios/imagens/', $filename);
+            $anuncios->foto3 = 'uploads/anuncios/imagens/'.$filename;
             $anuncios->save();
+        }
 
-            if ($request->foto4) {
-                File::move($foto4, public_path().'/imagens_anuncios/imagem4/imagens'.$anuncios->id.'.'.$extensaoimg);
-                $anuncios->foto4 = '/imagens_anuncios/imagem3/imagens'.$anuncios->id.'.'.$extensaoimg;
-                $anuncios->save();
-            }
-
-            //Foto5
-            if($request->foto5){
-                $foto5 = $request->foto5;
-                $extensaoimg = $foto5->getClientOriginalExtension();
-                if($extensaoimg !='jpg' && $extensaoimg != 'jpg' && $extensaoimg != 'png'){
-                    return back()->with('Erro', 'imagem com formato inválido');
-                }
-            }
+        if($request->hasfile('foto4'))
+        {
+            $file = $request->file('foto4');
+            $extenstion = $file->getClientOriginalExtension();
+            $filename = time().'.'.$extenstion;
+            $file->move('uploads/anuncios/imagens/', $filename);
+            $anuncios->foto4 = 'uploads/anuncios/imagens/'.$filename;
             $anuncios->save();
+        }
 
-            if ($request->foto5) {
-                File::move($foto5, public_path().'/imagens_anuncios/imagem5/imagens'.$anuncios->id.'.'.$extensaoimg);
-                $anuncios->foto5 = '/imagens_anuncios/imagem5/imagens'.$anuncios->id.'.'.$extensaoimg;
-                $anuncios->save();
-            }
-
-              //Foto6
-              if($request->foto6){
-                $foto6 = $request->foto6;
-                $extensaoimg = $foto6->getClientOriginalExtension();
-                if($extensaoimg !='jpg' && $extensaoimg != 'jpg' && $extensaoimg != 'png'){
-                    return back()->with('Erro', 'imagem com formato inválido');
-                }
-            }
+        if($request->hasfile('foto5'))
+        {
+            $file = $request->file('foto5');
+            $extenstion = $file->getClientOriginalExtension();
+            $filename = time().'.'.$extenstion;
+            $file->move('uploads/anuncios/imagens/', $filename);
+            $anuncios->foto5 = 'uploads/anuncios/imagens/'.$filename;
             $anuncios->save();
-
-            if ($request->foto6) {
-                File::move($foto6, public_path().'/imagens_anuncios/imagem6/imagens'.$anuncios->id.'.'.$extensaoimg);
-                $anuncios->foto6 = '/imagens_anuncios/imagem6/imagens'.$anuncios->id.'.'.$extensaoimg;
-                $anuncios->save();
-            }
-
-                  //Foto7
-                  if($request->foto7){
-                    $foto7 = $request->foto7;
-                    $extensaoimg = $foto7->getClientOriginalExtension();
-                    if($extensaoimg !='jpg' && $extensaoimg != 'jpg' && $extensaoimg != 'png'){
-                        return back()->with('Erro', 'imagem com formato inválido');
-                    }
-                }
-                $anuncios->save();
-
-                if ($request->foto7) {
-                    File::move($foto7, public_path().'/imagens_anuncios/imagem7/imagens'.$anuncios->id.'.'.$extensaoimg);
-                    $anuncios->foto7 = '/imagens_anuncios/imagem7/imagens'.$anuncios->id.'.'.$extensaoimg;
-                    $anuncios->save();
-                }
-
-                    //Foto8
-                    if($request->foto8){
-                        $foto8 = $request->foto8;
-                        $extensaoimg = $foto8->getClientOriginalExtension();
-                        if($extensaoimg !='jpg' && $extensaoimg != 'jpg' && $extensaoimg != 'png'){
-                            return back()->with('Erro', 'imagem com formato inválido');
-                        }
-                    }
-                    $anuncios->save();
-
-                    if ($request->foto8) {
-                        File::move($foto8, public_path().'/imagens_anuncios/imagem8/imagens'.$anuncios->id.'.'.$extensaoimg);
-                        $anuncios->foto8 = '/imagens_anuncios/imagem8/imagens'.$anuncios->id.'.'.$extensaoimg;
-                        $anuncios->save();
-                    }
+        }
 
 
-
-                    //Foto9
-                    if($request->foto9){
-                        $foto9 = $request->foto9;
-                        $extensaoimg = $foto9->getClientOriginalExtension();
-                        if($extensaoimg !='jpg' && $extensaoimg != 'jpg' && $extensaoimg != 'png'){
-                            return back()->with('Erro', 'imagem com formato inválido');
-                        }
-                    }
-                    $anuncios->save();
-
-                    if ($request->foto9) {
-                        File::move($foto9, public_path().'/imagens_anuncios/imagem9/imagens'.$anuncios->id.'.'.$extensaoimg);
-                        $anuncios->foto9 = '/imagens_anuncios/imagem9/imagens'.$anuncios->id.'.'.$extensaoimg;
-                        $anuncios->save();
-                    }
+        if($request->hasfile('foto6'))
+        {
+            $file = $request->file('foto6');
+            $extenstion = $file->getClientOriginalExtension();
+            $filename = time().'.'.$extenstion;
+            $file->move('uploads/anuncios/imagens/', $filename);
+            $anuncios->foto6 = 'uploads/anuncios/imagens/'.$filename;
+            $anuncios->save();
+        }
 
 
-                     //Foto10
-                     if($request->foto10){
-                        $foto10 = $request->foto10;
-                        $extensaoimg = $foto10->getClientOriginalExtension();
-                        if($extensaoimg !='jpg' && $extensaoimg != 'jpg' && $extensaoimg != 'png'){
-                            return back()->with('Erro', 'imagem com formato inválido');
-                        }
-                    }
-                    $anuncios->save();
+        if($request->hasfile('foto7'))
+        {
+            $file = $request->file('foto7');
+            $extenstion = $file->getClientOriginalExtension();
+            $filename = time().'.'.$extenstion;
+            $file->move('uploads/anuncios/imagens/', $filename);
+            $anuncios->foto7 = 'uploads/anuncios/imagens/'.$filename;
+            $anuncios->save();
+        }
 
-                    if ($request->foto10) {
-                        File::move($foto10, public_path().'/imagens_anuncios/imagem10/imagens'.$anuncios->id.'.'.$extensaoimg);
-                        $anuncios->foto10 = '/imagens_anuncios/imagem10/imagens'.$anuncios->id.'.'.$extensaoimg;
-                        $anuncios->save();
-                    }
+        if($request->hasfile('foto8'))
+        {
+            $file = $request->file('foto8');
+            $extenstion = $file->getClientOriginalExtension();
+            $filename = time().'.'.$extenstion;
+            $file->move('uploads/anuncios/imagens/', $filename);
+            $anuncios->foto8 = 'uploads/anuncios/imagens/'.$filename;
+            $anuncios->save();
+        }
+
+
+        if($request->hasfile('foto9'))
+        {
+            $file = $request->file('foto9');
+            $extenstion = $file->getClientOriginalExtension();
+            $filename = time().'.'.$extenstion;
+            $file->move('uploads/anuncios/imagens/', $filename);
+            $anuncios->foto9 = 'uploads/anuncios/imagens/'.$filename;
+            $anuncios->save();
+        }
+
+        if($request->hasfile('foto10'))
+        {
+            $file = $request->file('foto10');
+            $extenstion = $file->getClientOriginalExtension();
+            $filename = time().'.'.$extenstion;
+            $file->move('uploads/anuncios/imagens/', $filename);
+            $anuncios->foto10 = 'uploads/anuncios/imagens/'.$filename;
+            $anuncios->save();
+        }
+
+
+
+
+
 
         $anuncios->save();
         return $anuncios;

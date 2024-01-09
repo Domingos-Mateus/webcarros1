@@ -19,7 +19,7 @@ class planosAnuciantesController extends Controller
     {
         //
         $planosAnunciantes = PlanosAnunciantes::all();
-  
+
         $planosAnunciantes = DB::table('planos_anunciantes')
                 ->join('planos','planos.id','planos_anunciantes.plano_id')
                 ->join('anunciantes','anunciantes.id','planos_anunciantes.anunciante_id')
@@ -31,10 +31,10 @@ class planosAnuciantesController extends Controller
             $dadosPersonalizados[] = [
                 'id' => $planosAnunciante->id,
                 'nome_plano' => $planosAnunciante->nome_plano,
-                'id_planos' => $planosAnunciante->id,
+                'id_planos' => $planosAnunciante->id_planos,
                 'nome_plano' => $planosAnunciante->nome_plano,
                 'nome_anunciantes' => $planosAnunciante->nome_anunciantes,
-                'id_anunciantes' => $planosAnunciante->id
+                'id_anunciantes' => $planosAnunciante->id_anunciante,
             ];
         }
         return response()->json($dadosPersonalizados);
@@ -111,7 +111,7 @@ class planosAnuciantesController extends Controller
         if(!$planosAnunciantes){
             return response(['message'=>'Plano de anunciantes não encontrado'], 404);
         }
-        
+
         $planosAnunciantes->plano_id = $request->plano_id;
         $planosAnunciantes->anunciante_id = $request->anunciante_id;
         $planosAnunciantes->save();
