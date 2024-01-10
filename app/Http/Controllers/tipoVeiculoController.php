@@ -108,5 +108,7 @@ class tipoVeiculoController extends Controller
     {
         //
         TiposVeiculos::destroy($id);
+        return response(['message'=>'Anunciante Eliminado com sucesso'], 200);
+
     }
 }

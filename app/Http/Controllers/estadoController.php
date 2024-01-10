@@ -44,8 +44,9 @@ class estadoController extends Controller
         //
         $estados = new Estados;
 
+        $estados->uf = $request->uf;
         $estados->estado = $request->estado;
-        
+
         $estados->save();
         return "Estado Cadastrado";
     }
@@ -75,7 +76,7 @@ class estadoController extends Controller
     public function edit($id)
     {
         //
-        
+
     }
 
     /**
@@ -92,8 +93,9 @@ class estadoController extends Controller
         if(!$estados){
             return response(['message'=>'Estado não encontrado'], 404);
         }
+        $estados->uf = $request->uf;
         $estados->estado = $request->estado;
-        
+
         $estados->save();
         return "Estado Actualizado";
     }

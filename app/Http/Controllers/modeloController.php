@@ -19,7 +19,6 @@ class modeloController extends Controller
     public function index()
     {
         //
-        //$modelos = Modelos::all();
         $query = DB::table('modelos')
                 ->join('marcas','marcas.id','modelos.marca_id')
                 ->select('modelos.*', 'marcas.nome_marca','marcas.id as id_marcas');
@@ -86,7 +85,7 @@ class modeloController extends Controller
         if(!$modelo){
             return response(['message'=>'Modelo não encontrado'], 404);
         }
-        
+
         return $modelo;
     }
 

@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Models\Categorias;
+use App\Models\CategoriaOpcionais;
 
-class categoriasController extends Controller
+class categoriaOpcionaisController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,9 +16,8 @@ class categoriasController extends Controller
     public function index()
     {
         //
-        $categorias = Categorias::all();
-        return $categorias;
-
+        $catgoriasOpcionais = CategoriaOpcionais::all();
+        return $catgoriasOpcionais;
     }
 
     /**
@@ -29,7 +28,7 @@ class categoriasController extends Controller
     public function create()
     {
         //
-       }
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -40,21 +39,12 @@ class categoriasController extends Controller
     public function store(Request $request)
     {
         //
-        $categorias = new Categorias;
+        $catgoriasOpcionais = new CategoriaOpcionais;
 
-        $categorias->nome = $request->nome;
-        $categorias->descricao = $request->descricao;
-/*
-        $categorias = [
-            'nome' => 'teste1',
-            'descricao' => 'Testando',
-        ];
+        $catgoriasOpcionais->nome = $request->nome;
+        $catgoriasOpcionais->save();
 
-        return new JsonResponse($categorias);
-*/
-        $categorias->save();
-
-        return $categorias;
+        return $catgoriasOpcionais;
     }
 
     /**
@@ -66,11 +56,11 @@ class categoriasController extends Controller
     public function show($id)
     {
         //
-        $categorias = Categorias::find($id);
-        if(!$categorias){
-            return response(['message'=>'Categoria não encontrado'], 404);
+        $catgoriasOpcionais = CategoriaOpcionais::find($id);
+        if(!$catgoriasOpcionais){
+            return response(['message'=>'Categoria Opcionais não encontrada'], 404);
         }
-        return $categorias;
+        return $catgoriasOpcionais;
     }
 
     /**
@@ -82,7 +72,6 @@ class categoriasController extends Controller
     public function edit($id)
     {
         //
-
     }
 
     /**
@@ -95,16 +84,14 @@ class categoriasController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $categorias = Categorias::find($id);
-        if(!$categorias){
-            return response(['message'=>'Categoria não encontrado'], 404);
+        $catgoriasOpcionais = CategoriaOpcionais::find($id);
+        if(!$catgoriasOpcionais){
+            return response(['message'=>'Categoria Opcionais não encontrada'], 404);
         }
-        $categorias->nome = $request->nome;
-        $categorias->descricao = $request->descricao;
+        $catgoriasOpcionais->nome = $request->nome;
+        $catgoriasOpcionais->save();
 
-        $categorias->save();
-
-        return $categorias;
+        return $catgoriasOpcionais;
     }
 
     /**
@@ -116,6 +103,7 @@ class categoriasController extends Controller
     public function destroy($id)
     {
         //
-        Categorias::destroy($id);
+        CategoriaOpcionais::destroy($id);
+        return response(['message'=>'Categoria Opcionais Eliminado com sucesso'], 200);
     }
 }

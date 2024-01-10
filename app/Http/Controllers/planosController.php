@@ -133,11 +133,9 @@ class planosController extends Controller
     public function destroy(Request $request)
     {
         //
-        if(!$request->plano_id){
-            return response(['message'=>'Plano não encontrado'], 404);
-        }
+        Planos::destroy($id);
 
-        Planos::destroy($request->plano_id);
+        //return "Plano eliminado com sucesso!";
         return response(['message'=>'Plano eliminado com sucesso!'], 200);
     }
 }

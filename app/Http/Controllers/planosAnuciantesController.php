@@ -27,11 +27,10 @@ class planosAnuciantesController extends Controller
             $dadosPersonalizados[] = [
                 'id' => $planosAnunciante->id,
                 'nome_plano' => $planosAnunciante->nome_plano,
-                'id_planos' => $planosAnunciante->id,
+                'id_planos' => $planosAnunciante->id_planos,
                 'nome_plano' => $planosAnunciante->nome_plano,
                 'nome_anunciantes' => $planosAnunciante->nome_anunciantes,
-                'id_anunciantes' => $planosAnunciante->id,
-                'status' => $planosAnunciante->status
+                'id_anunciantes' => $planosAnunciante->id_anunciante,
             ];
         }
         return response()->json($dadosPersonalizados);
