@@ -10,11 +10,7 @@ use DB;
 
 class planosAnuciantesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         //
@@ -40,40 +36,24 @@ class planosAnuciantesController extends Controller
         return response()->json($dadosPersonalizados);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         //
         $planosAnunciantes = new PlanosAnunciantes;
         $planosAnunciantes->plano_id = $request->plano_id;
         $planosAnunciantes->anunciante_id = $request->anunciante_id;
+        $planosAnunciantes->status = $request->status;
 
         $planosAnunciantes->save();
 
         return $planosAnunciantes;
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //
@@ -85,24 +65,11 @@ class planosAnuciantesController extends Controller
         return $planosAnunciantes;
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         //
@@ -114,17 +81,12 @@ class planosAnuciantesController extends Controller
 
         $planosAnunciantes->plano_id = $request->plano_id;
         $planosAnunciantes->anunciante_id = $request->anunciante_id;
+        $planosAnunciantes->status = $request->status;
         $planosAnunciantes->save();
 
         return $planosAnunciantes;
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         //

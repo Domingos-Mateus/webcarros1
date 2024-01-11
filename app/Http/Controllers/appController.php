@@ -37,5 +37,41 @@ class appController extends Controller
             // tratar erro aqui
             return $e;
         }
+
+
     }
+
+
+    public function verificar_cnpj($cnpj){
+
+        $client = new Client();
+        $url = "https://www.receitaws.com.br/v1/cnpj/${cnpj}";
+
+
+
+        try {
+            $response = Http::withHeaders([
+                'Content-type'  => 'application/json; charset=utf-8',
+                'Accept'        => 'application/json',
+                'Authorization' => 'Bearer 06aef429-a981-3ec5-a1f8-71d38d86481e',
+            ])->get($url);
+
+            $status = $response->status();
+
+            if ($status != 200) {
+                return $response;
+            }
+
+            $resultado = json_decode($response->getBody()->getContents());
+
+            return $resultado;
+
+        } catch (\Exception $e) {
+            // tratar erro aqui
+            return $e;
+        }
+
+
+    }
+
 }

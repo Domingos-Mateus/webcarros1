@@ -37,7 +37,13 @@ class anunciosController extends Controller
             ->join('cors','cors.id','anuncios.cor_id')
             ->join('transmissaos','transmissaos.id','anuncios.transmissao_id')
             ->join('combustivels','combustivels.id','anuncios.combustivel_id')
-            ->select('anuncios.*', 'marcas.nome_marca', 'marcas.id as id_marcas', 'modelos.nome_modelo', 'modelos.id as id_m','categorias.nome as nome_categoria', 'categorias.id as id_categoria', 'anunciantes.nome_empresa as nome_anunciante', 'anunciantes.id as id_anunciatentes','tipos_veiculos.tipo_veiculo','tipos_veiculos.id as id_tipos_veiculo', 'cors.cor','cors.id as id_cor','tecnologias.tecnologia','tecnologias.id as idtecnologia','combustivels.combustivel','combustivels.id as id_combustivel','transmissaos.transmissao','transmissaos.id as id_transmissao');
+            ->select('anuncios.*', 'marcas.nome_marca', 'marcas.id as id_marcas',
+             'modelos.nome_modelo', 'modelos.id as id_m','categorias.nome as nome_categoria',
+             'categorias.id as id_categoria', 'anunciantes.nome_empresa as nome_anunciante',
+             'anunciantes.id as id_anunciatentes','tipos_veiculos.tipo_veiculo',
+             'tipos_veiculos.id as id_tipos_veiculo', 'cors.cor','cors.id as id_cor','tecnologias.tecnologia',
+             'tecnologias.id as idtecnologia','combustivels.combustivel','combustivels.id as id_combustivel',
+             'transmissaos.transmissao','transmissaos.id as id_transmissao');
 
         // Adiciona os filtros conforme os parâmetros passados
         if (request('nome_marca')) {
@@ -80,18 +86,18 @@ class anunciosController extends Controller
         foreach ($anuncios as $anuncio) {
             $dadosPersonalizados[] = [
                 'id' => $anuncio->id,
-                'tipo_veiculo_id' => $anuncio->tipo_veiculo,
-                'tecnologia_id' => $anuncio->tecnologia,
+                'tipo_veiculo_id' => $anuncio->tipo_veiculo_id,
+                'tecnologia_id' => $anuncio->tecnologia_id,
                 'nome_marca' => $anuncio->nome_marca,
-                'id_marca' => $anuncio->id,
+                'id_marca' => $anuncio->id_marca,
                 'nome_modelo' => $anuncio->nome_modelo,
-                'id_m' => $anuncio->id,
+                'id_modelo' => $anuncio->id_modelo,
                 'numero_cliques' => $anuncio->numero_cliques,
                 'situacao_veiculo' => $anuncio->situacao_veiculo,
                 'nome_anunciante' => $anuncio->nome_anunciante,
-                'id_anunciatentes' => $anuncio->id,
+                'id_anunciante' => $anuncio->id_anunciante,
                 'nome_categoria' => $anuncio->nome_categoria,
-                'id_categoria' => $anuncio->id,
+                'id_categoria' => $anuncio->id_categoria,
                 'data_inicio' => $anuncio->data_inicio,
                 'data_fim' => $anuncio->data_fim,
                 'ordenacao' => $anuncio->ordenacao,
@@ -116,25 +122,25 @@ class anunciosController extends Controller
                 'portas' => $anuncio->portas,
                 'cilindros' => $anuncio->cilindros,
                 'motor' => $anuncio->motor,
-                'cor' => $anuncio->cor,
-                'transmissao' => $anuncio->transmissao,
-                'combustivel' => $anuncio->combustivel,
+                'cor' => $anuncio->cor_id,
+                'transmissao' => $anuncio->transmissao_id,
+                'combustivel' => $anuncio->combustivel_id,
                 'placa' => $anuncio->placa,
                 'km' => $anuncio->km,
                 'sinistrado' => $anuncio->sinistrado,
                 'conforto_id' => $anuncio->conforto_id,
                 'seguranca_id' => $anuncio->seguranca_id,
                 'descricao' => $anuncio->descricao,
-                'foto1' => $anuncio->foto1 ? env('URL_BASE_SERVIDOR') . $anuncio->foto1 : null,
-                'foto2' => $anuncio->foto2 ? env('URL_BASE_SERVIDOR') . $anuncio->foto2 : null,
-                'foto3' => $anuncio->foto3 ? env('URL_BASE_SERVIDOR') . $anuncio->foto3 : null,
-                'foto4' => $anuncio->foto4 ? env('URL_BASE_SERVIDOR') . $anuncio->foto4 : null,
-                'foto5' => $anuncio->foto5 ? env('URL_BASE_SERVIDOR') . $anuncio->foto5 : null,
-                'foto6' => $anuncio->foto6 ? env('URL_BASE_SERVIDOR') . $anuncio->foto6 : null,
-                'foto7' => $anuncio->foto7 ? env('URL_BASE_SERVIDOR') . $anuncio->foto7 : null,
-                'foto8' => $anuncio->foto8 ? env('URL_BASE_SERVIDOR') . $anuncio->foto8 : null,
-                'foto9' => $anuncio->foto9 ? env('URL_BASE_SERVIDOR') . $anuncio->foto9 : null,
-                'foto10' => $anuncio->foto10 ? env('URL_BASE_SERVIDOR') . $anuncio->foto10 : null,
+                'foto1' => $anuncio->foto1 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto1 : null,
+                'foto2' => $anuncio->foto2 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto2 : null,
+                'foto3' => $anuncio->foto3 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto3 : null,
+                'foto4' => $anuncio->foto4 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto4 : null,
+                'foto5' => $anuncio->foto5 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto5 : null,
+                'foto6' => $anuncio->foto6 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto6 : null,
+                'foto7' => $anuncio->foto7 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto7 : null,
+                'foto8' => $anuncio->foto8 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto8 : null,
+                'foto9' => $anuncio->foto9 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto9 : null,
+                'foto10' => $anuncio->foto10 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto10 : null,
                 // Adicione mais campos personalizados conforme necessário
             ];
         }
@@ -276,11 +282,6 @@ class anunciosController extends Controller
         //
         $anuncios = Anuncios::find($id);
 
-        if(!$anuncios){
-            return response(['message'=>'Anúncio não encontrado'], 404);
-        }
-        //return $anuncios;
-
 
         if($request->hasfile('foto1'))
         {
@@ -386,8 +387,46 @@ class anunciosController extends Controller
         }
 
 
+        if($request->hasfile('foto7'))
+        {
+            $file = $request->file('foto7');
+            $extenstion = $file->getClientOriginalExtension();
+            $filename = time().'.'.$extenstion;
+            $file->move('uploads/anuncios/imagens/', $filename);
+            $anuncios->foto7 = 'uploads/anuncios/imagens/'.$filename;
+            $anuncios->save();
+        }
+
+        if($request->hasfile('foto8'))
+        {
+            $file = $request->file('foto8');
+            $extenstion = $file->getClientOriginalExtension();
+            $filename = time().'.'.$extenstion;
+            $file->move('uploads/anuncios/imagens/', $filename);
+            $anuncios->foto8 = 'uploads/anuncios/imagens/'.$filename;
+            $anuncios->save();
+        }
 
 
+        if($request->hasfile('foto9'))
+        {
+            $file = $request->file('foto9');
+            $extenstion = $file->getClientOriginalExtension();
+            $filename = time().'.'.$extenstion;
+            $file->move('uploads/anuncios/imagens/', $filename);
+            $anuncios->foto9 = 'uploads/anuncios/imagens/'.$filename;
+            $anuncios->save();
+        }
+
+        if($request->hasfile('foto10'))
+        {
+            $file = $request->file('foto10');
+            $extenstion = $file->getClientOriginalExtension();
+            $filename = time().'.'.$extenstion;
+            $file->move('uploads/anuncios/imagens/', $filename);
+            $anuncios->foto10 = 'uploads/anuncios/imagens/'.$filename;
+            $anuncios->save();
+        }
 
 
         $anuncios->save();
@@ -472,16 +511,16 @@ class anunciosController extends Controller
                 'seguranca_id' => $anuncio->seguranca_id,
                 'som' => $anuncio->som,
                 'descricao' => $anuncio->descricao,
-                'foto1' => $anuncio->foto1 ? env('URL_BASE_SERVIDOR') . $anuncio->foto1 : null,
-                'foto2' => $anuncio->foto2 ? env('URL_BASE_SERVIDOR') . $anuncio->foto2 : null,
-                'foto3' => $anuncio->foto3 ? env('URL_BASE_SERVIDOR') . $anuncio->foto3 : null,
-                'foto4' => $anuncio->foto4 ? env('URL_BASE_SERVIDOR') . $anuncio->foto4 : null,
-                'foto5' => $anuncio->foto5 ? env('URL_BASE_SERVIDOR') . $anuncio->foto5 : null,
-                'foto6' => $anuncio->foto6 ? env('URL_BASE_SERVIDOR') . $anuncio->foto6 : null,
-                'foto7' => $anuncio->foto7 ? env('URL_BASE_SERVIDOR') . $anuncio->foto7 : null,
-                'foto8' => $anuncio->foto8 ? env('URL_BASE_SERVIDOR') . $anuncio->foto8 : null,
-                'foto9' => $anuncio->foto9 ? env('URL_BASE_SERVIDOR') . $anuncio->foto9 : null,
-                'foto10' => $anuncio->foto10 ? env('URL_BASE_SERVIDOR') . $anuncio->foto10 : null,
+                'foto1' => $anuncio->foto1 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto1 : null,
+                'foto2' => $anuncio->foto2 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto2 : null,
+                'foto3' => $anuncio->foto3 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto3 : null,
+                'foto4' => $anuncio->foto4 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto4 : null,
+                'foto5' => $anuncio->foto5 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto5 : null,
+                'foto6' => $anuncio->foto6 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto6 : null,
+                'foto7' => $anuncio->foto7 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto7 : null,
+                'foto8' => $anuncio->foto8 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto8 : null,
+                'foto9' => $anuncio->foto9 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto9 : null,
+                'foto10' => $anuncio->foto10 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto10 : null,
                 // Adicione mais campos personalizados conforme necessário
             ];
 

@@ -67,6 +67,7 @@ foreach ($anunciantes as $anunciante) {
         'cidade_id' => $anunciante->cidade,
         'cidade_id' => $anunciante->cidade,
         'status' => $anunciante->status,
+        'observacao' => $anunciante->observacao,
         'foto' => $anunciante->foto ? env('URL_BASE_SERVIDOR') . $anunciante->foto : null,
         // Adicione mais campos personalizados conforme necessário
     ];
@@ -136,6 +137,7 @@ return response()->json($dadosPersonalizados);
         $anunciantes->cidade_id = $request->cidade_id;
         $anunciantes->cidade_comercial_id = $request->cidade_comercial_id;
         $anunciantes->regiao_id = $request->regiao_id;
+        $anunciantes->observacao = $request->observacao;
 
         $anunciantes->save();
         return $anunciantes;
@@ -207,6 +209,7 @@ return response()->json($dadosPersonalizados);
                 'cidade' => $cidade->cidade,
                 'cidade' => $cidade->cidade,
                 'status' => $anunciante->status,
+                'observacao' => $anunciante->observacao,
                 'foto' => $anunciante->foto ? env('URL_BASE_SERVIDOR') . $anunciante->foto : null,
                 // Adicione mais campos personalizados conforme necessário
             ];
@@ -262,6 +265,7 @@ return response()->json($dadosPersonalizados);
         $anunciantes->cidade_id = $request->cidade_id;
         $anunciantes->cidade_comercial_id = $request->cidade_comercial_id;
         $anunciantes->regiao_id = $request->regiao_id;
+        $anunciantes->observacao = $request->observacao;
 
         $anunciantes->save();
         return $anunciantes;
