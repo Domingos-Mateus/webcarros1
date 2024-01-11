@@ -37,7 +37,7 @@ class anunciosController extends Controller
             ->join('cors','cors.id','anuncios.cor_id')
             ->join('transmissaos','transmissaos.id','anuncios.transmissao_id')
             ->join('combustivels','combustivels.id','anuncios.combustivel_id')
-            ->select('anuncios.*', 'marcas.nome_marca', 'marcas.id as id_marcas', 'modelos.nome_modelo', 'modelos.id as id_m','categorias.nome as nome_categoria', 'categorias.id as id_categoria', 'anunciantes.nome as nome_anunciante', 'anunciantes.id as id_anunciatentes','tipos_veiculos.tipo_veiculo','tipos_veiculos.id as id_tipos_veiculo', 'cors.cor','cors.id as id_cor','tecnologias.tecnologia','tecnologias.id as idtecnologia','combustivels.combustivel','combustivels.id as id_combustivel','transmissaos.transmissao','transmissaos.id as id_transmissao');
+            ->select('anuncios.*', 'marcas.nome_marca', 'marcas.id as id_marcas', 'modelos.nome_modelo', 'modelos.id as id_m','categorias.nome as nome_categoria', 'categorias.id as id_categoria', 'anunciantes.nome_empresa as nome_anunciante', 'anunciantes.id as id_anunciatentes','tipos_veiculos.tipo_veiculo','tipos_veiculos.id as id_tipos_veiculo', 'cors.cor','cors.id as id_cor','tecnologias.tecnologia','tecnologias.id as idtecnologia','combustivels.combustivel','combustivels.id as id_combustivel','transmissaos.transmissao','transmissaos.id as id_transmissao');
 
         // Adiciona os filtros conforme os parâmetros passados
         if (request('nome_marca')) {

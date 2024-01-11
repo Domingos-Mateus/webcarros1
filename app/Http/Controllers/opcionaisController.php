@@ -23,9 +23,11 @@ class opcionaisController extends Controller
         ->join('categoria_opcionais','categoria_opcionais.id','opcionais.categoria_opcional_id')
         ->select('opcionais.*', 'categoria_opcionais.nome as nome_categoria','categoria_opcionais.id as id_categorias');
   // Adiciona os filtros conforme os parâmetros passados
+  /*
   if (request('nome_categoria')) {
     $query->where('categoria_opcionais.nome_categoria', 'LIKE', '%' . request('nome_categoria') . '%');
 }
+*/
 
 $opcionais = $query->get();
 $dadosPersonalizados = [];
@@ -34,9 +36,8 @@ foreach ($opcionais as $opcional) {
     // Personalize os campos conforme necessário
     $dadosPersonalizados[] = [
         'id' => $opcional->id,
-        'nome_categoria' => $opcional->nome_opcional,
-        'nome' => $opcional->nome_marca,
-        'id_categorias' => $opcional->id_marcas,
+        'categoria_opcional' => $opcional->nome_categoria,
+        'nome' => $opcional->nome,
     ];
 }
 return response()->json($dadosPersonalizados);

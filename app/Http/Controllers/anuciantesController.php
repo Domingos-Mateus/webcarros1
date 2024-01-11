@@ -42,12 +42,29 @@ $dadosPersonalizados = [];
 foreach ($anunciantes as $anunciante) {
     $dadosPersonalizados[] = [
         'id' => $anunciante->id,
-        'nome' => $anunciante->nome,
-        'tipo' => $anunciante->tipo,
+        'nome_empresa' => $anunciante->nome_empresa,
+        'Pessoal_responsavel' => $anunciante->pessoal_responsavel,
+        'tipo_anunciante' => $anunciante->tipo_anunciante,
+        'cnpj' => $anunciante->cnpj,
         'telefone' => $anunciante->telefone,
+        'celular' => $anunciante->celular,
+        'whatsapp' => $anunciante->whatsapp,
         'email' => $anunciante->email,
+        'cep' => $anunciante->cep,
+        'endereco' => $anunciante->endereco,
+        'numero' => $anunciante->numero,
+        'complemento' => $anunciante->complemento,
+        'bairro' => $anunciante->bairro,
+        'endereco_comercial' => $anunciante->endereco_comercial,
+        'numero_comercial' => $anunciante->numero_comercial,
+        'complemento_comercial' => $anunciante->complemento_comercial,
+        'bairro_comercial' => $anunciante->bairro_comercial,
+
+
+
         'regiao_id' => $anunciante->regiao,
         'estado_id' => $anunciante->estado,
+        'cidade_id' => $anunciante->cidade,
         'cidade_id' => $anunciante->cidade,
         'status' => $anunciante->status,
         'foto' => $anunciante->foto ? env('URL_BASE_SERVIDOR') . $anunciante->foto : null,
@@ -85,7 +102,8 @@ return response()->json($dadosPersonalizados);
 
         if(!$estado){
             return response(['message'=> 'O Estado selecionado não existe'], 404);
-        }if(!$regiao){
+        }
+        if(!$regiao){
             return response(['message'=> 'A Regiao selecionada não existe'], 404);
         }
         if(!$cidade){
@@ -94,14 +112,30 @@ return response()->json($dadosPersonalizados);
 
 
         $anunciantes = new Anunciantes;
-        $anunciantes->nome = $request->nome;
-        $anunciantes->tipo = $request->tipo;
-        $anunciantes->email = $request->email;
+        $anunciantes->nome_empresa = $request->nome_empresa;
+        $anunciantes->pessoal_responsavel = $request->pessoal_responsavel;
+        $anunciantes->tipo_anunciante = $request->tipo_anunciante;
+        $anunciantes->cnpj = $request->cnpj;
         $anunciantes->telefone = $request->telefone;
+        $anunciantes->celular = $request->celular;
+        $anunciantes->whatsapp = $request->whatsapp;
+        $anunciantes->email = $request->email;
+        $anunciantes->status = $request->status;
+        $anunciantes->site = $request->site;
+        $anunciantes->cep = $request->cep;
+        $anunciantes->endereco = $request->endereco;
+        $anunciantes->numero = $request->numero;
+        $anunciantes->complemento = $request->complemento;
+        $anunciantes->bairro = $request->bairro;
+        $anunciantes->endereco_comercial = $request->endereco_comercial;
+        $anunciantes->numero_comercial = $request->numero_comercial;
+        $anunciantes->complemento_comercial = $request->complemento_comercial;
+        $anunciantes->bairro_comercial = $request->bairro_comercial;
+        $anunciantes->cep_comercial = $request->cep_comercial;
         $anunciantes->estado_id = $request->estado_id;
         $anunciantes->cidade_id = $request->cidade_id;
+        $anunciantes->cidade_comercial_id = $request->cidade_comercial_id;
         $anunciantes->regiao_id = $request->regiao_id;
-        $anunciantes->status = $request->status;
 
         $anunciantes->save();
         return $anunciantes;
@@ -149,12 +183,28 @@ return response()->json($dadosPersonalizados);
             // Personalize os campos conforme necessário
             $dadosPersonalizados[] = [
                 'id' => $anunciante->id,
-                'nome' => $anunciante->nome,
-                'tipo' => $anunciante->tipo,
+                'nome_empresa' => $anunciante->nome_empresa,
+                'pessoal_anunciante' => $anunciante->pessoal_anunciante,
+                'tipo_anunciante' => $anunciante->tipo_anunciante,
+                'cnpj' => $anunciante->cnpj,
                 'telefone' => $anunciante->telefone,
+                'celular' => $anunciante->celular,
+                'whatsapp' => $anunciante->whatsapp,
                 'email' => $anunciante->email,
+                'site' => $anunciante->site,
+                'cep' => $anunciante->cep,
+                'endereco' => $anunciante->endereco,
+                'numero' => $anunciante->numero,
+                'complemento' => $anunciante->complemento,
+                'bairro' => $anunciante->bairro,
+                'cep_comercial' => $anunciante->cep_comercial,
+                'endereco_comercial' => $anunciante->endereco_comercial,
+                'numero_comercial' => $anunciante->numero_comercial,
+                'complemento_comercial' => $anunciante->complemento_comercial,
+                'bairro_comercial' => $anunciante->bairro_comercial,
                 'regiao' => $regiao->regiao,
                 'estado' => $estado->estado,
+                'cidade' => $cidade->cidade,
                 'cidade' => $cidade->cidade,
                 'status' => $anunciante->status,
                 'foto' => $anunciante->foto ? env('URL_BASE_SERVIDOR') . $anunciante->foto : null,
@@ -188,14 +238,30 @@ return response()->json($dadosPersonalizados);
         if(!$anunciantes){
             return response(['message'=>'Anunciante não encontrado'], 404);
         }
-        $anunciantes->nome = $request->nome;
-        $anunciantes->tipo = $request->tipo;
-        $anunciantes->email = $request->email;
+        $anunciantes->nome_empresa = $request->nome_empresa;
+        $anunciantes->pessoal_responsavel = $request->pessoal_responsavel;
+        $anunciantes->tipo_anunciante = $request->tipo_anunciante;
+        $anunciantes->cnpj = $request->cnpj;
         $anunciantes->telefone = $request->telefone;
+        $anunciantes->celular = $request->celular;
+        $anunciantes->whatsapp = $request->whatsapp;
+        $anunciantes->email = $request->email;
+        $anunciantes->status = $request->status;
+        $anunciantes->site = $request->site;
+        $anunciantes->cep = $request->cep;
+        $anunciantes->endereco = $request->endereco;
+        $anunciantes->numero = $request->numero;
+        $anunciantes->complemento = $request->complemento;
+        $anunciantes->bairro = $request->bairro;
+        $anunciantes->endereco_comercial = $request->endereco_comercial;
+        $anunciantes->numero_comercial = $request->numero_comercial;
+        $anunciantes->complemento_comercial = $request->complemento_comercial;
+        $anunciantes->bairro_comercial = $request->bairro_comercial;
+        $anunciantes->cep_comercial = $request->cep_comercial;
         $anunciantes->estado_id = $request->estado_id;
         $anunciantes->cidade_id = $request->cidade_id;
+        $anunciantes->cidade_comercial_id = $request->cidade_comercial_id;
         $anunciantes->regiao_id = $request->regiao_id;
-        $anunciantes->status = $request->status;
 
         $anunciantes->save();
         return $anunciantes;
