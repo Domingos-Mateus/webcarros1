@@ -27,12 +27,18 @@ class anuciantesController extends Controller
  $query = DB::table('anunciantes')
     ->join('estados', 'estados.id', '=', 'anunciantes.estado_id')
     ->join('regioes', 'regioes.id', '=', 'anunciantes.regiao_id')
-    ->join('cidades', 'cidades.id', '=', 'anunciantes.cidade_id')
+    ->join('cidades as cidade_principal', 'cidade_principal.id', '=', 'anunciantes.cidade_id')
+    ->join('cidades as cidade_comercial', 'cidade_comercial.id', '=', 'anunciantes.cidade_comercial_id')
     ->select(
         'anunciantes.*',
         'estados.estado as estado',
+        'estados.id as estado_id',
         'regioes.regiao as regiao',
-        'cidades.cidade as cidade'
+        'regioes.id as regiao_id',
+        'cidade_principal.cidade as cidade',
+        'cidade_principal.id as cidade_id',
+        'cidade_comercial.cidade as cidade_Comercial',
+        'cidade_comercial.id as cidade_comercial_id'
     );
 
 $anunciantes = $query->get();
@@ -49,12 +55,14 @@ foreach ($anunciantes as $anunciante) {
         'telefone' => $anunciante->telefone,
         'celular' => $anunciante->celular,
         'whatsapp' => $anunciante->whatsapp,
+        'site' => $anunciante->site,
         'email' => $anunciante->email,
         'cep' => $anunciante->cep,
         'endereco' => $anunciante->endereco,
         'numero' => $anunciante->numero,
         'complemento' => $anunciante->complemento,
         'bairro' => $anunciante->bairro,
+        'cep_comercial' => $anunciante->cep_comercial,
         'endereco_comercial' => $anunciante->endereco_comercial,
         'numero_comercial' => $anunciante->numero_comercial,
         'complemento_comercial' => $anunciante->complemento_comercial,
@@ -62,10 +70,14 @@ foreach ($anunciantes as $anunciante) {
 
 
 
-        'regiao_id' => $anunciante->regiao,
-        'estado_id' => $anunciante->estado,
-        'cidade_id' => $anunciante->cidade,
-        'cidade_id' => $anunciante->cidade,
+        'regiao_id' => $anunciante->regiao_id,
+        'regiao' => $anunciante->regiao,
+        'estado_id' => $anunciante->estado_id,
+        'estado' => $anunciante->estado,
+        'cidade_id' => $anunciante->cidade_id,
+        'cidade' => $anunciante->cidade,
+        'cidade_comercial_id' => $anunciante->cidade_comercial_id,
+        'cidade_comericial' => $anunciante->cidade_Comercial,
         'status' => $anunciante->status,
         'observacao' => $anunciante->observacao,
         'foto' => $anunciante->foto ? env('URL_BASE_SERVIDOR') . $anunciante->foto : null,

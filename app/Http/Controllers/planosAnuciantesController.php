@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\PlanosAnunciantes;
+use App\Models\Anunciantes;
+use App\Models\Planos;
 use File;
 use DB;
 
@@ -19,7 +21,7 @@ class planosAnuciantesController extends Controller
         $planosAnunciantes = DB::table('planos_anunciantes')
                 ->join('planos','planos.id','planos_anunciantes.plano_id')
                 ->join('anunciantes','anunciantes.id','planos_anunciantes.anunciante_id')
-                ->select('planos_anunciantes.*', 'planos.nome as nome_plano','planos.id as id_planos', 'anunciantes.nome as nome_anunciantes','anunciantes.id as id_anunciante')
+                ->select('planos_anunciantes.*', 'planos.nome as nome_plano','planos.id as id_planos', 'anunciantes.nome_empresa','anunciantes.pessoal_responsavel','anunciantes.id as id_anunciante')
                 ->get();
          $dadosPersonalizados = [];
         foreach ($planosAnunciantes as $planosAnunciante) {
@@ -29,8 +31,11 @@ class planosAnuciantesController extends Controller
                 'nome_plano' => $planosAnunciante->nome_plano,
                 'id_planos' => $planosAnunciante->id_planos,
                 'nome_plano' => $planosAnunciante->nome_plano,
-                'nome_anunciantes' => $planosAnunciante->nome_anunciantes,
+                'nome_anunciantes' => $planosAnunciante->nome_empresa,
+                'anunciante' => $planosAnunciante->pessoal_responsavel,
                 'id_anunciantes' => $planosAnunciante->id_anunciante,
+                'status' => $planosAnunciante->status,
+                'created_at' => $planosAnunciante->created_at,
             ];
         }
         return response()->json($dadosPersonalizados);
@@ -44,6 +49,17 @@ class planosAnuciantesController extends Controller
     public function store(Request $request)
     {
         //
+        $anunciante = Anunciantes::find($request->anunciante_id);
+        $plano = Planos::find($request->plano_id);
+
+        if(!$anunciante){
+            return response(['message'=> 'O Anunciante selecionado não existe'], 404);
+        }
+
+        if(!$plano){
+            return response(['message'=> 'O Plano selecionado não existe'], 404);
+        }
+
         $planosAnunciantes = new PlanosAnunciantes;
         $planosAnunciantes->plano_id = $request->plano_id;
         $planosAnunciantes->anunciante_id = $request->anunciante_id;

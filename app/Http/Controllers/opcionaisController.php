@@ -37,6 +37,7 @@ foreach ($opcionais as $opcional) {
     $dadosPersonalizados[] = [
         'id' => $opcional->id,
         'categoria_opcional' => $opcional->nome_categoria,
+        'categoria_opcional_id' => $opcional->id_categorias,
         'nome' => $opcional->nome,
     ];
 }

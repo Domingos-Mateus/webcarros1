@@ -5,6 +5,19 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\appController;
 
+
+
+
+Route::get('/anuncios/listar_anuncios', 'App\Http\Controllers\anunciosController@index');
+
+
+Route::middleware(['auth:sanctum'])->group(
+    function () {
+        Route::get('/teste', [AuthController::class,'teste']);
+
+        Route::get('/user/listar_user', 'App\Http\Controllers\userController@index');
+
+
 //Categorias
 Route::get('/categorias/listar_categorias', 'App\Http\Controllers\categoriasController@index');
 Route::post('/categorias/registar_categorias', 'App\Http\Controllers\categoriasController@store');
@@ -35,7 +48,6 @@ Route::delete('/anunciantes/eliminar_foto/{id}', 'App\Http\Controllers\anuciante
 
 
 //Anuncios
-Route::get('/anuncios/listar_anuncios', 'App\Http\Controllers\anunciosController@index');
 Route::post('/anuncios/registar_anuncios', 'App\Http\Controllers\anunciosController@store');
 Route::post('/anuncios/uploadFoto1_anuncios/{id}', 'App\Http\Controllers\anunciosController@uploadFoto');
 Route::put('/editar_anuncios/update/{id}', 'App\Http\Controllers\anunciosController@update');
@@ -194,7 +206,8 @@ Route::get('/opcionais/visualizar_opcionais/{id}', 'App\Http\Controllers\opciona
 Route::put('/editar_opcionais/update/{id}', 'App\Http\Controllers\opcionaisController@update');
 Route::get('/eliminar_opcionais/{id}', 'App\Http\Controllers\opcionaisController@destroy');
 
-
+Route::post('logout', [AuthController::class, 'logout']);
+}); // Fim da verificação de autenticação
 
 
 
@@ -205,12 +218,6 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout']);
 
-Route::middleware(['auth:sanctum'])->group(
-	function () {
-    Route::get('/teste', [AuthController::class,'teste']);
-
-    Route::post('logout', [AuthController::class, 'logout']);
-}); // Fim da verificação de autenticação
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
