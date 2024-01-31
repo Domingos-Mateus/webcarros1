@@ -9,6 +9,8 @@ use App\Http\Controllers\appController;
 
 
 Route::get('/anuncios/listar_anuncios', 'App\Http\Controllers\anunciosController@index');
+Route::get('/anuncios/visualizar_anuncios/{id}', 'App\Http\Controllers\anunciosController@show');
+
 
 
 Route::middleware(['auth:sanctum'])->group(
@@ -51,7 +53,6 @@ Route::delete('/anunciantes/eliminar_foto/{id}', 'App\Http\Controllers\anuciante
 Route::post('/anuncios/registar_anuncios', 'App\Http\Controllers\anunciosController@store');
 Route::post('/anuncios/uploadFoto1_anuncios/{id}', 'App\Http\Controllers\anunciosController@uploadFoto');
 Route::put('/editar_anuncios/update/{id}', 'App\Http\Controllers\anunciosController@update');
-Route::get('/anuncios/visualizar_anuncios/{id}', 'App\Http\Controllers\anunciosController@show');
 Route::get('/eliminar_anuncios/{id}', 'App\Http\Controllers\anunciosController@destroy');
 
 Route::delete('/anuncios/eliminar_foto1/{id}', 'App\Http\Controllers\anunciosController@destroyFoto1');

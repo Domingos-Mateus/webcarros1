@@ -16,8 +16,11 @@ class CreateMarcasTable extends Migration
         Schema::create('marcas', function (Blueprint $table) {
             $table->increments('id');
             $table->string('nome_marca', 100);
+            $table->integer('tipo_veiculo_id')->unsigned();
             $table->string('descricao', 100);
             $table->timestamps();
+
+            $table->foreign('tipo_veiculo_id')->references('id')->on('tipos_veiculos');
         });
     }
 

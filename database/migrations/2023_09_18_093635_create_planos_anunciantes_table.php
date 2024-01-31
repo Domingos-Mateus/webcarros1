@@ -18,6 +18,7 @@ class CreatePlanosAnunciantesTable extends Migration
             $table->integer('plano_id')->unsigned();
             $table->integer('anunciante_id')->unsigned();
             $table->string('status', 50);
+            $table->date('data_vencimento');
             $table->timestamps();
 
             $table->foreign('plano_id')->references('id')->on('planos');

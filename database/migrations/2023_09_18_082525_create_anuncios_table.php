@@ -49,8 +49,9 @@ class CreateAnunciosTable extends Migration
             $table->string('placa', 100)->nullable();
             $table->string('km', 100)->nullable();
             $table->string('sinistrado', 100)->nullable();
-            $table->string('conforto_id');
-            $table->string('seguranca_id');
+            //$table->string('conforto_id');
+            //$table->string('seguranca_id');
+            $table->string('opcionais_id');
             $table->string('descricao', 100);
             $table->string('foto1')->nullable();
             $table->string('foto2')->nullable();

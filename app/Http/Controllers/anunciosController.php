@@ -18,6 +18,7 @@ use App\Models\Cor;
 use App\Models\Transmissao;
 use App\Models\Confortos;
 use App\Models\Fabricantes;
+use App\Models\Opcionais;
 use File;
 use DB;
 
@@ -39,13 +40,31 @@ class anunciosController extends Controller
             ->join('combustivels','combustivels.id','anuncios.combustivel_id')
             ->select('anuncios.*', 'marcas.nome_marca', 'marcas.id as id_marcas',
              'modelos.nome_modelo', 'modelos.id as id_m','categorias.nome as nome_categoria',
-             'categorias.id as id_categoria', 'anunciantes.nome_empresa as nome_anunciante',
+             'categorias.id as id_categoria', 'anunciantes.nome_empresa',
              'anunciantes.id as id_anunciantes','tipos_veiculos.tipo_veiculo',
-             'tipos_veiculos.id as id_tipos_veiculo', 'cors.cor','cors.id as id_cor','tecnologias.tecnologia',
+             'tipos_veiculos.id as id_tipos_veiculo','tipos_veiculos.tipo_veiculo','cors.cor','cors.id as id_cor','tecnologias.tecnologia',
              'tecnologias.id as idtecnologia','combustivels.combustivel','combustivels.id as id_combustivel',
              'transmissaos.transmissao','transmissaos.id as id_transmissao');
 
-        // Adiciona os filtros conforme os parâmetros passados
+             // Adiciona os filtros conforme os parâmetros passados
+             if (request('tipo_veiculo')) {
+                 $query->where('tipos_veiculos.tipo_veiculo', request('tipo_veiculo'));
+             }
+             if (request('situacao_veiculo')) {
+                $query->where('anuncios.situacao_veiculo', request('situacao_veiculo'));
+            }
+            if (request('nome_empresa')) {
+                $query->where('anunciantes.nome_empresa', request('nome_empresa'));
+            }
+            if (request('nome_marca')) {
+                $query->where('marcas.nome_marca', request('nome_marca'));
+            }
+            if (request('valor_preco')) {
+                $query->where('anuncios.valor_preco', request('valor_preco'));
+            }
+            if (request('ano_modelo')) {
+                $query->where('anuncios.ano_modelo', request('ano_modelo'));
+            }
         if (request('nome_marca')) {
             $query->where('marcas.nome_marca', 'LIKE', '%' . request('nome_marca') . '%');
         }
@@ -61,9 +80,6 @@ class anunciosController extends Controller
         if (request('estado_id')) {
             $query->where('anuncios.estado_id', request('estado_id'));
         }
-        if (request('tipo_veiculo_id')) {
-            $query->where('anuncios.tipo_veiculo_id', request('tipo_veiculo_id'));
-        }
         if (request('tecnologia_id')) {
             $query->where('anuncios.tecnologia_id', request('tecnologia_id'));
         }
@@ -77,16 +93,18 @@ class anunciosController extends Controller
             $query->where('anuncios.combustivel_id', request('combustivel_id'));
         }
 
-        // Executa a consulta
-        $anuncios = $query->get();
-
+        // Executa a consulta aleatóriamente
+        $anuncios = $query->inRandomOrder()->get();
         // Processamento dos dados para personalizar a resposta
         $dadosPersonalizados = [];
+
+
 
         foreach ($anuncios as $anuncio) {
             $dadosPersonalizados[] = [
                 'id' => $anuncio->id,
                 'tipo_veiculo_id' => $anuncio->tipo_veiculo_id,
+                'tipo_veiculo' => $anuncio->tipo_veiculo,
                 'tecnologia_id' => $anuncio->tecnologia_id,
                 'nome_marca' => $anuncio->nome_marca,
                 'id_marca' => $anuncio->id_marcas,
@@ -94,7 +112,7 @@ class anunciosController extends Controller
                 'id_modelo' => $anuncio->id_m,
                 'numero_cliques' => $anuncio->numero_cliques,
                 'situacao_veiculo' => $anuncio->situacao_veiculo,
-                'nome_anunciante' => $anuncio->nome_anunciante,
+                'nome_empresa' => $anuncio->nome_empresa,
                 'id_anunciante' => $anuncio->id_anunciantes,
                 'nome_categoria' => $anuncio->nome_categoria,
                 'id_categoria' => $anuncio->id_categoria,
@@ -128,8 +146,9 @@ class anunciosController extends Controller
                 'placa' => $anuncio->placa,
                 'km' => $anuncio->km,
                 'sinistrado' => $anuncio->sinistrado,
-                'conforto_id' => $anuncio->conforto_id,
-                'seguranca_id' => $anuncio->seguranca_id,
+                //'conforto_id' => $anuncio->conforto_id,
+                //'seguranca_id' => $anuncio->seguranca_id,
+                'opcionais_id' => $anuncio->opcionais_id,
                 'descricao' => $anuncio->descricao,
                 'foto1' => $anuncio->foto1 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto1 : null,
                 'foto2' => $anuncio->foto2 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto2 : null,
@@ -264,8 +283,9 @@ class anunciosController extends Controller
         $anuncios->motor = $request->motor;
         $anuncios->cor_id = $request->cor;
         $anuncios->transmissao_id = $request->transmissao;
-        $anuncios->conforto_id = $request->conforto_id;
-        $anuncios->seguranca_id = $request->seguranca_id;
+        //$anuncios->conforto_id = $request->conforto_id;
+        //$anuncios->seguranca_id = $request->seguranca_id;
+        $anuncios->opcionais_id = $request->opcionais_id;
         $anuncios->combustivel_id = $request->combustivel;
         $anuncios->placa = $request->placa;
         $anuncios->km = $request->km;
@@ -467,6 +487,41 @@ class anunciosController extends Controller
         $combustivel = Combustivel::find($anuncio->combustivel_id);
         // Personalização dos campos da base de dados
 
+        $opcionais = Opcionais::all();
+
+        $lista_opcionais = collect([]);
+
+            // return $estudantes;
+
+                $array_opcional = [];
+
+                $opcionais_anuncio = $anuncio->opcionais_id;
+
+                // Converta a string JSON para um array usando json_decode
+                $opcionais_array = json_decode($opcionais_anuncio, true);
+
+                foreach ($opcionais_array as $opcional_anuncio) {
+                // Verifica se existem notas do tipo 1, 2 e 4
+
+
+                    foreach ($opcionais as $opcional_banco) {
+                        if ($opcional_anuncio == $opcional_banco->id) {
+
+                            $array_opcional[] = array(
+                                'id_opcional' => $opcional_banco->id,
+                                'categoria_opcional_id' => $opcional_banco->categoria_opcional_id,
+                                'nome' => $opcional_banco->nome,
+                            );
+
+                            $lista_opcionais->push($array_opcional);
+                        }
+                    }
+                }
+
+
+
+
+
 //return $tipo_veiculo;
             // Personalize os campos conforme necessário
             $dadosPersonalizados[] = [
@@ -507,8 +562,10 @@ class anunciosController extends Controller
                 'placa' => $anuncio->placa,
                 'km' => $anuncio->km,
                 'sinistrado' => $anuncio->sinistrado,
-                'conforto_id' => $anuncio->conforto_id,
-                'seguranca_id' => $anuncio->seguranca_id,
+                'opcionais_id' => $lista_opcionais,
+
+                //'conforto_id' => $anuncio->conforto_id,
+                //'seguranca_id' => $anuncio->seguranca_id,
                 'som' => $anuncio->som,
                 'descricao' => $anuncio->descricao,
                 'foto1' => $anuncio->foto1 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto1 : null,

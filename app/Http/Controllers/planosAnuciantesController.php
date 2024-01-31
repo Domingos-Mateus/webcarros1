@@ -9,6 +9,7 @@ use App\Models\Anunciantes;
 use App\Models\Planos;
 use File;
 use DB;
+use Carbon\Carbon;
 
 class planosAnuciantesController extends Controller
 {
@@ -35,6 +36,7 @@ class planosAnuciantesController extends Controller
                 'anunciante' => $planosAnunciante->pessoal_responsavel,
                 'id_anunciantes' => $planosAnunciante->id_anunciante,
                 'status' => $planosAnunciante->status,
+                'data_vencimento' => $planosAnunciante->data_vencimento,
                 'created_at' => $planosAnunciante->created_at,
             ];
         }
@@ -60,10 +62,23 @@ class planosAnuciantesController extends Controller
             return response(['message'=> 'O Plano selecionado não existe'], 404);
         }
 
+        //Este m+etodo serve para adicionar a data.
+        $data_hoje = Carbon::now();
+        $data_vecimento = $data_hoje->addDays($plano->dias_publicacao);
+
+        //  if($data_hoje >= $data_vecimento)
+        //  {
+        //     return 'plano vencido';
+        //  }
+        //  else{
+        //     return 'plano activo';
+        //  }
+
         $planosAnunciantes = new PlanosAnunciantes;
         $planosAnunciantes->plano_id = $request->plano_id;
         $planosAnunciantes->anunciante_id = $request->anunciante_id;
         $planosAnunciantes->status = $request->status;
+        $planosAnunciantes->data_vencimento = $data_vecimento->format('Y-m-d');
 
         $planosAnunciantes->save();
 
