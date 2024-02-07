@@ -41,6 +41,7 @@ class CreateAnunciantesTable extends Migration
             $table->integer('cidade_comercial_id')->unsigned();
             $table->integer('regiao_id')->unsigned();
             $table->string('observacao');
+            //$table->integer('usuario_id')->unsigned();
             $table->timestamps();
 
 

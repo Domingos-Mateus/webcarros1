@@ -11,6 +11,8 @@ use File;
 use DB;
 use Carbon\Carbon;
 
+
+
 class planosAnuciantesController extends Controller
 {
 
@@ -82,6 +84,8 @@ class planosAnuciantesController extends Controller
 
         $planosAnunciantes->save();
 
+
+
         return $planosAnunciantes;
     }
 
@@ -113,6 +117,7 @@ class planosAnuciantesController extends Controller
         $planosAnunciantes->plano_id = $request->plano_id;
         $planosAnunciantes->anunciante_id = $request->anunciante_id;
         $planosAnunciantes->status = $request->status;
+        $planosAnunciantes->data_vencimento = $request->data_vencimento;
         $planosAnunciantes->save();
 
         return $planosAnunciantes;

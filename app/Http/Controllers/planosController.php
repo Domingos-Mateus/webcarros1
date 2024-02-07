@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Planos;
 use File;
 use DB;
+use App\Models\HistoricoAnunciantes;
 
 class planosController extends Controller
 {
@@ -58,6 +59,12 @@ class planosController extends Controller
 
 
         $planos->save();
+
+        $historico = new HistoricoAnunciantes();
+        $historico->plano_anunciante_id = $planos->id; // ou qualquer outra forma de associar o histórico ao anúnciante
+
+        $historico->save();
+
         return $planos;
     }
 

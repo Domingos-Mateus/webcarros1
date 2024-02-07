@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Planos extends Model
+class HistoricoAnunciantes extends Model
 {
     use HasFactory;
-    public function historico()
+
+    public function planos()
     {
-        return $this->hasMany(HistoricoAnunciantes::class);
+        return $this->belongsTo(Planos::class);
     }
 }

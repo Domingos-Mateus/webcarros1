@@ -8,6 +8,7 @@ use App\Models\Anunciantes;
 use App\Models\Estados;
 use App\Models\Regioes;
 use App\Models\Cidades;
+
 use File;
 use DB;
 
@@ -152,6 +153,8 @@ return response()->json($dadosPersonalizados);
         $anunciantes->observacao = $request->observacao;
 
         $anunciantes->save();
+
+
         return $anunciantes;
     }
 

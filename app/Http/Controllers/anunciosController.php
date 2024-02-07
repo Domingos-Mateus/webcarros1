@@ -488,34 +488,31 @@ class anunciosController extends Controller
         // Personalização dos campos da base de dados
 
         $opcionais = Opcionais::all();
+$lista_opcionais = collect([]);
 
-        $lista_opcionais = collect([]);
+$opcionais_anuncio = $anuncio->opcionais_id;
 
-            // return $estudantes;
+// Converta a string JSON para um array usando json_decode
+$opcionais_array = json_decode($opcionais_anuncio, true);
 
-                $array_opcional = [];
+foreach ($opcionais_array as $opcional_anuncio) {
+    // Inicialize o array $array_opcional dentro do loop foreach
+    $array_opcional = [];
 
-                $opcionais_anuncio = $anuncio->opcionais_id;
+    foreach ($opcionais as $opcional_banco) {
+        if ($opcional_anuncio == $opcional_banco->id) {
+            $array_opcional[] = array(
+                'id_opcional' => $opcional_banco->id,
+                'categoria_opcional_id' => $opcional_banco->categoria_opcional_id,
+                'nome' => $opcional_banco->nome,
+            );
+        }
+    }
 
-                // Converta a string JSON para um array usando json_decode
-                $opcionais_array = json_decode($opcionais_anuncio, true);
-
-                foreach ($opcionais_array as $opcional_anuncio) {
-                // Verifica se existem notas do tipo 1, 2 e 4
+    // Movido para fora do loop interno para evitar repetições
+    $lista_opcionais->push($array_opcional);
 
 
-                    foreach ($opcionais as $opcional_banco) {
-                        if ($opcional_anuncio == $opcional_banco->id) {
-
-                            $array_opcional[] = array(
-                                'id_opcional' => $opcional_banco->id,
-                                'categoria_opcional_id' => $opcional_banco->categoria_opcional_id,
-                                'nome' => $opcional_banco->nome,
-                            );
-
-                            $lista_opcionais->push($array_opcional);
-                        }
-                    }
                 }
 
 

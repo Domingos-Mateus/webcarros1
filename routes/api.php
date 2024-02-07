@@ -74,6 +74,13 @@ Route::put('/editar_planos/update/{id}', 'App\Http\Controllers\planosController@
 Route::get('/planos/visualizar_planos/{id}', 'App\Http\Controllers\planosController@show');
 Route::delete('/eliminar_planos', 'App\Http\Controllers\planosController@destroy');
 
+
+
+
+//Histórico
+Route::get('/historicos_planos/listar_historicos_planos', 'App\Http\Controllers\historicoAnunciantesController@index');
+
+
 //Planos Anuciantes
 Route::get('/planos_anuciantes/listar_planos_anuciantes', 'App\Http\Controllers\planosAnuciantesController@index');
 Route::post('/planos_anuciantes/registar_planos_anuciantes', 'App\Http\Controllers\planosAnuciantesController@store');

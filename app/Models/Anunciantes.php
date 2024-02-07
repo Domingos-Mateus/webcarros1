@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Anunciantes extends Model
 {
     use HasFactory;
+
+
 }
