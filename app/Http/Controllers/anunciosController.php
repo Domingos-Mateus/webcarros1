@@ -36,12 +36,18 @@ class anunciosController extends Controller
             ->join('tipos_veiculos','tipos_veiculos.id','anuncios.tipo_veiculo_id')
             ->join('tecnologias','tecnologias.id','anuncios.tecnologia_id')
             ->join('cors','cors.id','anuncios.cor_id')
+            ->join('estados','estados.id','anuncios.estado_id')
+            ->join('cidades','cidades.id','anuncios.cidade_id')
+            ->join('fabricantes','fabricantes.id','anuncios.fabricante_id')
             ->join('transmissaos','transmissaos.id','anuncios.transmissao_id')
             ->join('combustivels','combustivels.id','anuncios.combustivel_id')
             ->select('anuncios.*', 'marcas.nome_marca', 'marcas.id as id_marcas',
              'modelos.nome_modelo', 'modelos.id as id_m','categorias.nome as nome_categoria',
              'categorias.id as id_categoria', 'anunciantes.nome_empresa',
              'anunciantes.id as id_anunciantes','tipos_veiculos.tipo_veiculo',
+             'estados.id as id_estado','estados.estado',
+             'cidades.id as id_cidade','cidades.cidade',
+             'fabricantes.fabricante',
              'tipos_veiculos.id as id_tipos_veiculo','tipos_veiculos.tipo_veiculo','cors.cor','cors.id as id_cor','tecnologias.tecnologia',
              'tecnologias.id as idtecnologia','combustivels.combustivel','combustivels.id as id_combustivel',
              'transmissaos.transmissao','transmissaos.id as id_transmissao');
@@ -100,12 +106,15 @@ class anunciosController extends Controller
 
 
 
+
+
         foreach ($anuncios as $anuncio) {
             $dadosPersonalizados[] = [
                 'id' => $anuncio->id,
                 'tipo_veiculo_id' => $anuncio->tipo_veiculo_id,
                 'tipo_veiculo' => $anuncio->tipo_veiculo,
                 'tecnologia_id' => $anuncio->tecnologia_id,
+                'tecnologia' => $anuncio->tecnologia,
                 'nome_marca' => $anuncio->nome_marca,
                 'id_marca' => $anuncio->id_marcas,
                 'nome_modelo' => $anuncio->nome_modelo,
@@ -127,12 +136,15 @@ class anunciosController extends Controller
                 'destaque_busca' => $anuncio->destaque_busca,
                 'cep' => $anuncio->cep,
                 'estado_id' => $anuncio->estado_id,
-                'cidade_id' => $anuncio->cidade_id,
+                'estado' => $anuncio->estado,
+                'id_cidade' => $anuncio->cidade_id,
+                'cidade' => $anuncio->cidade,
                 'empresa' => $anuncio->empresa,
                 'tipo_preco' => $anuncio->tipo_preco,
                 'valor_preco' => $anuncio->valor_preco,
                 'mostrar_preco' => $anuncio->mostrar_preco,
                 'fabricante_id' => $anuncio->fabricante_id,
+                'fabricante' => $anuncio->fabricante,
                 'ano_fabricacao' => $anuncio->ano_fabricacao,
                 'ano_modelo' => $anuncio->ano_modelo,
                 'carroceria' => $anuncio->carroceria,
@@ -141,8 +153,11 @@ class anunciosController extends Controller
                 'cilindros' => $anuncio->cilindros,
                 'motor' => $anuncio->motor,
                 'cor' => $anuncio->cor_id,
-                'transmissao' => $anuncio->transmissao_id,
-                'combustivel' => $anuncio->combustivel_id,
+                'cor' => $anuncio->cor,
+                'transmissao_id' => $anuncio->transmissao_id,
+                'transmissao' => $anuncio->transmissao,
+                'combustivel_id' => $anuncio->combustivel_id,
+                'combustivel' => $anuncio->combustivel,
                 'placa' => $anuncio->placa,
                 'km' => $anuncio->km,
                 'sinistrado' => $anuncio->sinistrado,
@@ -203,8 +218,6 @@ class anunciosController extends Controller
         $transmissao = Transmissao::find($request->transmissao);
         $combustivel = Combustivel::find($request->combustivel);
 
-
-
         if(!$tipo_veiculo){
             return response(['message'=> 'O tipo de veiculo selecionado não existe'], 404);
         }
@@ -243,9 +256,6 @@ class anunciosController extends Controller
         if(!$combustivel){
             return response(['message'=> 'O Combustível selecionado não existe'], 404);
         }
-
-
-
 
         $anuncios = new Anuncios;
         $anuncios->titulo = $request->titulo;
@@ -501,12 +511,13 @@ foreach ($opcionais_array as $opcional_anuncio) {
 
     foreach ($opcionais as $opcional_banco) {
         if ($opcional_anuncio == $opcional_banco->id) {
-            $array_opcional[] = array(
+            $array_opcional = array(
                 'id_opcional' => $opcional_banco->id,
                 'categoria_opcional_id' => $opcional_banco->categoria_opcional_id,
                 'nome' => $opcional_banco->nome,
             );
         }
+
     }
 
     // Movido para fora do loop interno para evitar repetições
@@ -603,25 +614,68 @@ foreach ($opcionais_array as $opcional_anuncio) {
     public function update(Request $request, $id)
     {
         //
+
         $anuncios = Anuncios::find($id);
-        $marcas = Marcas::find($request->marca_id);
-        $modelos = Modelos::find($request->modelo_id);
-        $anunciantes = Anunciantes::find($request->anunciante_id);
+        $dadosPersonalizados = [];
         if(!$anuncios){
             return response(['message'=>'Anúncio não encontrado'], 404);
         }
 
-        if(!$marcas){
-            return response(['message'=>'Marca não encontrada'], 404);
+        $tipo_veiculo = TiposVeiculos::find($request->tipo_veiculo);
+        $tecnologia = Tecnologia::find($request->tecnologia);
+        $modelo = Modelos::find($request->modelo_id);
+        $marca = Marcas::find($request->marca_id);
+        $anunciante = Anunciantes::find($request->anunciante_id);
+        $categoria = Categorias::find($request->categoria_id);
+        $estado = Estados::find($request->estado_id);
+        $cidade = Cidades::find($request->cidade_id);
+        $fabricante = Fabricantes::find($request->fabricante_id);
+        $cor = Cor::find($request->cor);
+        $transmissao = Transmissao::find($request->transmissao);
+        $combustivel = Combustivel::find($request->combustivel);
+
+
+
+        if(!$tipo_veiculo){
+            return response(['message'=> 'O tipo de veiculo selecionado não existe'], 404);
+        }
+        if(!$tecnologia){
+            return response(['message'=> 'A tecnologia selecionada não existe'], 404);
+        }
+        if(!$marca){
+            return response(['message'=> 'A marca selecionada não existe'], 404);
         }
 
-        if(!$modelos){
-            return response(['message'=>'Modelo não encontrado'], 404);
+        if(!$modelo){
+            return response(['message'=> 'O modelo selecionado não existe'], 404);
+        }
+        if(!$anunciante){
+            return response(['message'=> 'O Anunciante selecionado não existe'], 404);
         }
 
-        if(!$anunciantes){
-            return response(['message'=>'Anunciante não encontrado'], 404);
+        if(!$categoria){
+            return response(['message'=> 'A Categoria selecionada não existe'], 404);
         }
+        if(!$estado){
+            return response(['message'=> 'O Estado selecionado não existe'], 404);
+        }
+        if(!$cidade){
+            return response(['message'=> 'A Cidade selecionada não existe'], 404);
+        }
+        if(!$fabricante){
+            return response(['message'=> 'O Fabricante selecionado não existe'], 404);
+        }
+        if(!$cor){
+            return response(['message'=> 'A Cor selecionada não existe'], 404);
+        }
+        if(!$transmissao){
+            return response(['message'=> 'A Transmissão selecionada não existe'], 404);
+        }
+        if(!$combustivel){
+            return response(['message'=> 'O Combustível selecionado não existe'], 404);
+        }
+
+
 
         $anuncios->titulo = $request->titulo;
         $anuncios->tipo_veiculo_id = $request->tipo_veiculo;
@@ -661,8 +715,8 @@ foreach ($opcionais_array as $opcional_anuncio) {
         $anuncios->combustivel_id = $request->combustivel;
         $anuncios->placa = $request->placa;
         $anuncios->km = $request->km;
-        $anuncios->conforto_id = $request->conforto_id;
-        $anuncios->seguranca_id = $request->seguranca_id;
+        //$anuncios->conforto_id = $request->conforto_id;
+        $anuncios->opcionais_id = $request->opcionais_id;
         $anuncios->sinistrado = $request->sinistrado;
         $anuncios->descricao = $request->descricao;
         $anuncios->save();

@@ -58,6 +58,7 @@ foreach ($anunciantes as $anunciante) {
         'whatsapp' => $anunciante->whatsapp,
         'site' => $anunciante->site,
         'email' => $anunciante->email,
+        'password' => $anunciante->password,
         'cep' => $anunciante->cep,
         'endereco' => $anunciante->endereco,
         'numero' => $anunciante->numero,
@@ -124,6 +125,14 @@ return response()->json($dadosPersonalizados);
             return response(['message'=> 'A Cidade selecionada não existe'], 404);
         }
 
+        // Verifica se o email já existe na tabela de anunciantes
+    $emailExistente = Anunciantes::where('email', $request->email)->exists();
+
+    // Se o email já existe, retorna uma mensagem em JSON
+    if ($emailExistente) {
+        return response()->json(['mensagem' => 'Este email já existe no banco de dados'], 409); // 409 é o código de status para conflito
+    }
+
 
         $anunciantes = new Anunciantes;
         $anunciantes->nome_empresa = $request->nome_empresa;
@@ -134,6 +143,7 @@ return response()->json($dadosPersonalizados);
         $anunciantes->celular = $request->celular;
         $anunciantes->whatsapp = $request->whatsapp;
         $anunciantes->email = $request->email;
+        $anunciantes->password = $request->password;
         $anunciantes->status = $request->status;
         $anunciantes->site = $request->site;
         $anunciantes->cep = $request->cep;
@@ -155,7 +165,8 @@ return response()->json($dadosPersonalizados);
         $anunciantes->save();
 
 
-        return $anunciantes;
+        return response()->json(['mensagem' => 'Anunciante cadastrado com sucesso'], 201);
+        //return $anunciantes;
     }
 
     public function uploadFoto(Request $request, $id)
@@ -221,7 +232,6 @@ return response()->json($dadosPersonalizados);
                 'bairro_comercial' => $anunciante->bairro_comercial,
                 'regiao' => $regiao->regiao,
                 'estado' => $estado->estado,
-                'cidade' => $cidade->cidade,
                 'cidade' => $cidade->cidade,
                 'status' => $anunciante->status,
                 'observacao' => $anunciante->observacao,

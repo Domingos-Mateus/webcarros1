@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Propostas;
+use App\Models\Anuncios;
 use File;
 use DB;
 
@@ -21,7 +22,7 @@ class propostasController extends Controller
 
         $propostas = DB::table('propostas')
         ->join('anuncios','anuncios.id','propostas.anuncio_id')
-        ->select('propostas.*', 'anuncios.tipo_veiculo', 'anuncios.id as id_anuncios')
+        ->select('propostas.*', 'anuncios.titulo as anuncio', 'anuncios.id as id_anuncios')
         ->get();
 
 $dadosPersonalizados = [];
@@ -31,8 +32,8 @@ foreach ($propostas as $proposta) {
     $dadosPersonalizados[] = [
         'id' => $proposta->id,
         'titulo' => $proposta->titulo,
-        'tipo_veiculo' => $proposta->tipo_veiculo,
-        'id_anuncios' => $proposta->id,
+        'id_anuncios' => $proposta->id_anuncios,
+        'anuncio' => $proposta->anuncio,
         'nome' => $proposta->nome,
         'email' => $proposta->email,
         'ddd' => $proposta->ddd,
@@ -62,6 +63,11 @@ return response()->json($dadosPersonalizados);
     public function store(Request $request)
     {
         //
+        $anuncio = Anuncios::find($request->anuncio_id);
+        if(!$anuncio){
+            return response(['message'=> 'O Anúncio selecionado não existe'], 404);
+        }
+
         $proposta = new Propostas;
         $proposta->titulo = $request->titulo;
         $proposta->anuncio_id = $request->anuncio_id;
@@ -88,7 +94,20 @@ return response()->json($dadosPersonalizados);
         if(!$proposta){
             return response(['message'=>'Proposta não encontrada'], 404);
         }
-        return $proposta;
+        $anuncio = Anuncios::find($proposta->anuncio_id);
+            // Personalize os campos conforme necessário
+            $dadosPersonalizados[] = [
+                'id' => $proposta->id,
+                'titulo' => $proposta->titulo,
+                'id_anuncios' => $proposta->anuncio_id,
+                'anuncio' => $anuncio->titulo,
+                'nome' => $proposta->nome,
+                'email' => $proposta->email,
+                'ddd' => $proposta->ddd,
+                'telefone' => $proposta->telefone,
+                'mensagem' => $proposta->mensagem,
+            ];
+            return response()->json($dadosPersonalizados);
     }
 
     /**
@@ -112,9 +131,14 @@ return response()->json($dadosPersonalizados);
     public function update(Request $request, $id)
     {
         //
+        $anuncio = Anuncios::find($request->anuncio_id);
+        if(!$anuncio){
+            return response(['message'=> 'O Anúncio selecionado não existe!'], 404);
+        }
+
         $proposta = Propostas::find($id);
         if(!$proposta){
-            return response(['message'=>'Proposta não encontrada'], 404);
+            return response(['message'=>'Proposta não encontrada!'], 404);
         }
         $proposta->titulo = $request->titulo;
         $proposta->anuncio_id = $request->anuncio_id;
@@ -138,6 +162,6 @@ return response()->json($dadosPersonalizados);
     {
         //
         Propostas::destroy($id);
-        return "Anúncio eliminado com sucesso!";
+        return response()->json("Proposta eliminada com sucesso!");
     }
 }

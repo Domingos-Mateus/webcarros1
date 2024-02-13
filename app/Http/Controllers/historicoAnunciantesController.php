@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use DB;
+use App\Models\PlanosAnunciantes;
 
+use DB;
 
 class historicoAnunciantesController extends Controller
 {
@@ -16,28 +17,31 @@ class historicoAnunciantesController extends Controller
     public function index()
     {
         //
-        $query = DB::table('historico_anunciantes')
-    ->join('planos', 'planos.id', '=', 'historico_anunciantes.plano_anunciante_id')
-    ->select(
-        'historico_anunciantes.*',
-        'planos.nome',
-        'planos.created_at'
-
-    );
-
-$historicos = $query->get();
-
-$dadosPersonalizados = [];
-
-foreach ($historicos as $historico) {
-    $dadosPersonalizados[] = [
-        'id' => $historico->id,
-        'nome' => $historico->nome,
-        'created_at' => $historico->created_at,
-    ];
-}
-
-return response()->json($dadosPersonalizados);
+         //
+         $query = DB::table('historico_anunciantes')
+         ->join('planos_anunciantes', 'planos_anunciantes.id', '=', 'historico_anunciantes.plano_anunciante_id')
+         ->select(
+             'historico_anunciantes.*',
+             'planos_anunciantes.plano_id',
+             'planos_anunciantes.status',
+             'planos_anunciantes.created_at'
+     
+         );
+     
+     $historicos = $query->get();
+     
+     $dadosPersonalizados = [];
+     
+     foreach ($historicos as $historico) {
+         $dadosPersonalizados[] = [
+             'id' => $historico->id,
+             'plano_id' => $historico->plano_id,
+             'status' => $historico->status,
+             'created_at' => $historico->created_at,
+         ];
+     }
+     
+     return response()->json($dadosPersonalizados);
     }
 
     /**

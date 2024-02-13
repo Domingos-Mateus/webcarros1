@@ -11,6 +11,8 @@ use File;
 use DB;
 use Carbon\Carbon;
 
+use App\Models\HistoricoAnunciantes;
+
 
 
 class planosAnuciantesController extends Controller
@@ -81,8 +83,13 @@ class planosAnuciantesController extends Controller
         $planosAnunciantes->anunciante_id = $request->anunciante_id;
         $planosAnunciantes->status = $request->status;
         $planosAnunciantes->data_vencimento = $data_vecimento->format('Y-m-d');
-
         $planosAnunciantes->save();
+
+        $historico = new HistoricoAnunciantes();
+        $historico->plano_anunciante_id = $planosAnunciantes->id; // ou qualquer outra forma de associar o histórico ao anúnciante
+
+        $historico->save();
+
 
 
 

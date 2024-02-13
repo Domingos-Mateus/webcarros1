@@ -22,7 +22,8 @@ class CreateAnunciantesTable extends Migration
             $table->string('telefone', 50);
             $table->string('celular', 50);
             $table->string('whatsapp', 50);
-            $table->string('email', 50);
+            $table->string('email', 50)->unique();
+            $table->string('password', 50);
             $table->string('foto', 100)->nullable();
             $table->integer('status');
             $table->string('site', 50);
@@ -41,7 +42,6 @@ class CreateAnunciantesTable extends Migration
             $table->integer('cidade_comercial_id')->unsigned();
             $table->integer('regiao_id')->unsigned();
             $table->string('observacao');
-            //$table->integer('usuario_id')->unsigned();
             $table->timestamps();
 
 
