@@ -29,6 +29,7 @@ class anuciantesController extends Controller
     ->join('estados', 'estados.id', '=', 'anunciantes.estado_id')
     ->join('regioes', 'regioes.id', '=', 'anunciantes.regiao_id')
     ->join('cidades as cidade_principal', 'cidade_principal.id', '=', 'anunciantes.cidade_id')
+    ->join('users', 'users.id', '=', 'anunciantes.usuario_id')
     ->join('cidades as cidade_comercial', 'cidade_comercial.id', '=', 'anunciantes.cidade_comercial_id')
     ->select(
         'anunciantes.*',
@@ -37,6 +38,7 @@ class anuciantesController extends Controller
         'regioes.regiao as regiao',
         'regioes.id as regiao_id',
         'cidade_principal.cidade as cidade',
+        //'usuario_id.cidade as cidade',
         'cidade_principal.id as cidade_id',
         'cidade_comercial.cidade as cidade_Comercial',
         'cidade_comercial.id as cidade_comercial_id'

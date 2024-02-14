@@ -18,6 +18,8 @@ Route::middleware(['auth:sanctum'])->group(
         Route::get('/teste', [AuthController::class,'teste']);
 
         Route::get('/user/listar_user', 'App\Http\Controllers\userController@index');
+        Route::get('/user/usuario_logado', 'App\Http\Controllers\userController@usuarioLogado');
+        Route::get('/user/anunciante_logado', 'App\Http\Controllers\userController@anuncianteLogado');
 
 
 //Categorias

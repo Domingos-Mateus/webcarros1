@@ -152,7 +152,7 @@ class anunciosController extends Controller
                 'portas' => $anuncio->portas,
                 'cilindros' => $anuncio->cilindros,
                 'motor' => $anuncio->motor,
-                'cor' => $anuncio->cor_id,
+                'cor_id' => $anuncio->cor_id,
                 'cor' => $anuncio->cor,
                 'transmissao_id' => $anuncio->transmissao_id,
                 'transmissao' => $anuncio->transmissao,

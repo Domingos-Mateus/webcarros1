@@ -23,8 +23,11 @@ class Anunciantes extends Model
             $usuario = new User();
             $usuario->name = $anunciante->nome_empresa;
             $usuario->email = $anunciante->email;
-            $usuario->password = Hash::make($anunciante->password); // Use o CNPJ como senha
+            $usuario->password = Hash::make($anunciante->password);
             $usuario->save();
+
+            $anunciante->usuario_id = $usuario->id;
+            $anunciante->save();
         });
     }
 
