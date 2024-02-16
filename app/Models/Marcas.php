@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Marcas extends Model
 {
     use HasFactory;
+
+    public function tipoVeiculo()
+    {
+        return $this->belongsTo(TiposVeiculos::class, 'tipo_veiculo_id');
+    }
+
+    public function modelos()
+    {
+        return $this->hasMany(Modelos::class, 'marca_id');
+    }
 }

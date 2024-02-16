@@ -22,7 +22,8 @@ class modeloController extends Controller
         //
         $query = DB::table('modelos')
                 ->join('marcas','marcas.id','modelos.marca_id')
-                ->select('modelos.*', 'marcas.nome_marca','marcas.id as id_marcas');
+                ->join('tipos_veiculos','tipos_veiculos.id','marcas.tipo_veiculo_id')
+                ->select('modelos.*', 'marcas.nome_marca','marcas.id as id_marca','nome_marca','tipos_veiculos.id as tipo_veiculo_id','tipos_veiculos.tipo_veiculo');
           // Adiciona os filtros conforme os parâmetros passados
           if (request('nome_marca')) {
             $query->where('marcas.nome_marca', 'LIKE', '%' . request('nome_marca') . '%');
@@ -32,13 +33,17 @@ class modeloController extends Controller
         $dadosPersonalizados = [];
 
         foreach ($modelos as $modelo) {
+
+
             // Personalize os campos conforme necessário
             $dadosPersonalizados[] = [
                 'id' => $modelo->id,
                 'nome_modelo' => $modelo->nome_modelo,
-                'nome_marca' => $modelo->nome_marca,
-                'id_marcas' => $modelo->id_marcas,
                 'descricaoS' => $modelo->descricao,
+                'id_marca' => $modelo->id_marca,
+                'nome_marca' => $modelo->nome_marca,
+                'id_tipo_veiculo' => $modelo->tipo_veiculo_id,
+                'nome_tipo_veiculo' => $modelo->tipo_veiculo,
             ];
         }
         return response()->json($dadosPersonalizados);

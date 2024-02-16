@@ -21,15 +21,16 @@ class cidadeController extends Controller
          //
          $query = DB::table('cidades')
          ->join('regioes','regioes.id','cidades.regiao_id')
-         ->select('cidades.*', 'regioes.regiao','regioes.id as id_regiao');
+         ->join('estados','estados.id','regioes.estado_id')
+         ->select('cidades.*', 'regioes.regiao','regioes.id as id_regiao','regioes.regiao','estados.id as id_estado','estados.estado');
    // Adiciona os filtros conforme os parâmetros passados
    if (request('regiao')) {
      $query->where('regioes.regiao', 'LIKE', '%' . request('regiao') . '%');
  }
- 
+
  $cidades = $query->get();
  $dadosPersonalizados = [];
- 
+
  foreach ($cidades as $cidade) {
      // Personalize os campos conforme necessário
      $dadosPersonalizados[] = [
@@ -37,6 +38,9 @@ class cidadeController extends Controller
          'regiao' => $cidade->regiao,
          'cidade' => $cidade->cidade,
          'id_regiao' => $cidade->id_regiao,
+         'nome_regiao' => $cidade->regiao,
+         'id_estado' => $cidade->id_estado,
+         'nome_estado' => $cidade->estado,
      ];
  }
  return response()->json($dadosPersonalizados);
@@ -65,7 +69,7 @@ class cidadeController extends Controller
 
         $cidade->regiao_id = $request->regiao_id;
         $cidade->cidade = $request->cidade;
-        
+
         $cidade->save();
         return "Cidade Cadastrada";
     }
@@ -113,7 +117,7 @@ class cidadeController extends Controller
         }
         $cidade->regiao_id = $request->regiao_id;
         $cidade->cidade = $request->cidade;
-        
+
         $cidade->save();
         return "Cidade Actualizada";
     }
