@@ -24,14 +24,14 @@ class anuciantesController extends Controller
     {
         //
         $anunciantes = Anunciantes::all();
- // Personalização dos campos da base de dados
- $query = DB::table('anunciantes')
-    ->join('estados', 'estados.id', '=', 'anunciantes.estado_id')
-    ->join('regioes', 'regioes.id', '=', 'anunciantes.regiao_id')
-    ->join('cidades as cidade_principal', 'cidade_principal.id', '=', 'anunciantes.cidade_id')
-    ->join('users', 'users.id', '=', 'anunciantes.usuario_id')
-    ->join('cidades as cidade_comercial', 'cidade_comercial.id', '=', 'anunciantes.cidade_comercial_id')
-    ->select(
+        // Personalização dos campos da base de dados
+        $query = DB::table('anunciantes')
+            ->join('estados', 'estados.id', '=', 'anunciantes.estado_id')
+            ->join('regioes', 'regioes.id', '=', 'anunciantes.regiao_id')
+            ->join('cidades as cidade_principal', 'cidade_principal.id', '=', 'anunciantes.cidade_id')
+            ->join('users', 'users.id', '=', 'anunciantes.usuario_id')
+            ->join('cidades as cidade_comercial', 'cidade_comercial.id', '=', 'anunciantes.cidade_comercial_id')
+            ->select(
         'anunciantes.*',
         'estados.estado as estado',
         'estados.id as estado_id',

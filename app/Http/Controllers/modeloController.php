@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Modelos;
 use App\Models\Marcas;
+use App\Models\TiposVeiculos;
 use File;
 use DB;
 
@@ -21,7 +22,8 @@ class modeloController extends Controller
         //
         $query = DB::table('modelos')
                 ->join('marcas','marcas.id','modelos.marca_id')
-                ->select('modelos.*', 'marcas.nome_marca','marcas.id as id_marcas');
+                ->join('tipos_veiculos','tipos_veiculos.id','marcas.tipo_veiculo_id')
+                ->select('modelos.*', 'marcas.nome_marca','marcas.id as id_marca','nome_marca','tipos_veiculos.id as tipo_veiculo_id','tipos_veiculos.tipo_veiculo');
           // Adiciona os filtros conforme os parâmetros passados
           if (request('nome_marca')) {
             $query->where('marcas.nome_marca', 'LIKE', '%' . request('nome_marca') . '%');
@@ -31,13 +33,17 @@ class modeloController extends Controller
         $dadosPersonalizados = [];
 
         foreach ($modelos as $modelo) {
+
+
             // Personalize os campos conforme necessário
             $dadosPersonalizados[] = [
                 'id' => $modelo->id,
                 'nome_modelo' => $modelo->nome_modelo,
-                'nome_marca' => $modelo->nome_marca,
-                'id_marcas' => $modelo->id_marcas,
                 'descricaoS' => $modelo->descricao,
+                'id_marca' => $modelo->id_marca,
+                'nome_marca' => $modelo->nome_marca,
+                'id_tipo_veiculo' => $modelo->tipo_veiculo_id,
+                'nome_tipo_veiculo' => $modelo->tipo_veiculo,
             ];
         }
         return response()->json($dadosPersonalizados);
@@ -86,7 +92,33 @@ class modeloController extends Controller
             return response(['message'=>'Modelo não encontrado'], 404);
         }
 
-        return $modelo;
+        $marca = Marcas::find($modelo->marca_id);
+        if(!$marca){
+            return response(['message'=>'marca não encontrada'], 404);
+        }
+
+        $tipo_veiculo = TiposVeiculos::find($marca->tipo_veiculo_id);
+        if(!$tipo_veiculo){
+            return response(['message'=>'veiculo não encontrada'], 404);
+        }
+
+        $array = [];
+
+        $array = [
+            'id' => $modelo->id,
+            'nome_modelo' => $modelo->nome_modelo,
+            'marca_id' => $modelo->marca_id,
+            'descricao' => $modelo->descricao,
+            'created_at' => $modelo->created_at,
+            'updated_at' => $modelo->updated_at,
+            'id_marca' => $marca->id,
+            'nome_marca' => $marca->nome_marca,
+            'id_tipo_veiculo' => $tipo_veiculo->id,
+            'nome_tipo_veiculo' => $tipo_veiculo->tipo_veiculo,
+        ];
+
+         return $array;
+
     }
 
     /**
