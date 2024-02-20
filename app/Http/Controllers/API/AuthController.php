@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Anunciantes;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -72,9 +73,13 @@ class AuthController extends Controller
     		return response(['message'=> 'credencial inválida'], 401);
     	} else {
     		$token = $user->createToken('authTokenLogin')->plainTextToken;
+
+            $anunciante = Anunciantes::where('usuario_id',$user->id)->first();
+
     		$response = [
     			'user'=>$user,
-    			'token'=>$token
+    			'token'=>$token,
+    			'anunciante_id'=>$anunciante->id ?? null
     	];
 
     	return response($response, 200);
