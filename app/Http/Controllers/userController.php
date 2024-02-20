@@ -19,7 +19,6 @@ class userController extends Controller
         $user = Auth::user();
     $anunciante = Anunciantes::where('usuario_id',$user->id)->first(); // Usando o relacionamento definido no modelo User
 
-
     // Preparar os dados a serem retornados
     $data = [
         'id' => $user->id,
