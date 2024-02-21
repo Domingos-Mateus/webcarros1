@@ -25,22 +25,22 @@ class historicoAnunciantesController extends Controller
              'planos_anunciantes.plano_id',
              'planos_anunciantes.status',
              'planos_anunciantes.created_at'
-     
+
          );
-     
+
      $historicos = $query->get();
-     
+
      $dadosPersonalizados = [];
-     
+
      foreach ($historicos as $historico) {
          $dadosPersonalizados[] = [
              'id' => $historico->id,
-             'plano_id' => $historico->plano_id,
+             'plano_anunciante_id' => $historico->plano_id,
              'status' => $historico->status,
              'created_at' => $historico->created_at,
          ];
      }
-     
+
      return response()->json($dadosPersonalizados);
     }
 

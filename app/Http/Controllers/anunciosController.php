@@ -98,6 +98,9 @@ class anunciosController extends Controller
         if (request('combustivel_id')) {
             $query->where('anuncios.combustivel_id', request('combustivel_id'));
         }
+        if (request('estado')) {
+            $query->where('estados.estado', request('estado'));
+        }
 
         // Executa a consulta aleatóriamente
         $anuncios = $query->inRandomOrder()->get();
