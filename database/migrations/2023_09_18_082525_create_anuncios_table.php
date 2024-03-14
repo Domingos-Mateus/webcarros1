@@ -15,7 +15,9 @@ class CreateAnunciosTable extends Migration
             $table->integer('tecnologia_id')->unsigned();
             $table->integer('marca_id')->unsigned();
             $table->integer('modelo_id')->unsigned();
-            $table->integer('numero_cliques');
+            $table->integer('numero_cliques')->default(0);
+            $table->integer('numero_cliques_contato')->default(0);
+            $table->integer('numero_cliques_mensagem')->default(0);
             $table->integer('situacao_veiculo');
             $table->integer('anunciante_id')->unsigned();
             $table->integer('categoria_id')->unsigned();
@@ -28,10 +30,10 @@ class CreateAnunciosTable extends Migration
             $table->boolean('vendido')->default(0);
             $table->boolean('vitrine')->default(0);
             $table->boolean('destaque_busca')->default(0);
-            $table->string('cep', 50);
-            $table->integer('estado_id')->unsigned();
-            $table->integer('cidade_id')->unsigned();
-            $table->string('empresa', 100)->nullable();
+            //$table->string('cep', 50);
+            //$table->integer('estado_id')->unsigned();
+            //$table->integer('cidade_id')->unsigned();
+            //$table->string('empresa', 100)->nullable();
             $table->integer('tipo_preco');
             $table->string('valor_preco', 100)->nullable();
             $table->string('mostrar_preco');
@@ -72,8 +74,8 @@ class CreateAnunciosTable extends Migration
             $table->foreign('tipo_veiculo_id')->references('id')->on('tipos_veiculos');
             $table->foreign('tecnologia_id')->references('id')->on('tecnologias');
             $table->foreign('cor_id')->references('id')->on('cors');
-            $table->foreign('estado_id')->references('id')->on('estados');
-            $table->foreign('cidade_id')->references('id')->on('cidades');
+            //$table->foreign('estado_id')->references('id')->on('estados');
+            //$table->foreign('cidade_id')->references('id')->on('cidades');
             $table->foreign('combustivel_id')->references('id')->on('combustivels');
             $table->foreign('transmissao_id')->references('id')->on('transmissaos');
             $table->foreign('fabricante_id')->references('id')->on('fabricantes');

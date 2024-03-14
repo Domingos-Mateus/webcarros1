@@ -44,6 +44,26 @@ class anuciantesController extends Controller
         'cidade_comercial.id as cidade_comercial_id'
     );
 
+    if (request('nome_empresa')) {
+        $query->where('anunciantes.nome_empresa', 'LIKE', '%' . request('nome_empresa') . '%');
+    }
+    if (request('tipo_anunciante')) {
+        $query->where('anunciantes.tipo_anunciante', 'LIKE', '%' . request('tipo_anunciante') . '%');
+    }
+    if (request('estado')) {
+        $query->where('estados.estado', 'LIKE', '%' . request('estado') . '%');
+    }
+    if (request('regiao')) {
+        $query->where('regioes.regiao', 'LIKE', '%' . request('regiao') . '%');
+    }
+    if (request('cidade')) {
+        $query->where('cidade_comercial.cidade', 'LIKE', '%' . request('cidade') . '%');
+    }
+    if (request('status')) {
+        $query->where('anunciantes.status', request('status'));
+    }
+
+
 $anunciantes = $query->get();
 
 $dadosPersonalizados = [];
@@ -91,6 +111,7 @@ foreach ($anunciantes as $anunciante) {
 
 return response()->json($dadosPersonalizados);
     }
+
 
     /**
      * Show the form for creating a new resource.

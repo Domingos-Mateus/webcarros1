@@ -25,8 +25,14 @@ class modeloController extends Controller
                 ->join('tipos_veiculos','tipos_veiculos.id','marcas.tipo_veiculo_id')
                 ->select('modelos.*', 'marcas.nome_marca','marcas.id as id_marca','nome_marca','tipos_veiculos.id as tipo_veiculo_id','tipos_veiculos.tipo_veiculo');
           // Adiciona os filtros conforme os parâmetros passados
-          if (request('nome_marca')) {
+        if (request('nome_marca')) {
             $query->where('marcas.nome_marca', 'LIKE', '%' . request('nome_marca') . '%');
+        }
+        if (request('nome_tipo_veiculo')) {
+            $query->where('tipos_veiculos.tipo_veiculo', 'LIKE', '%' . request('nome_tipo_veiculo') . '%');
+        }
+        if (request('nome_modelo')) {
+            $query->where('modelos.nome_modelo', 'LIKE', '%' . request('nome_modelo') . '%');
         }
 
         $modelos = $query->get();

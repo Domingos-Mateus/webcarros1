@@ -23,6 +23,7 @@ class historicoAnunciantesController extends Controller
          ->select(
              'historico_anunciantes.*',
              'planos_anunciantes.plano_id',
+             'planos_anunciantes.anunciante_id',
              'planos_anunciantes.status',
              'planos_anunciantes.created_at'
 
@@ -36,6 +37,7 @@ class historicoAnunciantesController extends Controller
          $dadosPersonalizados[] = [
              'id' => $historico->id,
              'plano_anunciante_id' => $historico->plano_id,
+             'anunciante_id' => $historico->anunciante_id,
              'status' => $historico->status,
              'created_at' => $historico->created_at,
          ];

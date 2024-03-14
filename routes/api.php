@@ -9,7 +9,27 @@ use App\Http\Controllers\appController;
 
 
 Route::get('/anuncios/listar_anuncios', 'App\Http\Controllers\anunciosController@index');
+Route::get('/anuncios/contadorContacto/{id}', 'App\Http\Controllers\anunciosController@contadorContato');
+Route::get('/anuncios/contadorMensagem/{id}', 'App\Http\Controllers\anunciosController@contadorMensagem');
+Route::get('/anuncios/listar_anunciosAdmin', 'App\Http\Controllers\anunciosController@anuncioAdmin');
 Route::get('/anuncios/visualizar_anuncios/{id}', 'App\Http\Controllers\anunciosController@show');
+
+//Listagem fora da autenticação
+Route::get('/tipo_veiculo/listar_tipos_veiculos', 'App\Http\Controllers\tipoVeiculoController@index');
+Route::get('/marcas/listar_marcas', 'App\Http\Controllers\marcasController@index');
+Route::get('/modelos/listar_modelos', 'App\Http\Controllers\modeloController@index');
+Route::get('/estados/listar_estados', 'App\Http\Controllers\estadoController@index');
+Route::get('/cor/listar_cor', 'App\Http\Controllers\corController@index');
+Route::get('/tecnologia/listar_tecnologia', 'App\Http\Controllers\tecnologiaController@index');
+Route::get('/opcionais/listar_opcionais', 'App\Http\Controllers\opcionaisController@index');
+Route::get('/conforto/listar_confortos', 'App\Http\Controllers\confortoController@index');
+Route::get('/fabricante/listar_fabricantes', 'App\Http\Controllers\fabricanteController@index');
+Route::get('/cidade/listar_cidades', 'App\Http\Controllers\cidadeController@index');
+Route::post('/estados/registar_estados', 'App\Http\Controllers\estadoController@store');
+Route::get('/transmissao/listar_transmissao', 'App\Http\Controllers\transmissaoController@index');
+Route::get('/combustivel/listar_combustivel', 'App\Http\Controllers\combustivelController@index');
+
+
 
 
 
@@ -98,21 +118,19 @@ Route::put('/editar_proposta/update/{id}', 'App\Http\Controllers\propostasContro
 Route::get('/eliminar_proposta/{id}', 'App\Http\Controllers\propostasController@destroy');
 
 //Marcas
-Route::get('/marcas/listar_marcas', 'App\Http\Controllers\marcasController@index');
 Route::post('/marcas/registar_marcas', 'App\Http\Controllers\marcasController@store');
 Route::get('/marcas/visualizar_marca/{id}', 'App\Http\Controllers\marcasController@show');
 Route::put('/editar_marca/update/{id}', 'App\Http\Controllers\marcasController@update');
 Route::get('/eliminar_marca/{id}', 'App\Http\Controllers\marcasController@destroy');
 
 //Modelo
-Route::get('/modelos/listar_modelos', 'App\Http\Controllers\modeloController@index');
 Route::post('/modelos/registar_modelos', 'App\Http\Controllers\modeloController@store');
 Route::get('/modelos/visualizar_modelo/{id}', 'App\Http\Controllers\modeloController@show');
 Route::put('/editar_modelo/update/{id}', 'App\Http\Controllers\modeloController@update');
 Route::get('/eliminar_modelo/{id}', 'App\Http\Controllers\modeloController@destroy');
 
 //Tipo de veiculo
-Route::get('/tipo_veiculo/listar_tipos_veiculos', 'App\Http\Controllers\tipoVeiculoController@index');
+
 Route::post('/tipo_veiculo/registar_tipos_veiculos', 'App\Http\Controllers\tipoVeiculoController@store');
 Route::get('/tipo_veiculo/visualizar_tipos_veiculos/{id}', 'App\Http\Controllers\tipoVeiculoController@show');
 Route::put('/editar_tipos_veiculos/update/{id}', 'App\Http\Controllers\tipoVeiculoController@update');
@@ -120,7 +138,6 @@ Route::get('/eliminar_tipos_veiculos/{id}', 'App\Http\Controllers\tipoVeiculoCon
 
 
 //Tecnologia
-Route::get('/tecnologia/listar_tecnologia', 'App\Http\Controllers\tecnologiaController@index');
 Route::post('/tecnologia/registar_tecnologia', 'App\Http\Controllers\tecnologiaController@store');
 Route::get('/tecnologia/visualizar_tecnologia/{id}', 'App\Http\Controllers\tecnologiaController@show');
 Route::put('/editar_tecnologia/update/{id}', 'App\Http\Controllers\tecnologiaController@update');
@@ -128,7 +145,6 @@ Route::get('/eliminar_tecnologia/{id}', 'App\Http\Controllers\tecnologiaControll
 
 
 //Cor
-Route::get('/cor/listar_cor', 'App\Http\Controllers\corController@index');
 Route::post('/cor/registar_cor', 'App\Http\Controllers\corController@store');
 Route::get('/cor/visualizar_cor/{id}', 'App\Http\Controllers\corController@show');
 Route::put('/editar_cor/update/{id}', 'App\Http\Controllers\corController@update');
@@ -136,7 +152,6 @@ Route::get('/eliminar_cor/{id}', 'App\Http\Controllers\corController@destroy');
 
 
 //Combustivel
-Route::get('/combustivel/listar_combustivel', 'App\Http\Controllers\combustivelController@index');
 Route::post('/combustivel/registar_combustivel', 'App\Http\Controllers\combustivelController@store');
 Route::get('/combustivel/visualizar_combustivel/{id}', 'App\Http\Controllers\combustivelController@show');
 Route::put('/editar_combustivel/update/{id}', 'App\Http\Controllers\combustivelController@update');
@@ -144,7 +159,6 @@ Route::get('/eliminar_combustivel/{id}', 'App\Http\Controllers\combustivelContro
 
 
 //Transmissão
-Route::get('/transmissao/listar_transmissao', 'App\Http\Controllers\transmissaoController@index');
 Route::post('/transmissao/registar_transmissao', 'App\Http\Controllers\transmissaoController@store');
 Route::get('/transmissao/visualizar_transmissao/{id}', 'App\Http\Controllers\transmissaoController@show');
 Route::put('/editar_transmissao/update/{id}', 'App\Http\Controllers\transmissaoController@update');
@@ -152,8 +166,6 @@ Route::get('/eliminar_transmissao/{id}', 'App\Http\Controllers\transmissaoContro
 
 
 //Estado
-Route::get('/estados/listar_estados', 'App\Http\Controllers\estadoController@index');
-Route::post('/estados/registar_estados', 'App\Http\Controllers\estadoController@store');
 Route::get('/estados/visualizar_estado/{id}', 'App\Http\Controllers\estadoController@show');
 Route::put('/editar_estado/update/{id}', 'App\Http\Controllers\estadoController@update');
 Route::get('/eliminar_estado/{id}', 'App\Http\Controllers\estadoController@destroy');
@@ -169,14 +181,12 @@ Route::get('/eliminar_regiao/{id}', 'App\Http\Controllers\regiaoController@destr
 
 
 //Cidade
-Route::get('/cidade/listar_cidades', 'App\Http\Controllers\cidadeController@index');
 Route::post('/cidade/registar_cidade', 'App\Http\Controllers\cidadeController@store');
 Route::get('/cidade/visualizar_cidade/{id}', 'App\Http\Controllers\cidadeController@show');
 Route::put('/editar_cidade/update/{id}', 'App\Http\Controllers\cidadeController@update');
 Route::get('/eliminar_cidade/{id}', 'App\Http\Controllers\cidadeController@destroy');
 
 //Fabricante
-Route::get('/fabricante/listar_fabricantes', 'App\Http\Controllers\fabricanteController@index');
 Route::post('/fabricante/registar_fabricante', 'App\Http\Controllers\fabricanteController@store');
 Route::get('/fabricante/visualizar_fabricante/{id}', 'App\Http\Controllers\fabricanteController@show');
 Route::put('/editar_fabricante/update/{id}', 'App\Http\Controllers\fabricanteController@update');
@@ -184,7 +194,6 @@ Route::get('/eliminar_fabricante/{id}', 'App\Http\Controllers\fabricanteControll
 
 
 //Conforto
-Route::get('/conforto/listar_confortos', 'App\Http\Controllers\confortoController@index');
 Route::post('/conforto/registar_conforto', 'App\Http\Controllers\confortoController@store');
 Route::get('/conforto/visualizar_conforto/{id}', 'App\Http\Controllers\confortoController@show');
 Route::put('/editar_conforto/update/{id}', 'App\Http\Controllers\confortoController@update');
@@ -210,7 +219,6 @@ Route::get('/eliminar_categoria_opcionais/{id}', 'App\Http\Controllers\categoria
 
 
 //Opcionais
-Route::get('/opcionais/listar_opcionais', 'App\Http\Controllers\opcionaisController@index');
 Route::post('/opcionais/registar_opcionais', 'App\Http\Controllers\opcionaisController@store');
 Route::get('/opcionais/visualizar_opcionais/{id}', 'App\Http\Controllers\opcionaisController@show');
 Route::put('/editar_opcionais/update/{id}', 'App\Http\Controllers\opcionaisController@update');
