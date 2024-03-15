@@ -14,6 +14,8 @@ Route::get('/anuncios/contadorMensagem/{id}', 'App\Http\Controllers\anunciosCont
 Route::get('/anuncios/listar_anunciosAdmin', 'App\Http\Controllers\anunciosController@anuncioAdmin');
 Route::get('/anuncios/visualizar_anuncios/{id}', 'App\Http\Controllers\anunciosController@show');
 
+Route::get('/categorias/listar_categorias', 'App\Http\Controllers\categoriasController@index');
+
 //Listagem fora da autenticação
 Route::get('/tipo_veiculo/listar_tipos_veiculos', 'App\Http\Controllers\tipoVeiculoController@index');
 Route::get('/marcas/listar_marcas', 'App\Http\Controllers\marcasController@index');
@@ -43,11 +45,15 @@ Route::middleware(['auth:sanctum'])->group(
 
 
 //Categorias
-Route::get('/categorias/listar_categorias', 'App\Http\Controllers\categoriasController@index');
+
 Route::post('/categorias/registar_categorias', 'App\Http\Controllers\categoriasController@store');
 Route::put('/editar_categorias/update/{id}', 'App\Http\Controllers\categoriasController@update');
 Route::get('/categorias/visualizar_categorias/{id}', 'App\Http\Controllers\categoriasController@show');
 Route::get('/eliminar_categorias/{id}', 'App\Http\Controllers\categoriasController@destroy');
+
+//Carregar foto da categoria
+Route::post('/categorias/fotosCategoria/{id}', 'App\Http\Controllers\categoriasController@uploadFotoCategorias');
+
 
 //Notícias
 Route::get('/noticias/listar_noticias', 'App\Http\Controllers\noticiasController@index');

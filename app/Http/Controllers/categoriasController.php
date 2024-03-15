@@ -44,16 +44,30 @@ class categoriasController extends Controller
 
         $categorias->nome = $request->nome;
         $categorias->descricao = $request->descricao;
-/*
-        $categorias = [
-            'nome' => 'teste1',
-            'descricao' => 'Testando',
-        ];
 
-        return new JsonResponse($categorias);
-*/
         $categorias->save();
 
+        return $categorias;
+    }
+
+    public function uploadFotoCategorias(Request $request, $id)
+    {
+        //
+        $categorias = Categorias::find($id);
+        if(!$categorias){
+            return response(['message'=>'Categoria não encontrado'], 404);
+        }
+
+        if($request->hasfile('foto_categoria'))
+        {
+            $file = $request->file('foto_categoria');
+            $extenstion = $file->getClientOriginalExtension();
+            $filename = time().'.'.$extenstion;
+            $file->move('uploads/categorias/imagens/', $filename);
+            $categorias->foto_categoria = 'uploads/categorias/imagens/'.$filename;
+            $categorias->save();
+        }
+        $categorias->save();
         return $categorias;
     }
 
@@ -117,5 +131,6 @@ class categoriasController extends Controller
     {
         //
         Categorias::destroy($id);
+        return "Categoria eliminada com sucesso";
     }
 }

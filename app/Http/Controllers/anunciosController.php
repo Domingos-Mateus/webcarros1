@@ -890,8 +890,6 @@ foreach ($opcionais_array as $opcional_anuncio) {
         $marca = Marcas::find($request->marca_id);
         $anunciante = Anunciantes::find($request->anunciante_id);
         $categoria = Categorias::find($request->categoria_id);
-        $estado = Estados::find($request->estado_id);
-        $cidade = Cidades::find($request->cidade_id);
         $fabricante = Fabricantes::find($request->fabricante_id);
         $cor = Cor::find($request->cor);
         $transmissao = Transmissao::find($request->transmissao);
@@ -918,12 +916,6 @@ foreach ($opcionais_array as $opcional_anuncio) {
 
         if(!$categoria){
             return response(['message'=> 'A Categoria selecionada não existe'], 404);
-        }
-        if(!$estado){
-            return response(['message'=> 'O Estado selecionado não existe'], 404);
-        }
-        if(!$cidade){
-            return response(['message'=> 'A Cidade selecionada não existe'], 404);
         }
         if(!$fabricante){
             return response(['message'=> 'O Fabricante selecionado não existe'], 404);
@@ -958,10 +950,6 @@ foreach ($opcionais_array as $opcional_anuncio) {
         $anuncios->vendido = $request->vendido;
         $anuncios->vitrine = $request->vitrine;
         $anuncios->destaque_busca = $request->destaque_busca;
-        $anuncios->cep = $request->cep;
-        $anuncios->estado_id = $request->estado_id;
-        $anuncios->cidade_id = $request->cidade_id;
-        $anuncios->empresa = $request->empresa;
         $anuncios->tipo_preco = $request->tipo_preco;
         $anuncios->valor_preco = $request->valor_preco;
         $anuncios->mostrar_preco = $request->mostrar_preco;
