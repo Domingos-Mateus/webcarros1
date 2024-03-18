@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Models\Categorias;
 
+use DB;
+
 class categoriasController extends Controller
 {
     /**
@@ -15,11 +17,32 @@ class categoriasController extends Controller
      */
     public function index()
     {
-        //
-        $categorias = Categorias::all();
-        return $categorias;
+        // Começa a construir a consulta ao banco de dados
+        $query = DB::table('categorias')
+            ->select('categorias.*');
+        // Executa a consulta aleatóriamente
+        $categorias = $query->get();
+        // Processamento dos dados para personalizar a resposta
+        $dadosPersonalizados = [];
 
+
+
+        foreach ($categorias as $categoria) {
+            $dadosPersonalizados[] = [
+                'id' => $categoria->id,
+                'nome' => $categoria->nome,
+                'descricao' => $categoria->descricao,
+                'foto_categoria' => $categoria->foto_categoria ? env('URL_BASE_SERVIDOR') . '/' . $categoria->foto_categoria : null,
+                // Adicione mais campos personalizados conforme necessário
+            ];
+        }
+
+
+
+        // Retorna a resposta JSON com os dados personalizados
+        return response()->json($dadosPersonalizados);
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -51,25 +74,31 @@ class categoriasController extends Controller
     }
 
     public function uploadFotoCategorias(Request $request, $id)
-    {
-        //
-        $categorias = Categorias::find($id);
-        if(!$categorias){
-            return response(['message'=>'Categoria não encontrado'], 404);
-        }
+{
+    // Encontra a categoria pelo ID
+    $categorias = Categorias::find($id);
 
-        if($request->hasfile('foto_categoria'))
-        {
-            $file = $request->file('foto_categoria');
-            $extenstion = $file->getClientOriginalExtension();
-            $filename = time().'.'.$extenstion;
-            $file->move('uploads/categorias/imagens/', $filename);
-            $categorias->foto_categoria = 'uploads/categorias/imagens/'.$filename;
-            $categorias->save();
-        }
-        $categorias->save();
-        return $categorias;
+    // Verifica se a categoria existe
+    if (!$categorias) {
+        return response(['message' => 'Categoria não encontrada'], 404);
     }
+
+    if($request->hasfile('foto_categoria'))
+    {
+        $file = $request->file('foto_categoria');
+        $extenstion = $file->getClientOriginalExtension();
+        $filename = time().'.'.$extenstion;
+        // Move o arquivo para o diretório de destino
+        $file->move('uploads/categorias/', $filename);
+        $categorias->foto_categoria = 'uploads/categorias/'.$filename;
+        $categorias->save();
+    }
+
+    // Retorna a categoria sem fazer alterações se nenhum arquivo foi enviado
+    return $categorias;
+}
+
+
 
     /**
      * Display the specified resource.

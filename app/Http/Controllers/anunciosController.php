@@ -521,22 +521,16 @@ class anunciosController extends Controller
         $anuncios = Anuncios::find($id);
 
 
-        if ($request->hasFile('foto1')) {
-            $file = $request->file('foto1');
-
-            // Define o diretório de destino personalizado
-            $directory = 'uploads/anuncios/imagens/foto1';
-
-            // Move o arquivo para o diretório desejado mantendo o nome original
-            $filePath = $file->storeAs($directory, $file->getClientOriginalName());
-
-            // Atualiza o campo foto1 do anúncio com o caminho relativo do arquivo
-            $anuncios->foto1 = $filePath;
-            $anuncios->save();
-        }
-
-
-
+        if($request->hasfile('foto1'))
+    {
+        $file = $request->file('foto1');
+        $extenstion = $file->getClientOriginalExtension();
+        $filename = time().'.'.$extenstion;
+        // Move o arquivo para o diretório de destino
+        $file->move('uploads/anuncios/foto1/', $filename);
+        $anuncios->foto1 = 'uploads/anuncios/foto1/'.$filename;
+        $anuncios->save();
+    }
 
 
 
