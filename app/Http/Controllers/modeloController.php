@@ -81,7 +81,7 @@ class modeloController extends Controller
 
         $modelos->save();
 
-        return "Marca cadastrada";
+        return response(['message'=> 'Marca cadastrada'], 200);
     }
 
     /**
@@ -162,7 +162,7 @@ class modeloController extends Controller
         $modelo->descricao = $request->descricao;
 
         $modelo->save();
-        return "Dados Atualizado";
+        return response(['message'=> 'Dados Atualizado!'], 200);
     }
 
     /**
@@ -175,6 +175,6 @@ class modeloController extends Controller
     {
         //
         Modelos::destroy($id);
-        return "Modelo Eliminado com sucesso!";
+        return response(['message'=> 'Modelo Eliminado com sucesso!'], 200);
     }
 }

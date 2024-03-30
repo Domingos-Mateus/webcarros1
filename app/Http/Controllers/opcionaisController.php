@@ -146,6 +146,6 @@ return response()->json($dadosPersonalizados);
     {
         //
         Opcionais::destroy($id);
-        return "Opcional Eliminado com sucesso!";
+        return response(['message'=> 'Opcional Eliminado com sucesso!'], 200);
     }
 }

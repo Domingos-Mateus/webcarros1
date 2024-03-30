@@ -21,6 +21,7 @@ use App\Models\Fabricantes;
 use App\Models\Opcionais;
 use File;
 use DB;
+use Intervention\Image\Facades\Image;
 
 class anunciosController extends Controller
 {
@@ -29,61 +30,73 @@ class anunciosController extends Controller
     {
         // Começa a construir a consulta ao banco de dados
         $query = DB::table('anuncios')
-            ->join('marcas','marcas.id','anuncios.marca_id')
-            ->join('modelos','modelos.id','anuncios.modelo_id')
-            ->join('categorias','categorias.id','anuncios.categoria_id')
-            ->join('anunciantes','anunciantes.id','anuncios.anunciante_id')
-            ->join('tipos_veiculos','tipos_veiculos.id','anuncios.tipo_veiculo_id')
-            ->join('tecnologias','tecnologias.id','anuncios.tecnologia_id')
-            ->join('cors','cors.id','anuncios.cor_id')
-            ->join('fabricantes','fabricantes.id','anuncios.fabricante_id')
-            ->join('transmissaos','transmissaos.id','anuncios.transmissao_id')
-            ->join('combustivels','combustivels.id','anuncios.combustivel_id')
+            ->join('marcas', 'marcas.id', 'anuncios.marca_id')
+            ->join('modelos', 'modelos.id', 'anuncios.modelo_id')
+            ->join('categorias', 'categorias.id', 'anuncios.categoria_id')
+            ->join('anunciantes', 'anunciantes.id', 'anuncios.anunciante_id')
+            ->join('tipos_veiculos', 'tipos_veiculos.id', 'anuncios.tipo_veiculo_id')
+            ->join('tecnologias', 'tecnologias.id', 'anuncios.tecnologia_id')
+            ->join('cors', 'cors.id', 'anuncios.cor_id')
+            ->join('fabricantes', 'fabricantes.id', 'anuncios.fabricante_id')
+            ->join('transmissaos', 'transmissaos.id', 'anuncios.transmissao_id')
+            ->join('combustivels', 'combustivels.id', 'anuncios.combustivel_id')
             ->join('estados', 'estados.id', 'anunciantes.estado_id') // Junção com a tabela de estados
             ->join('cidades', 'cidades.id', 'anunciantes.cidade_id') // Junção com a tabela de estados
-            ->select('anuncios.*', 'marcas.nome_marca', 'marcas.id as id_marcas',
-             'modelos.nome_modelo', 'modelos.id as id_m','categorias.nome as nome_categoria',
-             'categorias.id as id_categoria', 'anunciantes.nome_empresa',
-             'anunciantes.cnpj',
-             'anunciantes.telefone',
-             'anunciantes.celular',
-             'anunciantes.whatsapp',
-             'anunciantes.endereco',
-             'anunciantes.estado_id',
-             'estados.estado', // Selecionando o nome do estado
-             'cidades.cidade', // Selecionando o nome do Cidade
-             'anunciantes.cidade_id',
-             'anunciantes.cep',
-             'anunciantes.cep_comercial',
-             'anunciantes.foto as foto_anunciante',
-             'anunciantes.endereco_comercial',
-             'anunciantes.id as id_anunciantes','tipos_veiculos.tipo_veiculo',
-             'fabricantes.fabricante',
-             'tipos_veiculos.id as id_tipos_veiculo',
-             'tipos_veiculos.tipo_veiculo','cors.cor',
-             'cors.id as id_cor','tecnologias.tecnologia',
-             'tecnologias.id as idtecnologia','combustivels.combustivel',
-             'combustivels.id as id_combustivel',
-             'transmissaos.transmissao','transmissaos.id as id_transmissao');
+            ->select(
+                'anuncios.*',
+                'marcas.nome_marca',
+                'marcas.id as id_marcas',
+                'modelos.nome_modelo',
+                'modelos.id as id_m',
+                'categorias.nome as nome_categoria',
+                'categorias.id as id_categoria',
+                'anunciantes.nome_empresa',
+                'anunciantes.cnpj',
+                'anunciantes.telefone',
+                'anunciantes.celular',
+                'anunciantes.whatsapp',
+                'anunciantes.endereco',
+                'anunciantes.estado_id',
+                'estados.estado', // Selecionando o nome do estado
+                'cidades.cidade', // Selecionando o nome do Cidade
+                'anunciantes.cidade_id',
+                'anunciantes.cep',
+                'anunciantes.cep_comercial',
+                'anunciantes.foto as foto_anunciante',
+                'anunciantes.endereco_comercial',
+                'anunciantes.id as id_anunciantes',
+                'tipos_veiculos.tipo_veiculo',
+                'fabricantes.fabricante',
+                'tipos_veiculos.id as id_tipos_veiculo',
+                'tipos_veiculos.tipo_veiculo',
+                'cors.cor',
+                'cors.id as id_cor',
+                'tecnologias.tecnologia',
+                'tecnologias.id as idtecnologia',
+                'combustivels.combustivel',
+                'combustivels.id as id_combustivel',
+                'transmissaos.transmissao',
+                'transmissaos.id as id_transmissao'
+            );
 
-             // Adiciona os filtros conforme os parâmetros passados
+        // Adiciona os filtros conforme os parâmetros passados
 
-             if (request('tipo_veiculo')) {
-                $query->where('tipos_veiculos.tipo_veiculo', 'LIKE', '%' . request('tipo_veiculo') . '%');
-            }
-            if (request('situacao_veiculo')) {
-                $query->where('anuncios.situacao_veiculo', 'LIKE', '%' . request('situacao_veiculo') . '%');
-            }
-            if (request('nome_empresa')) {
-                $query->where('anunciantes.nome_empresa', 'LIKE', '%' . request('nome_empresa') . '%');
-            }
+        if (request('tipo_veiculo')) {
+            $query->where('tipos_veiculos.tipo_veiculo', 'LIKE', '%' . request('tipo_veiculo') . '%');
+        }
+        if (request('situacao_veiculo')) {
+            $query->where('anuncios.situacao_veiculo', 'LIKE', '%' . request('situacao_veiculo') . '%');
+        }
+        if (request('nome_empresa')) {
+            $query->where('anunciantes.nome_empresa', 'LIKE', '%' . request('nome_empresa') . '%');
+        }
 
-            if (request('valor_preco')) {
-                $query->where('anuncios.valor_preco', request('valor_preco'));
-            }
-            if (request('ano_modelo')) {
-                $query->where('anuncios.ano_modelo', request('ano_modelo'));
-            }
+        if (request('valor_preco')) {
+            $query->where('anuncios.valor_preco', request('valor_preco'));
+        }
+        if (request('ano_modelo')) {
+            $query->where('anuncios.ano_modelo', request('ano_modelo'));
+        }
 
         if (request('nome_marca')) {
             $query->where('marcas.nome_marca', request('nome_marca'));
@@ -215,66 +228,78 @@ class anunciosController extends Controller
 
 
 
-//Listagem de Anúncios para o administrador
+    //Listagem de Anúncios para o administrador
     public function anuncioAdmin()
     {
         // Começa a construir a consulta ao banco de dados
         $query = DB::table('anuncios')
-            ->join('marcas','marcas.id','anuncios.marca_id')
-            ->join('modelos','modelos.id','anuncios.modelo_id')
-            ->join('categorias','categorias.id','anuncios.categoria_id')
-            ->join('anunciantes','anunciantes.id','anuncios.anunciante_id')
-            ->join('tipos_veiculos','tipos_veiculos.id','anuncios.tipo_veiculo_id')
-            ->join('tecnologias','tecnologias.id','anuncios.tecnologia_id')
-            ->join('cors','cors.id','anuncios.cor_id')
-            ->join('fabricantes','fabricantes.id','anuncios.fabricante_id')
-            ->join('transmissaos','transmissaos.id','anuncios.transmissao_id')
-            ->join('combustivels','combustivels.id','anuncios.combustivel_id')
+            ->join('marcas', 'marcas.id', 'anuncios.marca_id')
+            ->join('modelos', 'modelos.id', 'anuncios.modelo_id')
+            ->join('categorias', 'categorias.id', 'anuncios.categoria_id')
+            ->join('anunciantes', 'anunciantes.id', 'anuncios.anunciante_id')
+            ->join('tipos_veiculos', 'tipos_veiculos.id', 'anuncios.tipo_veiculo_id')
+            ->join('tecnologias', 'tecnologias.id', 'anuncios.tecnologia_id')
+            ->join('cors', 'cors.id', 'anuncios.cor_id')
+            ->join('fabricantes', 'fabricantes.id', 'anuncios.fabricante_id')
+            ->join('transmissaos', 'transmissaos.id', 'anuncios.transmissao_id')
+            ->join('combustivels', 'combustivels.id', 'anuncios.combustivel_id')
             ->join('estados', 'estados.id', 'anunciantes.estado_id') // Junção com a tabela de estados
             ->join('cidades', 'cidades.id', 'anunciantes.cidade_id') // Junção com a tabela de estados
-            ->select('anuncios.*', 'marcas.nome_marca', 'marcas.id as id_marcas',
-             'modelos.nome_modelo', 'modelos.id as id_m','categorias.nome as nome_categoria',
-             'categorias.id as id_categoria', 'anunciantes.nome_empresa',
-             'anunciantes.cnpj',
-             'anunciantes.telefone',
-             'anunciantes.celular',
-             'anunciantes.whatsapp',
-             'anunciantes.endereco',
-             'anunciantes.estado_id',
-             'estados.estado', // Selecionando o nome do estado
-             'cidades.cidade', // Selecionando o nome do Cidade
-             'anunciantes.cidade_id',
-             'anunciantes.cep',
-             'anunciantes.cep_comercial',
-             'anunciantes.foto as foto_anunciante',
-             'anunciantes.endereco_comercial',
-             'anunciantes.id as id_anunciantes','tipos_veiculos.tipo_veiculo',
-             'fabricantes.fabricante',
-             'tipos_veiculos.id as id_tipos_veiculo',
-             'tipos_veiculos.tipo_veiculo','cors.cor',
-             'cors.id as id_cor','tecnologias.tecnologia',
-             'tecnologias.id as idtecnologia','combustivels.combustivel',
-             'combustivels.id as id_combustivel',
-             'transmissaos.transmissao','transmissaos.id as id_transmissao');
+            ->select(
+                'anuncios.*',
+                'marcas.nome_marca',
+                'marcas.id as id_marcas',
+                'modelos.nome_modelo',
+                'modelos.id as id_m',
+                'categorias.nome as nome_categoria',
+                'categorias.id as id_categoria',
+                'anunciantes.nome_empresa',
+                'anunciantes.cnpj',
+                'anunciantes.telefone',
+                'anunciantes.celular',
+                'anunciantes.whatsapp',
+                'anunciantes.endereco',
+                'anunciantes.estado_id',
+                'estados.estado', // Selecionando o nome do estado
+                'cidades.cidade', // Selecionando o nome do Cidade
+                'anunciantes.cidade_id',
+                'anunciantes.cep',
+                'anunciantes.cep_comercial',
+                'anunciantes.foto as foto_anunciante',
+                'anunciantes.endereco_comercial',
+                'anunciantes.id as id_anunciantes',
+                'tipos_veiculos.tipo_veiculo',
+                'fabricantes.fabricante',
+                'tipos_veiculos.id as id_tipos_veiculo',
+                'tipos_veiculos.tipo_veiculo',
+                'cors.cor',
+                'cors.id as id_cor',
+                'tecnologias.tecnologia',
+                'tecnologias.id as idtecnologia',
+                'combustivels.combustivel',
+                'combustivels.id as id_combustivel',
+                'transmissaos.transmissao',
+                'transmissaos.id as id_transmissao'
+            );
 
-             // Adiciona os filtros conforme os parâmetros passados
+        // Adiciona os filtros conforme os parâmetros passados
 
-             if (request('tipo_veiculo')) {
-                $query->where('tipos_veiculos.tipo_veiculo', 'LIKE', '%' . request('tipo_veiculo') . '%');
-            }
-            if (request('situacao_veiculo')) {
-                $query->where('anuncios.situacao_veiculo', 'LIKE', '%' . request('situacao_veiculo') . '%');
-            }
-            if (request('nome_empresa')) {
-                $query->where('anunciantes.nome_empresa', 'LIKE', '%' . request('nome_empresa') . '%');
-            }
+        if (request('tipo_veiculo')) {
+            $query->where('tipos_veiculos.tipo_veiculo', 'LIKE', '%' . request('tipo_veiculo') . '%');
+        }
+        if (request('situacao_veiculo')) {
+            $query->where('anuncios.situacao_veiculo', 'LIKE', '%' . request('situacao_veiculo') . '%');
+        }
+        if (request('nome_empresa')) {
+            $query->where('anunciantes.nome_empresa', 'LIKE', '%' . request('nome_empresa') . '%');
+        }
 
-            if (request('valor_preco')) {
-                $query->where('anuncios.valor_preco', request('valor_preco'));
-            }
-            if (request('ano_modelo')) {
-                $query->where('anuncios.ano_modelo', request('ano_modelo'));
-            }
+        if (request('valor_preco')) {
+            $query->where('anuncios.valor_preco', request('valor_preco'));
+        }
+        if (request('ano_modelo')) {
+            $query->where('anuncios.ano_modelo', request('ano_modelo'));
+        }
 
         if (request('nome_marca')) {
             $query->where('marcas.nome_marca', request('nome_marca'));
@@ -435,38 +460,38 @@ class anunciosController extends Controller
         $transmissao = Transmissao::find($request->transmissao);
         $combustivel = Combustivel::find($request->combustivel);
 
-        if(!$tipo_veiculo){
-            return response(['message'=> 'O tipo de veiculo selecionado não existe'], 404);
+        if (!$tipo_veiculo) {
+            return response(['message' => 'O tipo de veiculo selecionado não existe'], 404);
         }
-        if(!$tecnologia){
-            return response(['message'=> 'A tecnologia selecionada não existe'], 404);
+        if (!$tecnologia) {
+            return response(['message' => 'A tecnologia selecionada não existe'], 404);
         }
-        if(!$marca){
-            return response(['message'=> 'A marca selecionada não existe'], 404);
-        }
-
-        if(!$modelo){
-            return response(['message'=> 'O modelo selecionado não existe'], 404);
-        }
-        if(!$anunciante){
-            return response(['message'=> 'O Anunciante selecionado não existe'], 404);
+        if (!$marca) {
+            return response(['message' => 'A marca selecionada não existe'], 404);
         }
 
-        if(!$categoria){
-            return response(['message'=> 'A Categoria selecionada não existe'], 404);
+        if (!$modelo) {
+            return response(['message' => 'O modelo selecionado não existe'], 404);
+        }
+        if (!$anunciante) {
+            return response(['message' => 'O Anunciante selecionado não existe'], 404);
         }
 
-        if(!$fabricante){
-            return response(['message'=> 'O Fabricante selecionado não existe'], 404);
+        if (!$categoria) {
+            return response(['message' => 'A Categoria selecionada não existe'], 404);
         }
-        if(!$cor){
-            return response(['message'=> 'A Cor selecionada não existe'], 404);
+
+        if (!$fabricante) {
+            return response(['message' => 'O Fabricante selecionado não existe'], 404);
         }
-        if(!$transmissao){
-            return response(['message'=> 'A Transmissão selecionada não existe'], 404);
+        if (!$cor) {
+            return response(['message' => 'A Cor selecionada não existe'], 404);
         }
-        if(!$combustivel){
-            return response(['message'=> 'O Combustível selecionado não existe'], 404);
+        if (!$transmissao) {
+            return response(['message' => 'A Transmissão selecionada não existe'], 404);
+        }
+        if (!$combustivel) {
+            return response(['message' => 'O Combustível selecionado não existe'], 404);
         }
 
         $anuncios = new Anuncios;
@@ -516,192 +541,427 @@ class anunciosController extends Controller
     }
 
     public function uploadFoto(Request $request, $id)
-    {
-        //
-        $anuncios = Anuncios::find($id);
+{
+    $anuncios = Anuncios::find($id);
 
+        if (!$anuncios) {
+            return response()->json(['mensagem' => 'Técnico Inexistente!']);
+        }
 
-        if($request->hasfile('foto1'))
-    {
-        $file = $request->file('foto1');
-        $extenstion = $file->getClientOriginalExtension();
-        $filename = time().'.'.$extenstion;
-        // Move o arquivo para o diretório de destino
-        $file->move('uploads/anuncios/foto1/', $filename);
-        $anuncios->foto1 = 'uploads/anuncios/foto1/'.$filename;
-        $anuncios->save();
-    }
+        if ($request->hasFile('foto1')) {
 
+            // Código para upload e redimensionamento de cada foto
+            $file = $request->file('foto1');
+            $extension = $file->getClientOriginalExtension();
+            $detalheFilename = 'detalhe.' . $extension;
+            $detaleMiniFilename = 'detalhe_mini.' . $extension;
+            $destaqueFilename = 'destaque.' . $extension;
+            $destaqueMiniFilename = 'destaque_mini.' . $extension;
+            $principalFilename = 'principal.' . $extension;
+            $principalMiniFilename = 'principal_mini.' . $extension;
 
+            // Diretório para armazenar o arquivo, criado com base no ID
+            $directory = 'uploads/anuncios/foto1/' . $id . '/';
+            // Move a primeira foto
+            $file->move($directory, $detalheFilename);
+            // Cria cópias redimensionadas para as outras fotos
+            $copyDestaque = Image::make($directory . $detalheFilename)
+                ->fit(480, 360) // Tamanho desejado para destaque
+                ->save($directory . $destaqueFilename);
 
-        if ($request->hasFile('foto2')) {
-            $file = $request->file('foto2');
-            $extension = $file->getClientOriginalExtension(); // Obter a extensão do arquivo
-            $filename = 'foto' . $anuncios->id . '.' . $extension; // Nome do arquivo com prefixo "foto" e ID do anúncio
+            $copyDestaqueMini = Image::make($directory . $detalheFilename)
+                ->fit(240, 180) // Tamanho desejado para miniatura do destaque
+                ->save($directory . $destaqueMiniFilename);
 
-            // Move o arquivo para o diretório desejado com o novo nome
-            $file->move(public_path('uploads/anuncios/imagens/foto2/'), $filename);
+            $copyPrincipal = Image::make($directory . $detalheFilename)
+                ->fit(249, 186) // Tamanho desejado para detalhe
+                ->save($directory . $principalFilename);
 
-            // Atualiza o campo foto2 do anúncio com o caminho relativo do arquivo
-            $anuncios->foto2 = 'uploads/anuncios/imagens/foto2/' . $filename;
+            $copyPrincipalMini = Image::make($directory . $detalheFilename)
+                ->fit(122, 93) // Tamanho desejado para miniatura do detalhe
+                ->save($directory . $principalMiniFilename);
+
+            $copyDetalharMini = Image::make($directory . $detalheFilename)
+                ->fit(800, 600) // Tamanho desejado para miniatura do detalhe
+                ->save($directory . $detaleMiniFilename);
+
+            $anuncios->foto1 = $directory;
             $anuncios->save();
         }
 
+
+        if ($request->hasFile('foto2')) {
+
+            // Código para upload e redimensionamento de cada foto
+            $file = $request->file('foto2');
+            $extension = $file->getClientOriginalExtension();
+            $detalheFilename = 'detalhe.' . $extension;
+            $detaleMiniFilename = 'detalhe_mini.' . $extension;
+            $destaqueFilename = 'destaque.' . $extension;
+            $destaqueMiniFilename = 'destaque_mini.' . $extension;
+            $principalFilename = 'principal.' . $extension;
+            $principalMiniFilename = 'principal_mini.' . $extension;
+
+            // Diretório para armazenar o arquivo, criado com base no ID
+            $directory = 'uploads/anuncios/foto2/' . $id . '/';
+            // Move a primeira foto
+            $file->move($directory, $detalheFilename);
+            // Cria cópias redimensionadas para as outras fotos
+            $copyDestaque = Image::make($directory . $detalheFilename)
+                ->fit(480, 360) // Tamanho desejado para destaque
+                ->save($directory . $destaqueFilename);
+
+            $copyDestaqueMini = Image::make($directory . $detalheFilename)
+                ->fit(240, 180) // Tamanho desejado para miniatura do destaque
+                ->save($directory . $destaqueMiniFilename);
+
+            $copyPrincipal = Image::make($directory . $detalheFilename)
+                ->fit(249, 186) // Tamanho desejado para detalhe
+                ->save($directory . $principalFilename);
+
+            $copyPrincipalMini = Image::make($directory . $detalheFilename)
+                ->fit(122, 93) // Tamanho desejado para miniatura do detalhe
+                ->save($directory . $principalMiniFilename);
+
+            $copyDetalharMini = Image::make($directory . $detalheFilename)
+                ->fit(800, 600) // Tamanho desejado para miniatura do detalhe
+                ->save($directory . $detaleMiniFilename);
+
+            $anuncios->foto2 = $directory;
+            $anuncios->save();
+        }
+
+
         if ($request->hasFile('foto3')) {
+
+            // Código para upload e redimensionamento de cada foto
             $file = $request->file('foto3');
-            $extension = $file->getClientOriginalExtension(); // Obter a extensão do arquivo
-            $filename = 'foto' . $anuncios->id . '.' . $extension; // Nome do arquivo com prefixo "foto" e ID do anúncio
+            $extension = $file->getClientOriginalExtension();
+            $detalheFilename = 'detalhe.' . $extension;
+            $detaleMiniFilename = 'detalhe_mini.' . $extension;
+            $destaqueFilename = 'destaque.' . $extension;
+            $destaqueMiniFilename = 'destaque_mini.' . $extension;
+            $principalFilename = 'principal.' . $extension;
+            $principalMiniFilename = 'principal_mini.' . $extension;
 
-            // Move o arquivo para o diretório desejado com o novo nome
-            $file->move(public_path('uploads/anuncios/imagens/foto3/'), $filename);
+            // Diretório para armazenar o arquivo, criado com base no ID
+            $directory = 'uploads/anuncios/foto3/' . $id . '/';
+            // Move a primeira foto
+            $file->move($directory, $detalheFilename);
+            // Cria cópias redimensionadas para as outras fotos
+            $copyDestaque = Image::make($directory . $detalheFilename)
+                ->fit(480, 360) // Tamanho desejado para destaque
+                ->save($directory . $destaqueFilename);
 
-            // Atualiza o campo foto3 do anúncio com o caminho relativo do arquivo
-            $anuncios->foto3 = 'uploads/anuncios/imagens/foto3/' . $filename;
+            $copyDestaqueMini = Image::make($directory . $detalheFilename)
+                ->fit(240, 180) // Tamanho desejado para miniatura do destaque
+                ->save($directory . $destaqueMiniFilename);
+
+            $copyPrincipal = Image::make($directory . $detalheFilename)
+                ->fit(249, 186) // Tamanho desejado para detalhe
+                ->save($directory . $principalFilename);
+
+            $copyPrincipalMini = Image::make($directory . $detalheFilename)
+                ->fit(122, 93) // Tamanho desejado para miniatura do detalhe
+                ->save($directory . $principalMiniFilename);
+
+            $copyDetalharMini = Image::make($directory . $detalheFilename)
+                ->fit(800, 600) // Tamanho desejado para miniatura do detalhe
+                ->save($directory . $detaleMiniFilename);
+
+            $anuncios->foto3 = $directory;
             $anuncios->save();
         }
 
         if ($request->hasFile('foto4')) {
+
+            // Código para upload e redimensionamento de cada foto
             $file = $request->file('foto4');
-            $extension = $file->getClientOriginalExtension(); // Obter a extensão do arquivo
-            $filename = 'foto' . $anuncios->id . '.' . $extension; // Nome do arquivo com prefixo "foto" e ID do anúncio
+            $extension = $file->getClientOriginalExtension();
+            $detalheFilename = 'detalhe.' . $extension;
+            $detaleMiniFilename = 'detalhe_mini.' . $extension;
+            $destaqueFilename = 'destaque.' . $extension;
+            $destaqueMiniFilename = 'destaque_mini.' . $extension;
+            $principalFilename = 'principal.' . $extension;
+            $principalMiniFilename = 'principal_mini.' . $extension;
 
-            // Move o arquivo para o diretório desejado com o novo nome
-            $file->move(public_path('uploads/anuncios/imagens/foto4/'), $filename);
+            // Diretório para armazenar o arquivo, criado com base no ID
+            $directory = 'uploads/anuncios/foto4/' . $id . '/';
+            // Move a primeira foto
+            $file->move($directory, $detalheFilename);
+            // Cria cópias redimensionadas para as outras fotos
+            $copyDestaque = Image::make($directory . $detalheFilename)
+                ->fit(480, 360) // Tamanho desejado para destaque
+                ->save($directory . $destaqueFilename);
 
-            // Atualiza o campo foto4 do anúncio com o caminho relativo do arquivo
-            $anuncios->foto4 = 'uploads/anuncios/imagens/foto4/' . $filename;
+            $copyDestaqueMini = Image::make($directory . $detalheFilename)
+                ->fit(240, 180) // Tamanho desejado para miniatura do destaque
+                ->save($directory . $destaqueMiniFilename);
+
+            $copyPrincipal = Image::make($directory . $detalheFilename)
+                ->fit(249, 186) // Tamanho desejado para detalhe
+                ->save($directory . $principalFilename);
+
+            $copyPrincipalMini = Image::make($directory . $detalheFilename)
+                ->fit(122, 93) // Tamanho desejado para miniatura do detalhe
+                ->save($directory . $principalMiniFilename);
+
+            $copyDetalharMini = Image::make($directory . $detalheFilename)
+                ->fit(800, 600) // Tamanho desejado para miniatura do detalhe
+                ->save($directory . $detaleMiniFilename);
+
+            $anuncios->foto4 = $directory;
             $anuncios->save();
         }
 
         if ($request->hasFile('foto5')) {
+
+            // Código para upload e redimensionamento de cada foto
             $file = $request->file('foto5');
-            $extension = $file->getClientOriginalExtension(); // Obter a extensão do arquivo
-            $filename = 'foto' . $anuncios->id . '.' . $extension; // Nome do arquivo com prefixo "foto" e ID do anúncio
+            $extension = $file->getClientOriginalExtension();
+            $detalheFilename = 'detalhe.' . $extension;
+            $detaleMiniFilename = 'detalhe_mini.' . $extension;
+            $destaqueFilename = 'destaque.' . $extension;
+            $destaqueMiniFilename = 'destaque_mini.' . $extension;
+            $principalFilename = 'principal.' . $extension;
+            $principalMiniFilename = 'principal_mini.' . $extension;
 
-            // Move o arquivo para o diretório desejado com o novo nome
-            $file->move(public_path('uploads/anuncios/imagens/foto5/'), $filename);
+            // Diretório para armazenar o arquivo, criado com base no ID
+            $directory = 'uploads/anuncios/foto5/' . $id . '/';
+            // Move a primeira foto
+            $file->move($directory, $detalheFilename);
+            // Cria cópias redimensionadas para as outras fotos
+            $copyDestaque = Image::make($directory . $detalheFilename)
+                ->fit(480, 360) // Tamanho desejado para destaque
+                ->save($directory . $destaqueFilename);
 
-            // Atualiza o campo foto5 do anúncio com o caminho relativo do arquivo
-            $anuncios->foto5 = 'uploads/anuncios/imagens/foto5/' . $filename;
+            $copyDestaqueMini = Image::make($directory . $detalheFilename)
+                ->fit(240, 180) // Tamanho desejado para miniatura do destaque
+                ->save($directory . $destaqueMiniFilename);
+
+            $copyPrincipal = Image::make($directory . $detalheFilename)
+                ->fit(249, 186) // Tamanho desejado para detalhe
+                ->save($directory . $principalFilename);
+
+            $copyPrincipalMini = Image::make($directory . $detalheFilename)
+                ->fit(122, 93) // Tamanho desejado para miniatura do detalhe
+                ->save($directory . $principalMiniFilename);
+
+            $copyDetalharMini = Image::make($directory . $detalheFilename)
+                ->fit(800, 600) // Tamanho desejado para miniatura do detalhe
+                ->save($directory . $detaleMiniFilename);
+
+            $anuncios->foto5 = $directory;
             $anuncios->save();
         }
-
 
         if ($request->hasFile('foto6')) {
+
+            // Código para upload e redimensionamento de cada foto
             $file = $request->file('foto6');
-            $extension = $file->getClientOriginalExtension(); // Obter a extensão do arquivo
-            $filename = 'foto' . $anuncios->id . '.' . $extension; // Nome do arquivo com prefixo "foto" e ID do anúncio
+            $extension = $file->getClientOriginalExtension();
+            $detalheFilename = 'detalhe.' . $extension;
+            $detaleMiniFilename = 'detalhe_mini.' . $extension;
+            $destaqueFilename = 'destaque.' . $extension;
+            $destaqueMiniFilename = 'destaque_mini.' . $extension;
+            $principalFilename = 'principal.' . $extension;
+            $principalMiniFilename = 'principal_mini.' . $extension;
 
-            // Move o arquivo para o diretório desejado com o novo nome
-            $file->move(public_path('uploads/anuncios/imagens/foto6/'), $filename);
+            // Diretório para armazenar o arquivo, criado com base no ID
+            $directory = 'uploads/anuncios/foto6/' . $id . '/';
+            // Move a primeira foto
+            $file->move($directory, $detalheFilename);
+            // Cria cópias redimensionadas para as outras fotos
+            $copyDestaque = Image::make($directory . $detalheFilename)
+                ->fit(480, 360) // Tamanho desejado para destaque
+                ->save($directory . $destaqueFilename);
 
-            // Atualiza o campo foto6 do anúncio com o caminho relativo do arquivo
-            $anuncios->foto6 = 'uploads/anuncios/imagens/foto6/' . $filename;
+            $copyDestaqueMini = Image::make($directory . $detalheFilename)
+                ->fit(240, 180) // Tamanho desejado para miniatura do destaque
+                ->save($directory . $destaqueMiniFilename);
+
+            $copyPrincipal = Image::make($directory . $detalheFilename)
+                ->fit(249, 186) // Tamanho desejado para detalhe
+                ->save($directory . $principalFilename);
+
+            $copyPrincipalMini = Image::make($directory . $detalheFilename)
+                ->fit(122, 93) // Tamanho desejado para miniatura do detalhe
+                ->save($directory . $principalMiniFilename);
+
+            $copyDetalharMini = Image::make($directory . $detalheFilename)
+                ->fit(800, 600) // Tamanho desejado para miniatura do detalhe
+                ->save($directory . $detaleMiniFilename);
+
+            $anuncios->foto6 = $directory;
             $anuncios->save();
         }
 
-
         if ($request->hasFile('foto7')) {
+
+            // Código para upload e redimensionamento de cada foto
             $file = $request->file('foto7');
-            $extension = $file->getClientOriginalExtension(); // Obter a extensão do arquivo
-            $filename = 'foto' . $anuncios->id . '.' . $extension; // Nome do arquivo com prefixo "foto" e ID do anúncio
+            $extension = $file->getClientOriginalExtension();
+            $detalheFilename = 'detalhe.' . $extension;
+            $detaleMiniFilename = 'detalhe_mini.' . $extension;
+            $destaqueFilename = 'destaque.' . $extension;
+            $destaqueMiniFilename = 'destaque_mini.' . $extension;
+            $principalFilename = 'principal.' . $extension;
+            $principalMiniFilename = 'principal_mini.' . $extension;
 
-            // Move o arquivo para o diretório desejado com o novo nome
-            $file->move(public_path('uploads/anuncios/imagens/foto7/'), $filename);
+            // Diretório para armazenar o arquivo, criado com base no ID
+            $directory = 'uploads/anuncios/foto7/' . $id . '/';
+            // Move a primeira foto
+            $file->move($directory, $detalheFilename);
+            // Cria cópias redimensionadas para as outras fotos
+            $copyDestaque = Image::make($directory . $detalheFilename)
+                ->fit(480, 360) // Tamanho desejado para destaque
+                ->save($directory . $destaqueFilename);
 
-            // Atualiza o campo foto7 do anúncio com o caminho relativo do arquivo
-            $anuncios->foto7 = 'uploads/anuncios/imagens/foto7/' . $filename;
+            $copyDestaqueMini = Image::make($directory . $detalheFilename)
+                ->fit(240, 180) // Tamanho desejado para miniatura do destaque
+                ->save($directory . $destaqueMiniFilename);
+
+            $copyPrincipal = Image::make($directory . $detalheFilename)
+                ->fit(249, 186) // Tamanho desejado para detalhe
+                ->save($directory . $principalFilename);
+
+            $copyPrincipalMini = Image::make($directory . $detalheFilename)
+                ->fit(122, 93) // Tamanho desejado para miniatura do detalhe
+                ->save($directory . $principalMiniFilename);
+
+            $copyDetalharMini = Image::make($directory . $detalheFilename)
+                ->fit(800, 600) // Tamanho desejado para miniatura do detalhe
+                ->save($directory . $detaleMiniFilename);
+
+            $anuncios->foto7 = $directory;
             $anuncios->save();
         }
 
         if ($request->hasFile('foto8')) {
+
+            // Código para upload e redimensionamento de cada foto
             $file = $request->file('foto8');
-            $extension = $file->getClientOriginalExtension(); // Obter a extensão do arquivo
-            $filename = 'foto' . $anuncios->id . '.' . $extension; // Nome do arquivo com prefixo "foto" e ID do anúncio
+            $extension = $file->getClientOriginalExtension();
+            $detalheFilename = 'detalhe.' . $extension;
+            $detaleMiniFilename = 'detalhe_mini.' . $extension;
+            $destaqueFilename = 'destaque.' . $extension;
+            $destaqueMiniFilename = 'destaque_mini.' . $extension;
+            $principalFilename = 'principal.' . $extension;
+            $principalMiniFilename = 'principal_mini.' . $extension;
 
-            // Move o arquivo para o diretório desejado com o novo nome
-            $file->move(public_path('uploads/anuncios/imagens/foto8/'), $filename);
+            // Diretório para armazenar o arquivo, criado com base no ID
+            $directory = 'uploads/anuncios/foto8/' . $id . '/';
+            // Move a primeira foto
+            $file->move($directory, $detalheFilename);
+            // Cria cópias redimensionadas para as outras fotos
+            $copyDestaque = Image::make($directory . $detalheFilename)
+                ->fit(480, 360) // Tamanho desejado para destaque
+                ->save($directory . $destaqueFilename);
 
-            // Atualiza o campo foto8 do anúncio com o caminho relativo do arquivo
-            $anuncios->foto8 = 'uploads/anuncios/imagens/foto8/' . $filename;
+            $copyDestaqueMini = Image::make($directory . $detalheFilename)
+                ->fit(240, 180) // Tamanho desejado para miniatura do destaque
+                ->save($directory . $destaqueMiniFilename);
+
+            $copyPrincipal = Image::make($directory . $detalheFilename)
+                ->fit(249, 186) // Tamanho desejado para detalhe
+                ->save($directory . $principalFilename);
+
+            $copyPrincipalMini = Image::make($directory . $detalheFilename)
+                ->fit(122, 93) // Tamanho desejado para miniatura do detalhe
+                ->save($directory . $principalMiniFilename);
+
+            $copyDetalharMini = Image::make($directory . $detalheFilename)
+                ->fit(800, 600) // Tamanho desejado para miniatura do detalhe
+                ->save($directory . $detaleMiniFilename);
+
+            $anuncios->foto8 = $directory;
             $anuncios->save();
         }
 
-
         if ($request->hasFile('foto9')) {
+
+            // Código para upload e redimensionamento de cada foto
             $file = $request->file('foto9');
-            $extension = $file->getClientOriginalExtension(); // Obter a extensão do arquivo
-            $filename = 'foto' . $anuncios->id . '.' . $extension; // Nome do arquivo com prefixo "foto" e ID do anúncio
+            $extension = $file->getClientOriginalExtension();
+            $detalheFilename = 'detalhe.' . $extension;
+            $detaleMiniFilename = 'detalhe_mini.' . $extension;
+            $destaqueFilename = 'destaque.' . $extension;
+            $destaqueMiniFilename = 'destaque_mini.' . $extension;
+            $principalFilename = 'principal.' . $extension;
+            $principalMiniFilename = 'principal_mini.' . $extension;
 
-            // Move o arquivo para o diretório desejado com o novo nome
-            $file->move(public_path('uploads/anuncios/imagens/foto9/'), $filename);
+            // Diretório para armazenar o arquivo, criado com base no ID
+            $directory = 'uploads/anuncios/foto9/' . $id . '/';
+            // Move a primeira foto
+            $file->move($directory, $detalheFilename);
+            // Cria cópias redimensionadas para as outras fotos
+            $copyDestaque = Image::make($directory . $detalheFilename)
+                ->fit(480, 360) // Tamanho desejado para destaque
+                ->save($directory . $destaqueFilename);
 
-            // Atualiza o campo foto9 do anúncio com o caminho relativo do arquivo
-            $anuncios->foto9 = 'uploads/anuncios/imagens/foto9/' . $filename;
+            $copyDestaqueMini = Image::make($directory . $detalheFilename)
+                ->fit(240, 180) // Tamanho desejado para miniatura do destaque
+                ->save($directory . $destaqueMiniFilename);
+
+            $copyPrincipal = Image::make($directory . $detalheFilename)
+                ->fit(249, 186) // Tamanho desejado para detalhe
+                ->save($directory . $principalFilename);
+
+            $copyPrincipalMini = Image::make($directory . $detalheFilename)
+                ->fit(122, 93) // Tamanho desejado para miniatura do detalhe
+                ->save($directory . $principalMiniFilename);
+
+            $copyDetalharMini = Image::make($directory . $detalheFilename)
+                ->fit(800, 600) // Tamanho desejado para miniatura do detalhe
+                ->save($directory . $detaleMiniFilename);
+
+            $anuncios->foto9 = $directory;
             $anuncios->save();
         }
 
         if ($request->hasFile('foto10')) {
+
+            // Código para upload e redimensionamento de cada foto
             $file = $request->file('foto10');
-            $extension = $file->getClientOriginalExtension(); // Obter a extensão do arquivo
-            $filename = 'foto' . $anuncios->id . '.' . $extension; // Nome do arquivo com prefixo "foto" e ID do anúncio
+            $extension = $file->getClientOriginalExtension();
+            $detalheFilename = 'detalhe.' . $extension;
+            $detaleMiniFilename = 'detalhe_mini.' . $extension;
+            $destaqueFilename = 'destaque.' . $extension;
+            $destaqueMiniFilename = 'destaque_mini.' . $extension;
+            $principalFilename = 'principal.' . $extension;
+            $principalMiniFilename = 'principal_mini.' . $extension;
 
-            // Move o arquivo para o diretório desejado com o novo nome
-            $file->move(public_path('uploads/anuncios/imagens/foto10/'), $filename);
+            // Diretório para armazenar o arquivo, criado com base no ID
+            $directory = 'uploads/anuncios/foto10/' . $id . '/';
+            // Move a primeira foto
+            $file->move($directory, $detalheFilename);
+            // Cria cópias redimensionadas para as outras fotos
+            $copyDestaque = Image::make($directory . $detalheFilename)
+                ->fit(480, 360) // Tamanho desejado para destaque
+                ->save($directory . $destaqueFilename);
 
-            // Atualiza o campo foto10 do anúncio com o caminho relativo do arquivo
-            $anuncios->foto10 = 'uploads/anuncios/imagens/foto10/' . $filename;
+            $copyDestaqueMini = Image::make($directory . $detalheFilename)
+                ->fit(240, 180) // Tamanho desejado para miniatura do destaque
+                ->save($directory . $destaqueMiniFilename);
+
+            $copyPrincipal = Image::make($directory . $detalheFilename)
+                ->fit(249, 186) // Tamanho desejado para detalhe
+                ->save($directory . $principalFilename);
+
+            $copyPrincipalMini = Image::make($directory . $detalheFilename)
+                ->fit(122, 93) // Tamanho desejado para miniatura do detalhe
+                ->save($directory . $principalMiniFilename);
+
+            $copyDetalharMini = Image::make($directory . $detalheFilename)
+                ->fit(800, 600) // Tamanho desejado para miniatura do detalhe
+                ->save($directory . $detaleMiniFilename);
+
+            $anuncios->foto10 = $directory;
             $anuncios->save();
         }
+}
 
-
-        if($request->hasfile('foto7'))
-        {
-            $file = $request->file('foto7');
-            $extenstion = $file->getClientOriginalExtension();
-            $filename = time().'.'.$extenstion;
-            $file->move('uploads/anuncios/imagens/', $filename);
-            $anuncios->foto7 = 'uploads/anuncios/imagens/'.$filename;
-            $anuncios->save();
-        }
-
-        if($request->hasfile('foto8'))
-        {
-            $file = $request->file('foto8');
-            $extenstion = $file->getClientOriginalExtension();
-            $filename = time().'.'.$extenstion;
-            $file->move('uploads/anuncios/imagens/', $filename);
-            $anuncios->foto8 = 'uploads/anuncios/imagens/'.$filename;
-            $anuncios->save();
-        }
-
-
-        if($request->hasfile('foto9'))
-        {
-            $file = $request->file('foto9');
-            $extenstion = $file->getClientOriginalExtension();
-            $filename = time().'.'.$extenstion;
-            $file->move('uploads/anuncios/imagens/', $filename);
-            $anuncios->foto9 = 'uploads/anuncios/imagens/'.$filename;
-            $anuncios->save();
-        }
-
-        if($request->hasfile('foto10'))
-        {
-            $file = $request->file('foto10');
-            $extenstion = $file->getClientOriginalExtension();
-            $filename = time().'.'.$extenstion;
-            $file->move('uploads/anuncios/imagens/', $filename);
-            $anuncios->foto10 = 'uploads/anuncios/imagens/'.$filename;
-            $anuncios->save();
-        }
-
-
-        $anuncios->save();
-        return $anuncios;
-
-
-    }
+                     // Adicione mais verificações e ações para cada foto que você deseja processar, como foto2, foto3, etc.
 
     /**
      * Display the specified resource.
@@ -714,8 +974,8 @@ class anunciosController extends Controller
         //
         $anuncio = Anuncios::find($id);
         $dadosPersonalizados = [];
-        if(!$anuncio){
-            return response(['message'=>'Anúncio não encontrado'], 404);
+        if (!$anuncio) {
+            return response(['message' => 'Anúncio não encontrado'], 404);
         }
 
         //Para incrementar o número de cliques
@@ -740,91 +1000,89 @@ class anunciosController extends Controller
         $cidade = Cidades::find($anunciante->cidade_id);
 
         $opcionais = Opcionais::all();
-$lista_opcionais = collect([]);
+        $lista_opcionais = collect([]);
 
-$opcionais_anuncio = $anuncio->opcionais_id;
+        $opcionais_anuncio = $anuncio->opcionais_id;
 
-// Converta a string JSON para um array usando json_decode
-$opcionais_array = json_decode($opcionais_anuncio, true);
+        // Converta a string JSON para um array usando json_decode
+        $opcionais_array = json_decode($opcionais_anuncio, true);
 
-foreach ($opcionais_array as $opcional_anuncio) {
-    // Inicialize o array $array_opcional dentro do loop foreach
-    $array_opcional = [];
+        foreach ($opcionais_array as $opcional_anuncio) {
+            // Inicialize o array $array_opcional dentro do loop foreach
+            $array_opcional = [];
 
-    foreach ($opcionais as $opcional_banco) {
-        if ($opcional_anuncio == $opcional_banco->id) {
-            $array_opcional = array(
-                'id_opcional' => $opcional_banco->id,
-                'categoria_opcional_id' => $opcional_banco->categoria_opcional_id,
-                'nome' => $opcional_banco->nome,
-            );
-        }
-
-    }
-
-    // Movido para fora do loop interno para evitar repetições
-    $lista_opcionais->push($array_opcional);
-
+            foreach ($opcionais as $opcional_banco) {
+                if ($opcional_anuncio == $opcional_banco->id) {
+                    $array_opcional = array(
+                        'id_opcional' => $opcional_banco->id,
+                        'categoria_opcional_id' => $opcional_banco->categoria_opcional_id,
+                        'nome' => $opcional_banco->nome,
+                    );
                 }
-//return $tipo_veiculo;
-            // Personalize os campos conforme necessário
-            $dadosPersonalizados[] = [
-                'id' => $anuncio->id,
-                'tipo_veiculo' => $tipo_veiculo->tipo_veiculo,
-                'marca' => $marca->nome_marca,
-                'modelo' => $modelo->nome_modelo,
-                'numero_cliques' => $anuncio->numero_cliques,
-                'situacao_veiculo' => $anuncio->situacao_veiculo,
-                'anunciantes' => $anunciante->pessoal_responsavel,
-                'categoria_id' => $categoria->nome,
-                'data_inicio' => $anuncio->data_inicio,
-                'data_fim' => $anuncio->data_fim,
-                'ordenacao' => $anuncio->ordenacao,
-                'status_publicacao' => $anuncio->status_publicacao,
-                'status_pagamento' => $anuncio->status_pagamento,
-                'tipo' => $anuncio->tipo,
-                'vendido' => $anuncio->vendido,
-                'vitrine' => $anuncio->vitrine,
-                'destaque_busca' => $anuncio->destaque_busca,
-                'estado' => $estado->estado,
-                'uf' => $estado->uf,
-                'cidade' => $cidade->cidade,
-                'empresa' => $anunciante->nome_empresa,
-                'tipo_preco' => $anuncio->tipo_preco,
-                'valor_preco' => $anuncio->valor_preco,
-                'mostrar_preco' => $anuncio->mostrar_preco,
-                'fabricante' => $fabricante->fabricante,
-                'ano_fabricacao' => $anuncio->ano_fabricacao,
-                'ano_modelo' => $anuncio->ano_modelo,
-                'carroceria' => $anuncio->carroceria,
-                'estilo' => $anuncio->estilo,
-                'portas' => $anuncio->portas,
-                'cilindros' => $anuncio->cilindros,
-                'motor' => $anuncio->motor,
-                'cor' => $cor->cor,
-                'transmissao' => $transmissao->transmissao,
-                'combustivel' => $combustivel->combustivel,
-                'placa' => $anuncio->placa,
-                'km' => $anuncio->km,
-                'sinistrado' => $anuncio->sinistrado,
-                'opcionais_id' => $lista_opcionais,
+            }
 
-                //'conforto_id' => $anuncio->conforto_id,
-                //'seguranca_id' => $anuncio->seguranca_id,
-                'som' => $anuncio->som,
-                'descricao' => $anuncio->descricao,
-                'foto1' => $anuncio->foto1 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto1 : null,
-                'foto2' => $anuncio->foto2 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto2 : null,
-                'foto3' => $anuncio->foto3 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto3 : null,
-                'foto4' => $anuncio->foto4 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto4 : null,
-                'foto5' => $anuncio->foto5 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto5 : null,
-                'foto6' => $anuncio->foto6 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto6 : null,
-                'foto7' => $anuncio->foto7 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto7 : null,
-                'foto8' => $anuncio->foto8 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto8 : null,
-                'foto9' => $anuncio->foto9 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto9 : null,
-                'foto10' => $anuncio->foto10 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto10 : null,
-                // Adicione mais campos personalizados conforme necessário
-            ];
+            // Movido para fora do loop interno para evitar repetições
+            $lista_opcionais->push($array_opcional);
+        }
+        //return $tipo_veiculo;
+        // Personalize os campos conforme necessário
+        $dadosPersonalizados[] = [
+            'id' => $anuncio->id,
+            'tipo_veiculo' => $tipo_veiculo->tipo_veiculo,
+            'marca' => $marca->nome_marca,
+            'modelo' => $modelo->nome_modelo,
+            'numero_cliques' => $anuncio->numero_cliques,
+            'situacao_veiculo' => $anuncio->situacao_veiculo,
+            'anunciantes' => $anunciante->pessoal_responsavel,
+            'categoria_id' => $categoria->nome,
+            'data_inicio' => $anuncio->data_inicio,
+            'data_fim' => $anuncio->data_fim,
+            'ordenacao' => $anuncio->ordenacao,
+            'status_publicacao' => $anuncio->status_publicacao,
+            'status_pagamento' => $anuncio->status_pagamento,
+            'tipo' => $anuncio->tipo,
+            'vendido' => $anuncio->vendido,
+            'vitrine' => $anuncio->vitrine,
+            'destaque_busca' => $anuncio->destaque_busca,
+            'estado' => $estado->estado,
+            'uf' => $estado->uf,
+            'cidade' => $cidade->cidade,
+            'empresa' => $anunciante->nome_empresa,
+            'tipo_preco' => $anuncio->tipo_preco,
+            'valor_preco' => $anuncio->valor_preco,
+            'mostrar_preco' => $anuncio->mostrar_preco,
+            'fabricante' => $fabricante->fabricante,
+            'ano_fabricacao' => $anuncio->ano_fabricacao,
+            'ano_modelo' => $anuncio->ano_modelo,
+            'carroceria' => $anuncio->carroceria,
+            'estilo' => $anuncio->estilo,
+            'portas' => $anuncio->portas,
+            'cilindros' => $anuncio->cilindros,
+            'motor' => $anuncio->motor,
+            'cor' => $cor->cor,
+            'transmissao' => $transmissao->transmissao,
+            'combustivel' => $combustivel->combustivel,
+            'placa' => $anuncio->placa,
+            'km' => $anuncio->km,
+            'sinistrado' => $anuncio->sinistrado,
+            'opcionais_id' => $lista_opcionais,
+
+            //'conforto_id' => $anuncio->conforto_id,
+            //'seguranca_id' => $anuncio->seguranca_id,
+            'som' => $anuncio->som,
+            'descricao' => $anuncio->descricao,
+            'foto1' => $anuncio->foto1 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto1 : null,
+            'foto2' => $anuncio->foto2 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto2 : null,
+            'foto3' => $anuncio->foto3 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto3 : null,
+            'foto4' => $anuncio->foto4 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto4 : null,
+            'foto5' => $anuncio->foto5 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto5 : null,
+            'foto6' => $anuncio->foto6 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto6 : null,
+            'foto7' => $anuncio->foto7 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto7 : null,
+            'foto8' => $anuncio->foto8 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto8 : null,
+            'foto9' => $anuncio->foto9 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto9 : null,
+            'foto10' => $anuncio->foto10 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto10 : null,
+            // Adicione mais campos personalizados conforme necessário
+        ];
 
         // Retorna a resposta JSON com os dados personalizados
         return response()->json($dadosPersonalizados);
@@ -837,22 +1095,22 @@ foreach ($opcionais_array as $opcional_anuncio) {
      * @return \Illuminate\Http\Response
      */
 
-     public function contadorContato($id)
-     {
-         $contato = Anuncios::findOrFail($id);
-         $contato->increment('numero_cliques_contato');
+    public function contadorContato($id)
+    {
+        $contato = Anuncios::findOrFail($id);
+        $contato->increment('numero_cliques_contato');
 
-         return $contato;
-     }
+        return $contato;
+    }
 
 
-     public function contadorMensagem($id)
-     {
-         $mensagem = Anuncios::findOrFail($id);
-         $mensagem->increment('numero_cliques_mensagem');
+    public function contadorMensagem($id)
+    {
+        $mensagem = Anuncios::findOrFail($id);
+        $mensagem->increment('numero_cliques_mensagem');
 
-         return $mensagem;
-     }
+        return $mensagem;
+    }
 
 
 
@@ -874,8 +1132,8 @@ foreach ($opcionais_array as $opcional_anuncio) {
 
         $anuncios = Anuncios::find($id);
         $dadosPersonalizados = [];
-        if(!$anuncios){
-            return response(['message'=>'Anúncio não encontrado'], 404);
+        if (!$anuncios) {
+            return response(['message' => 'Anúncio não encontrado'], 404);
         }
 
         $tipo_veiculo = TiposVeiculos::find($request->tipo_veiculo);
@@ -891,37 +1149,37 @@ foreach ($opcionais_array as $opcional_anuncio) {
 
 
 
-        if(!$tipo_veiculo){
-            return response(['message'=> 'O tipo de veiculo selecionado não existe'], 404);
+        if (!$tipo_veiculo) {
+            return response(['message' => 'O tipo de veiculo selecionado não existe'], 404);
         }
-        if(!$tecnologia){
-            return response(['message'=> 'A tecnologia selecionada não existe'], 404);
+        if (!$tecnologia) {
+            return response(['message' => 'A tecnologia selecionada não existe'], 404);
         }
-        if(!$marca){
-            return response(['message'=> 'A marca selecionada não existe'], 404);
-        }
-
-        if(!$modelo){
-            return response(['message'=> 'O modelo selecionado não existe'], 404);
-        }
-        if(!$anunciante){
-            return response(['message'=> 'O Anunciante selecionado não existe'], 404);
+        if (!$marca) {
+            return response(['message' => 'A marca selecionada não existe'], 404);
         }
 
-        if(!$categoria){
-            return response(['message'=> 'A Categoria selecionada não existe'], 404);
+        if (!$modelo) {
+            return response(['message' => 'O modelo selecionado não existe'], 404);
         }
-        if(!$fabricante){
-            return response(['message'=> 'O Fabricante selecionado não existe'], 404);
+        if (!$anunciante) {
+            return response(['message' => 'O Anunciante selecionado não existe'], 404);
         }
-        if(!$cor){
-            return response(['message'=> 'A Cor selecionada não existe'], 404);
+
+        if (!$categoria) {
+            return response(['message' => 'A Categoria selecionada não existe'], 404);
         }
-        if(!$transmissao){
-            return response(['message'=> 'A Transmissão selecionada não existe'], 404);
+        if (!$fabricante) {
+            return response(['message' => 'O Fabricante selecionado não existe'], 404);
         }
-        if(!$combustivel){
-            return response(['message'=> 'O Combustível selecionado não existe'], 404);
+        if (!$cor) {
+            return response(['message' => 'A Cor selecionada não existe'], 404);
+        }
+        if (!$transmissao) {
+            return response(['message' => 'A Transmissão selecionada não existe'], 404);
+        }
+        if (!$combustivel) {
+            return response(['message' => 'O Combustível selecionado não existe'], 404);
         }
 
 
@@ -984,215 +1242,195 @@ foreach ($opcionais_array as $opcional_anuncio) {
 
 
     public function destroyFoto1($id)
-{
-    $anuncios = Anuncios::find($id);
+    {
+        $anuncios = Anuncios::find($id);
 
-    if (!$anuncios) {
-        return response()->json(['message' => 'Anunciantes não encontrado'], 404);
+        if (!$anuncios) {
+            return response()->json(['message' => 'Anunciantes não encontrado'], 404);
+        }
+
+        $pathFoto = public_path() .  $anuncios->foto1;
+        if (File::exists($pathFoto)) {
+            File::delete($pathFoto);
+            $anuncios->foto1 = '';
+            $anuncios->save();
+            return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
+        } else {
+            return response()->json(['message' => 'Foto não encontrada'], 404);
+        }
     }
 
-    $pathFoto = public_path() .  $anuncios->foto1;
-    if (File::exists($pathFoto)) {
-        File::delete($pathFoto);
-        $anuncios->foto1 = '';
-        $anuncios->save();
-        return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
+    public function destroyFoto2($id)
+    {
+        $anuncios = Anuncios::find($id);
+
+        if (!$anuncios) {
+            return response()->json(['message' => 'Anunciantes não encontrado'], 404);
+        }
+
+        $pathFoto = public_path() .  $anuncios->foto2;
+        if (File::exists($pathFoto)) {
+            File::delete($pathFoto);
+            $anuncios->foto2 = '';
+            $anuncios->save();
+            return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
+        } else {
+            return response()->json(['message' => 'Foto não encontrada'], 404);
+        }
     }
 
-    else {
-        return response()->json(['message' => 'Foto não encontrada'], 404);
-    }
-}
+    public function destroyFoto3($id)
+    {
+        $anuncios = Anuncios::find($id);
 
-public function destroyFoto2($id)
-{
-    $anuncios = Anuncios::find($id);
+        if (!$anuncios) {
+            return response()->json(['message' => 'Anunciantes não encontrado'], 404);
+        }
 
-    if (!$anuncios) {
-        return response()->json(['message' => 'Anunciantes não encontrado'], 404);
-    }
-
-    $pathFoto = public_path() .  $anuncios->foto2;
-    if (File::exists($pathFoto)) {
-        File::delete($pathFoto);
-        $anuncios->foto2 = '';
-        $anuncios->save();
-        return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
+        $pathFoto = public_path() .  $anuncios->foto1;
+        if (File::exists($pathFoto)) {
+            File::delete($pathFoto);
+            $anuncios->foto3 = '';
+            $anuncios->save();
+            return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
+        } else {
+            return response()->json(['message' => 'Foto não encontrada'], 404);
+        }
     }
 
-    else {
-        return response()->json(['message' => 'Foto não encontrada'], 404);
-    }
-}
+    public function destroyFoto4($id)
+    {
+        $anuncios = Anuncios::find($id);
 
-public function destroyFoto3($id)
-{
-    $anuncios = Anuncios::find($id);
+        if (!$anuncios) {
+            return response()->json(['message' => 'Anunciantes não encontrado'], 404);
+        }
 
-    if (!$anuncios) {
-        return response()->json(['message' => 'Anunciantes não encontrado'], 404);
-    }
-
-    $pathFoto = public_path() .  $anuncios->foto1;
-    if (File::exists($pathFoto)) {
-        File::delete($pathFoto);
-        $anuncios->foto3 = '';
-        $anuncios->save();
-        return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
+        $pathFoto = public_path() .  $anuncios->foto1;
+        if (File::exists($pathFoto)) {
+            File::delete($pathFoto);
+            $anuncios->foto4 = '';
+            $anuncios->save();
+            return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
+        } else {
+            return response()->json(['message' => 'Foto não encontrada'], 404);
+        }
     }
 
-    else {
-        return response()->json(['message' => 'Foto não encontrada'], 404);
-    }
-}
+    public function destroyFoto5($id)
+    {
+        $anuncios = Anuncios::find($id);
 
-public function destroyFoto4($id)
-{
-    $anuncios = Anuncios::find($id);
+        if (!$anuncios) {
+            return response()->json(['message' => 'Anunciantes não encontrado'], 404);
+        }
 
-    if (!$anuncios) {
-        return response()->json(['message' => 'Anunciantes não encontrado'], 404);
-    }
-
-    $pathFoto = public_path() .  $anuncios->foto1;
-    if (File::exists($pathFoto)) {
-        File::delete($pathFoto);
-        $anuncios->foto4 = '';
-        $anuncios->save();
-        return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
+        $pathFoto = public_path() .  $anuncios->foto5;
+        if (File::exists($pathFoto)) {
+            File::delete($pathFoto);
+            $anuncios->foto5 = '';
+            $anuncios->save();
+            return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
+        } else {
+            return response()->json(['message' => 'Foto não encontrada'], 404);
+        }
     }
 
-    else {
-        return response()->json(['message' => 'Foto não encontrada'], 404);
-    }
-}
+    public function destroyFoto6($id)
+    {
+        $anuncios = Anuncios::find($id);
 
-public function destroyFoto5($id)
-{
-    $anuncios = Anuncios::find($id);
+        if (!$anuncios) {
+            return response()->json(['message' => 'Anunciantes não encontrado'], 404);
+        }
 
-    if (!$anuncios) {
-        return response()->json(['message' => 'Anunciantes não encontrado'], 404);
-    }
-
-    $pathFoto = public_path() .  $anuncios->foto5;
-    if (File::exists($pathFoto)) {
-        File::delete($pathFoto);
-        $anuncios->foto5 = '';
-        $anuncios->save();
-        return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
+        $pathFoto = public_path() .  $anuncios->foto6;
+        if (File::exists($pathFoto)) {
+            File::delete($pathFoto);
+            $anuncios->foto6 = '';
+            $anuncios->save();
+            return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
+        } else {
+            return response()->json(['message' => 'Foto não encontrada'], 404);
+        }
     }
 
-    else {
-        return response()->json(['message' => 'Foto não encontrada'], 404);
-    }
-}
+    public function destroyFoto7($id)
+    {
+        $anuncios = Anuncios::find($id);
 
-public function destroyFoto6($id)
-{
-    $anuncios = Anuncios::find($id);
+        if (!$anuncios) {
+            return response()->json(['message' => 'Anunciantes não encontrado'], 404);
+        }
 
-    if (!$anuncios) {
-        return response()->json(['message' => 'Anunciantes não encontrado'], 404);
-    }
-
-    $pathFoto = public_path() .  $anuncios->foto6;
-    if (File::exists($pathFoto)) {
-        File::delete($pathFoto);
-        $anuncios->foto6 = '';
-        $anuncios->save();
-        return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
+        $pathFoto = public_path() .  $anuncios->foto7;
+        if (File::exists($pathFoto)) {
+            File::delete($pathFoto);
+            $anuncios->foto7 = '';
+            $anuncios->save();
+            return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
+        } else {
+            return response()->json(['message' => 'Foto não encontrada'], 404);
+        }
     }
 
-    else {
-        return response()->json(['message' => 'Foto não encontrada'], 404);
-    }
-}
 
-public function destroyFoto7($id)
-{
-    $anuncios = Anuncios::find($id);
+    public function destroyFoto8($id)
+    {
+        $anuncios = Anuncios::find($id);
 
-    if (!$anuncios) {
-        return response()->json(['message' => 'Anunciantes não encontrado'], 404);
-    }
+        if (!$anuncios) {
+            return response()->json(['message' => 'Anunciantes não encontrado'], 404);
+        }
 
-    $pathFoto = public_path() .  $anuncios->foto7;
-    if (File::exists($pathFoto)) {
-        File::delete($pathFoto);
-        $anuncios->foto7 = '';
-        $anuncios->save();
-        return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
-    }
-
-    else {
-        return response()->json(['message' => 'Foto não encontrada'], 404);
-    }
-}
-
-
-public function destroyFoto8($id)
-{
-    $anuncios = Anuncios::find($id);
-
-    if (!$anuncios) {
-        return response()->json(['message' => 'Anunciantes não encontrado'], 404);
+        $pathFoto = public_path() .  $anuncios->foto8;
+        if (File::exists($pathFoto)) {
+            File::delete($pathFoto);
+            $anuncios->foto8 = '';
+            $anuncios->save();
+            return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
+        } else {
+            return response()->json(['message' => 'Foto não encontrada'], 404);
+        }
     }
 
-    $pathFoto = public_path() .  $anuncios->foto8;
-    if (File::exists($pathFoto)) {
-        File::delete($pathFoto);
-        $anuncios->foto8 = '';
-        $anuncios->save();
-        return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
+
+    public function destroyFoto9($id)
+    {
+        $anuncios = Anuncios::find($id);
+
+        if (!$anuncios) {
+            return response()->json(['message' => 'Anunciantes não encontrado'], 404);
+        }
+
+        $pathFoto = public_path() .  $anuncios->foto9;
+        if (File::exists($pathFoto)) {
+            File::delete($pathFoto);
+            $anuncios->foto9 = '';
+            $anuncios->save();
+            return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
+        } else {
+            return response()->json(['message' => 'Foto não encontrada'], 404);
+        }
     }
 
-    else {
-        return response()->json(['message' => 'Foto não encontrada'], 404);
+
+    public function destroyFoto10($id)
+    {
+        $anuncios = Anuncios::find($id);
+
+        if (!$anuncios) {
+            return response()->json(['message' => 'Anunciantes não encontrado'], 404);
+        }
+
+        $pathFoto = public_path() .  $anuncios->foto10;
+        if (File::exists($pathFoto)) {
+            File::delete($pathFoto);
+            $anuncios->foto10 = '';
+            $anuncios->save();
+            return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
+        } else {
+            return response()->json(['message' => 'Foto não encontrada'], 404);
+        }
     }
-}
-
-
-public function destroyFoto9($id)
-{
-    $anuncios = Anuncios::find($id);
-
-    if (!$anuncios) {
-        return response()->json(['message' => 'Anunciantes não encontrado'], 404);
-    }
-
-    $pathFoto = public_path() .  $anuncios->foto9;
-    if (File::exists($pathFoto)) {
-        File::delete($pathFoto);
-        $anuncios->foto9 = '';
-        $anuncios->save();
-        return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
-    }
-
-    else {
-        return response()->json(['message' => 'Foto não encontrada'], 404);
-    }
-}
-
-
-public function destroyFoto10($id)
-{
-    $anuncios = Anuncios::find($id);
-
-    if (!$anuncios) {
-        return response()->json(['message' => 'Anunciantes não encontrado'], 404);
-    }
-
-    $pathFoto = public_path() .  $anuncios->foto10;
-    if (File::exists($pathFoto)) {
-        File::delete($pathFoto);
-        $anuncios->foto10 = '';
-        $anuncios->save();
-        return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
-    }
-
-    else {
-        return response()->json(['message' => 'Foto não encontrada'], 404);
-    }
-}
 }

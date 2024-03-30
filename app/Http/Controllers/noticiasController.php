@@ -82,7 +82,7 @@ foreach ($noticias as $noticias) {
 
        $noticias->save();
 
-       
+
 
 
         return $noticias;
@@ -211,12 +211,12 @@ foreach ($noticias as $noticias) {
     {
         //
         Noticias::destroy($id);
-        return "Anunciante eliminado com sucesso!";
+        return response(['message'=> 'Notícia eliminado com sucesso!'], 200);
     }
 
 
 
-    
+
     public function destroyFotoArtigo($id)
 {
     $noticia = Noticias::find($id);
@@ -238,9 +238,9 @@ foreach ($noticias as $noticias) {
         $noticia->save();
 
         return response()->json(['message' => 'Foto do artigo eliminada com sucesso'], 200);
-        
-    } 
-    
+
+    }
+
     else {
         return response()->json(['message' => 'Foto não encontrada'], 404);
     }
@@ -268,9 +268,9 @@ public function destroyFotoCapa($id)
         $noticia->save();
 
         return response()->json(['message' => 'Foto de capa eliminada com sucesso'], 200);
-        
-    } 
-    
+
+    }
+
     else {
         return response()->json(['message' => 'Foto não encontrada'], 404);
     }

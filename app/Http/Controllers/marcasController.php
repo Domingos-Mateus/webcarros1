@@ -92,7 +92,8 @@ class marcasController extends Controller
 
         $marcas->save();
 
-        return "Marca cadastrada";
+        //return "Marca cadastrada";
+        return response(['message'=> 'Marca cadastrada'], 200);
     }
 
     /**
@@ -142,7 +143,8 @@ class marcasController extends Controller
         $marca->descricao = $request->descricao;
 
         $marca->save();
-        return "Dados Atualizado";
+        return response(['message'=> 'Dados Atualizado'], 200);
+        //return "Dados Atualizado";
     }
 
     /**
@@ -155,6 +157,6 @@ class marcasController extends Controller
     {
         //
         Marcas::destroy($id);
-        return "Marca Eliminada com sucesso!";
+        return response(['message'=> 'Marca Eliminada com sucesso!'], 200);
     }
 }
