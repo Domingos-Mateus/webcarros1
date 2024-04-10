@@ -52,7 +52,7 @@ class categoriasController extends Controller
     public function create()
     {
         //
-       }
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -74,29 +74,28 @@ class categoriasController extends Controller
     }
 
     public function uploadFotoCategorias(Request $request, $id)
-{
-    // Encontra a categoria pelo ID
-    $categorias = Categorias::find($id);
-
-    // Verifica se a categoria existe
-    if (!$categorias) {
-        return response(['message' => 'Categoria não encontrada'], 404);
-    }
-
-    if($request->hasfile('foto_categoria'))
     {
-        $file = $request->file('foto_categoria');
-        $extenstion = $file->getClientOriginalExtension();
-        $filename = time().'.'.$extenstion;
-        // Move o arquivo para o diretório de destino
-        $file->move('uploads/categorias/', $filename);
-        $categorias->foto_categoria = 'uploads/categorias/'.$filename;
-        $categorias->save();
-    }
+        // Encontra a categoria pelo ID
+        $categorias = Categorias::find($id);
 
-    // Retorna a categoria sem fazer alterações se nenhum arquivo foi enviado
-    return $categorias;
-}
+        // Verifica se a categoria existe
+        if (!$categorias) {
+            return response(['message' => 'Categoria não encontrada'], 404);
+        }
+
+        if ($request->hasfile('foto_categoria')) {
+            $file = $request->file('foto_categoria');
+            $extenstion = $file->getClientOriginalExtension();
+            $filename = time() . '.' . $extenstion;
+            // Move o arquivo para o diretório de destino
+            $file->move('uploads/categorias/', $filename);
+            $categorias->foto_categoria = 'uploads/categorias/' . $filename;
+            $categorias->save();
+        }
+
+        // Retorna a categoria sem fazer alterações se nenhum arquivo foi enviado
+        return response()->json(['message' => 'Foto da categoria enviada com sucesso'], 200);
+    }
 
 
 
@@ -110,10 +109,18 @@ class categoriasController extends Controller
     {
         //
         $categorias = Categorias::find($id);
-        if(!$categorias){
-            return response(['message'=>'Categoria não encontrado'], 404);
+        if (!$categorias) {
+            return response(['message' => 'Categoria não encontrada'], 404);
         }
-        return $categorias;
+        $dadosPersonalizados = [
+            'id' => $categorias->id,
+            'nome' => $categorias->nome,
+            'descricao' => $categorias->descricao,
+            'foto_categoria' => $categorias->foto_categoria ? env('URL_BASE_SERVIDOR') . '/' . $categorias->foto_categoria : null,
+            'created_at' => $categorias->created_at,
+
+        ];
+        return response()->json($dadosPersonalizados);
     }
 
     /**
@@ -139,8 +146,8 @@ class categoriasController extends Controller
     {
         //
         $categorias = Categorias::find($id);
-        if(!$categorias){
-            return response(['message'=>'Categoria não encontrado'], 404);
+        if (!$categorias) {
+            return response(['message' => 'Categoria não encontrado'], 404);
         }
         $categorias->nome = $request->nome;
         $categorias->descricao = $request->descricao;
@@ -160,6 +167,6 @@ class categoriasController extends Controller
     {
         //
         Categorias::destroy($id);
-        return "Categoria eliminada com sucesso";
+        return response(['message' => 'Categoria eliminada com sucesso'], 200);
     }
 }

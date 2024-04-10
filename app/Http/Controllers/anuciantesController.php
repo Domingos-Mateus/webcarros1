@@ -193,25 +193,51 @@ return response()->json($dadosPersonalizados);
     }
 
     public function uploadFoto(Request $request, $id)
-    {
-        //
-        $anunciantes = Anunciantes::find($id);
-        if(!$anunciantes){
-            return response(['message'=>'Anunciante não encontrado'], 404);
+{
+    // Busca o anunciante pelo ID
+    $anunciante = Anunciantes::find($id);
+
+    // Verifica se o anunciante existe
+    if (!$anunciante) {
+        return response(['message' => 'Anunciante não encontrado'], 404);
+    }
+
+    // Verifica se o request contém um arquivo de foto
+    if ($request->hasFile('foto')) {
+        $file = $request->file('foto');
+
+        // Define as extensões de arquivo permitidas
+        $allowedExtensions = ['png', 'jpg', 'jpeg', 'webp'];
+        $extension = $file->getClientOriginalExtension();
+
+        // Verifica se a extensão do arquivo é permitida
+        if (!in_array($extension, $allowedExtensions)) {
+            return response(['message' => 'Extensão de arquivo não suportada'], 400);
         }
 
-        if($request->hasfile('foto'))
-        {
-            $file = $request->file('foto');
-            $extenstion = $file->getClientOriginalExtension();
-            $filename = time().'.'.$extenstion;
-            $file->move('uploads/anunciantes/imagens/', $filename);
-            $anunciantes->foto = 'uploads/anunciantes/imagens/'.$filename;
-            $anunciantes->save();
+        // Define o nome do arquivo
+        $filename = 'fotoPerfil' . $anunciante->id . '.' . $extension;
+
+        // Verifica se o anunciante já possui uma foto e exclui a foto antiga
+        if ($anunciante->foto) {
+            // Remove a foto antiga
+            if (file_exists($anunciante->foto)) {
+                unlink($anunciante->foto);
+            }
         }
-        $anunciantes->save();
-        return $anunciantes;
+
+        // Move a nova foto para a pasta
+        $file->move('uploads/anunciantes/imagens/', $filename);
+
+        // Atualiza o caminho da foto do anunciante
+        $anunciante->foto = 'uploads/anunciantes/imagens/' . $filename;
+        $anunciante->save();
     }
+
+    // Retorna a resposta de sucesso
+    return response()->json(['message' => 'Foto do Anunciante enviada com sucesso'], 200);
+}
+
     /**
      * Display the specified resource.
      *

@@ -18,6 +18,9 @@ class CreatePlanosAnunciantesTable extends Migration
             $table->integer('plano_id')->unsigned();
             $table->integer('anunciante_id')->unsigned();
             $table->string('status', 50);
+            $table->integer('limite_anuncio');
+            $table->integer('quantidade_anuncio');
+            $table->integer('anuncio_restante');
             $table->date('data_vencimento');
             $table->timestamps();
 

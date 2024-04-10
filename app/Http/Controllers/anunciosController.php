@@ -19,9 +19,11 @@ use App\Models\Transmissao;
 use App\Models\Confortos;
 use App\Models\Fabricantes;
 use App\Models\Opcionais;
+use App\Models\PlanosAnunciantes;
 use File;
 use DB;
-use Intervention\Image\Facades\Image;
+//use Intervention\Image\Facades\Image;
+use Intervention\Image\ImageManagerStatic as Image;
 
 class anunciosController extends Controller
 {
@@ -42,6 +44,7 @@ class anunciosController extends Controller
             ->join('combustivels', 'combustivels.id', 'anuncios.combustivel_id')
             ->join('estados', 'estados.id', 'anunciantes.estado_id') // Junção com a tabela de estados
             ->join('cidades', 'cidades.id', 'anunciantes.cidade_id') // Junção com a tabela de estados
+            //  ->join('planos_anunciantes', 'planos_anunciantes.anunciante_id', 'anunciantes.id')
             ->select(
                 'anuncios.*',
                 'marcas.nome_marca',
@@ -76,10 +79,9 @@ class anunciosController extends Controller
                 'combustivels.combustivel',
                 'combustivels.id as id_combustivel',
                 'transmissaos.transmissao',
-                'transmissaos.id as id_transmissao'
+                'transmissaos.id as id_transmissao',
             );
 
-        // Adiciona os filtros conforme os parâmetros passados
 
         if (request('tipo_veiculo')) {
             $query->where('tipos_veiculos.tipo_veiculo', 'LIKE', '%' . request('tipo_veiculo') . '%');
@@ -132,15 +134,14 @@ class anunciosController extends Controller
         if (request('status_publicacao')) {
             $query->where('anuncios.status_publicacao', request('status_publicacao'));
         }
+        if (request('vitrine')) {
+            $query->where('anuncios.vitrine', request('vitrine'));
+        }
 
         // Executa a consulta aleatóriamente
         $anuncios = $query->inRandomOrder()->get();
         // Processamento dos dados para personalizar a resposta
         $dadosPersonalizados = [];
-
-
-
-
 
         foreach ($anuncios as $anuncio) {
             $dadosPersonalizados[] = [
@@ -219,9 +220,6 @@ class anunciosController extends Controller
                 // Adicione mais campos personalizados conforme necessário
             ];
         }
-
-
-
         // Retorna a resposta JSON com os dados personalizados
         return response()->json($dadosPersonalizados);
     }
@@ -245,6 +243,7 @@ class anunciosController extends Controller
             ->join('combustivels', 'combustivels.id', 'anuncios.combustivel_id')
             ->join('estados', 'estados.id', 'anunciantes.estado_id') // Junção com a tabela de estados
             ->join('cidades', 'cidades.id', 'anunciantes.cidade_id') // Junção com a tabela de estados
+            //->join('planos_anunciantes', 'planos_anunciantes.anunciante_id', 'anunciantes.id')
             ->select(
                 'anuncios.*',
                 'marcas.nome_marca',
@@ -279,7 +278,8 @@ class anunciosController extends Controller
                 'combustivels.combustivel',
                 'combustivels.id as id_combustivel',
                 'transmissaos.transmissao',
-                'transmissaos.id as id_transmissao'
+                'transmissaos.id as id_transmissao',
+                //'planos_anunciantes.*'
             );
 
         // Adiciona os filtros conforme os parâmetros passados
@@ -334,6 +334,9 @@ class anunciosController extends Controller
         }
         if (request('status_publicacao')) {
             $query->where('anuncios.status_publicacao', request('status_publicacao'));
+        }
+        if (request('vitrine')) {
+            $query->where('anuncios.vitrine', request('vitrine'));
         }
 
         // Executa a consulta aleatóriamente
@@ -460,6 +463,18 @@ class anunciosController extends Controller
         $transmissao = Transmissao::find($request->transmissao);
         $combustivel = Combustivel::find($request->combustivel);
 
+        $plano_anunciante = PlanosAnunciantes::where('anunciante_id', '=', $request->anunciante_id)->first();
+
+        if (!$plano_anunciante) {
+            return response(['message' => 'O Anunciante selecionado não possui um plano'], 404);
+        }
+
+        //return $plano_anunciante->anuncio_restante;
+
+        if ($plano_anunciante->anuncio_restante==0) {
+            return response(['message' => 'O teu plano não possui anuncios restantes'], 404);
+        }
+
         if (!$tipo_veiculo) {
             return response(['message' => 'O tipo de veiculo selecionado não existe'], 404);
         }
@@ -537,15 +552,30 @@ class anunciosController extends Controller
         $anuncios->descricao = $request->descricao;
 
         $anuncios->save();
+
+        // Verifica se a quantidade de anúncios já atingiu o limite
+        /* if ($plano_anunciante->quantidade_anuncio >= $request->limite_anuncio) {
+            return response(['message'=> 'Limite de anúncios atingido'], 400);
+        }
+ */
+        // Atualiza a quantidade total de anúncios feitos pelo anunciante
+        $plano_anunciante->quantidade_anuncio += 1;
+
+        // Atualiza a quantidade restante de anúncios no plano do anunciante
+        $plano_anunciante->anuncio_restante -= 1;
+
+        $plano_anunciante->save();
+
+
         return $anuncios;
     }
 
     public function uploadFoto(Request $request, $id)
-{
-    $anuncios = Anuncios::find($id);
+    {
+        $anuncios = Anuncios::find($id);
 
         if (!$anuncios) {
-            return response()->json(['mensagem' => 'Técnico Inexistente!']);
+            return response()->json(['mensagem' => 'Não existe um anúncio com este ID!']);
         }
 
         if ($request->hasFile('foto1')) {
@@ -959,9 +989,11 @@ class anunciosController extends Controller
             $anuncios->foto10 = $directory;
             $anuncios->save();
         }
-}
 
-                     // Adicione mais verificações e ações para cada foto que você deseja processar, como foto2, foto3, etc.
+        return response()->json(['message' => 'Foto enviada com sucesso'], 200);
+    }
+
+    // Adicione mais verificações e ações para cada foto que você deseja processar, como foto2, foto3, etc.
 
     /**
      * Display the specified resource.
@@ -1032,8 +1064,14 @@ class anunciosController extends Controller
             'marca' => $marca->nome_marca,
             'modelo' => $modelo->nome_modelo,
             'numero_cliques' => $anuncio->numero_cliques,
+            'numero_cliques_contato' => $anuncio->numero_cliques_contato,
+            'numero_cliques_mensagem' => $anuncio->numero_cliques_mensagem,
             'situacao_veiculo' => $anuncio->situacao_veiculo,
             'anunciantes' => $anunciante->pessoal_responsavel,
+            'telefone' => $anunciante->telefone,
+            'celular' => $anunciante->celular,
+            'whatsapp' => $anunciante->whatsapp,
+            'email' => $anunciante->email,
             'categoria_id' => $categoria->nome,
             'data_inicio' => $anuncio->data_inicio,
             'data_fim' => $anuncio->data_fim,
@@ -1067,8 +1105,6 @@ class anunciosController extends Controller
             'sinistrado' => $anuncio->sinistrado,
             'opcionais_id' => $lista_opcionais,
 
-            //'conforto_id' => $anuncio->conforto_id,
-            //'seguranca_id' => $anuncio->seguranca_id,
             'som' => $anuncio->som,
             'descricao' => $anuncio->descricao,
             'foto1' => $anuncio->foto1 ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto1 : null,
