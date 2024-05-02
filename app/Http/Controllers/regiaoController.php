@@ -19,26 +19,32 @@ class regiaoController extends Controller
     {
         //
         $query = DB::table('regioes')
-        ->join('estados','estados.id','regioes.estado_id')
-        ->select('regioes.*', 'estados.estado','estados.id as id_estado');
-  // Adiciona os filtros conforme os parâmetros passados
-  if (request('estado')) {
-    $query->where('marcas.estado', 'LIKE', '%' . request('estado') . '%');
-}
+            ->join('estados', 'estados.id', 'regioes.estado_id')
+            ->select('regioes.*', 'estados.estado', 'estados.id as id_estado');
+        // Adiciona os filtros conforme os parâmetros passados
+        if (request('estado')) {
+            $query->where('estados.estado', 'LIKE', '%' . request('estado') . '%');
+        }
+        if (request('regiao')) {
+            $query->where('regioes.regiao', 'LIKE', '%' . request('regiao') . '%');
+        }
+        if (request('estado_id')) {
+            $query->where('regioes.estado_id', 'LIKE', '%' . request('estado_id') . '%');
+        }
 
-$regiaos = $query->get();
-$dadosPersonalizados = [];
+        $regiaos = $query->get();
+        $dadosPersonalizados = [];
 
-foreach ($regiaos as $regiao) {
-    // Personalize os campos conforme necessário
-    $dadosPersonalizados[] = [
-        'id' => $regiao->id,
-        'estado' => $regiao->estado,
-        'regiao' => $regiao->regiao,
-        'id_estado' => $regiao->id_estado,
-    ];
-}
-return response()->json($dadosPersonalizados);
+        foreach ($regiaos as $regiao) {
+            // Personalize os campos conforme necessário
+            $dadosPersonalizados[] = [
+                'id' => $regiao->id,
+                'estado' => $regiao->estado,
+                'regiao' => $regiao->regiao,
+                'estado_id' => $regiao->estado_id,
+            ];
+        }
+        return response()->json($dadosPersonalizados);
     }
 
     /**
@@ -64,7 +70,7 @@ return response()->json($dadosPersonalizados);
 
         $regiao->estado_id = $request->estado_id;
         $regiao->regiao = $request->regiao;
-        
+
         $regiao->save();
         return "Regiao Cadastrada";
     }
@@ -79,8 +85,8 @@ return response()->json($dadosPersonalizados);
     {
         //
         $regiao = Regioes::find($id);
-        if(!$regiao){
-            return response(['message'=>'Região não encontrado!'], 404);
+        if (!$regiao) {
+            return response(['message' => 'Região não encontrado!'], 404);
         }
         return $regiao;
     }
@@ -107,12 +113,12 @@ return response()->json($dadosPersonalizados);
     {
         //
         $regiao = Regioes::find($id);
-        if(!$regiao){
-            return response(['message'=>'Região não encontrado!'], 404);
+        if (!$regiao) {
+            return response(['message' => 'Região não encontrado!'], 404);
         }
         $regiao->estado_id = $request->estado_id;
         $regiao->regiao = $request->regiao;
-        
+
         $regiao->save();
         return "Região Actualizada";
     }

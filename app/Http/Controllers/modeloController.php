@@ -23,7 +23,11 @@ class modeloController extends Controller
         $query = DB::table('modelos')
                 ->join('marcas','marcas.id','modelos.marca_id')
                 ->join('tipos_veiculos','tipos_veiculos.id','marcas.tipo_veiculo_id')
-                ->select('modelos.*', 'marcas.nome_marca','marcas.id as id_marca','nome_marca','tipos_veiculos.id as tipo_veiculo_id','tipos_veiculos.tipo_veiculo');
+                ->select('modelos.*', 'marcas.nome_marca',
+                'marcas.id as id_marca','nome_marca',
+                'tipos_veiculos.id as tipo_veiculo_id',
+                'tipos_veiculos.tipo_veiculo')
+                ->orderBy('modelos.nome_modelo', 'asc');
           // Adiciona os filtros conforme os parâmetros passados
         if (request('nome_marca')) {
             $query->where('marcas.nome_marca', 'LIKE', '%' . request('nome_marca') . '%');
@@ -81,7 +85,7 @@ class modeloController extends Controller
 
         $modelos->save();
 
-        return response(['message'=> 'Marca cadastrada'], 200);
+        return response(['message'=> 'Modelo cadastrado com sucesso!'], 200);
     }
 
     /**

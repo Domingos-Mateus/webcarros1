@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\TiposVeiculos;
+use DB;
 
 class tipoVeiculoController extends Controller
 {
@@ -15,9 +16,30 @@ class tipoVeiculoController extends Controller
     public function index()
     {
         //
-        $tipos_veiculos = TiposVeiculos::all();
-        return $tipos_veiculos;
+        $query = DB::table('tipos_veiculos')
+       ->select('tipos_veiculos.*')
+       ->orderBy('tipos_veiculos.tipo_veiculo', 'asc');
+
+   // Adiciona os filtros conforme os parâmetros passados
+   if (request('tipo_veiculo')) {
+       $query->where('tipos_veiculos.tipo_veiculo', 'LIKE', '%' . request('tipo_veiculo') . '%');
+   }
+
+   // Executa a consulta aleatóriamente
+   $tipos_veiculos = $query->get();
+   //return $tipos_veiculos;
+   // Processamento dos dados para personalizar a resposta
+   $dadosPersonalizados = [];
+
+   foreach ($tipos_veiculos as $tipo_veiculo) {
+       $dadosPersonalizados[] = [
+           'id' => $tipo_veiculo->id,
+           'tipo_veiculo' => $tipo_veiculo->tipo_veiculo,
+           'descricao' => $tipo_veiculo->descricao,
+       ];
     }
+    return $dadosPersonalizados;
+}
 
     /**
      * Show the form for creating a new resource.

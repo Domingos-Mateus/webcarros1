@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Tecnologia;
-
+use Illuminate\Support\Facades\DB;
 
 class tecnologiaController extends Controller
 {
@@ -17,9 +17,29 @@ class tecnologiaController extends Controller
     public function index()
     {
         //
-        $tecnologia = Tecnologia::all();
-        return $tecnologia;
+        $query = DB::table('tecnologias')
+       ->select('tecnologias.*')
+       ->orderBy('tecnologias.tecnologia', 'asc');
+
+   // Adiciona os filtros conforme os parâmetros passados
+   /*
+   if (request('tecnologia')) {
+       $query->where('tecnologias.tecnologia', 'LIKE', '%' . request('tecnologia') . '%');
+   }*/
+
+   $tecnologias = $query->get();
+   // Processamento dos dados para personalizar a resposta
+   $dadosPersonalizados = [];
+
+   foreach ($tecnologias as $tecnologia) {
+       $dadosPersonalizados[] = [
+           'id' => $tecnologia->id,
+           'tecnologia' => $tecnologia->tecnologia,
+           'descricao' => $tecnologia->descricao,
+       ];
     }
+    return $dadosPersonalizados;
+}
 
     /**
      * Show the form for creating a new resource.
@@ -47,7 +67,8 @@ class tecnologiaController extends Controller
 
         $tecnologia->save();
 
-        return $tecnologia;
+        return response(['message'=> 'Tecnologia cadastrada com sucesso!'], 200);
+
     }
 
     /**
@@ -75,7 +96,7 @@ class tecnologiaController extends Controller
     public function edit($id)
     {
         //
-        
+
     }
 
     /**
@@ -96,7 +117,9 @@ class tecnologiaController extends Controller
         $tecnologia->descricao = $request->descricao;
 
         $tecnologia->save();
-        return $tecnologia;
+        return response(['message'=> 'Tecnologia Actualizado com sucesso!'], 200);
+
+        //return $tecnologia;
     }
 
     /**

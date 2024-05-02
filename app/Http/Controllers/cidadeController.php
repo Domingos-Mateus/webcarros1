@@ -18,32 +18,40 @@ class cidadeController extends Controller
     public function index()
     {
         //
-         //
-         $query = DB::table('cidades')
-         ->join('regioes','regioes.id','cidades.regiao_id')
-         ->join('estados','estados.id','regioes.estado_id')
-         ->select('cidades.*', 'regioes.regiao','regioes.id as id_regiao','regioes.regiao','estados.id as id_estado','estados.estado');
-   // Adiciona os filtros conforme os parâmetros passados
-   if (request('regiao')) {
-     $query->where('regioes.regiao', 'LIKE', '%' . request('regiao') . '%');
- }
+        //
+        $query = DB::table('cidades')
+            ->join('regioes', 'regioes.id', 'cidades.regiao_id')
+            ->join('estados', 'estados.id', 'regioes.estado_id')
+            ->select('cidades.*', 'regioes.regiao',
+            'regioes.id as id_regiao', 'regioes.regiao',
+            'estados.id as id_estado', 'estados.estado');
+        // Adiciona os filtros conforme os parâmetros passados
+        if (request('regiao')) {
+            $query->where('regioes.regiao', 'LIKE', '%' . request('regiao') . '%');
+        }
+        if (request('cidade')) {
+            $query->where('cidades.cidade', 'LIKE', '%' . request('cidade') . '%');
+        }
+        if (request('estado')) {
+            $query->where('estados.estado', 'LIKE', '%' . request('estado') . '%');
+        }
 
- $cidades = $query->get();
- $dadosPersonalizados = [];
+        $cidades = $query->get();
+        $dadosPersonalizados = [];
 
- foreach ($cidades as $cidade) {
-     // Personalize os campos conforme necessário
-     $dadosPersonalizados[] = [
-         'id' => $cidade->id,
-         'regiao' => $cidade->regiao,
-         'cidade' => $cidade->cidade,
-         'id_regiao' => $cidade->id_regiao,
-         'nome_regiao' => $cidade->regiao,
-         'id_estado' => $cidade->id_estado,
-         'nome_estado' => $cidade->estado,
-     ];
- }
- return response()->json($dadosPersonalizados);
+        foreach ($cidades as $cidade) {
+            // Personalize os campos conforme necessário
+            $dadosPersonalizados[] = [
+                'id' => $cidade->id,
+                'regiao' => $cidade->regiao,
+                'cidade' => $cidade->cidade,
+                'id_regiao' => $cidade->id_regiao,
+                'nome_regiao' => $cidade->regiao,
+                'id_estado' => $cidade->id_estado,
+                'nome_estado' => $cidade->estado,
+            ];
+        }
+        return response()->json($dadosPersonalizados);
     }
 
     /**
@@ -84,8 +92,8 @@ class cidadeController extends Controller
     {
         //
         $cidade = Cidades::find($id);
-        if(!$cidade){
-            return response(['message'=>'Cidades não encontrada!'], 404);
+        if (!$cidade) {
+            return response(['message' => 'Cidades não encontrada!'], 404);
         }
         return $cidade;
     }
@@ -112,8 +120,8 @@ class cidadeController extends Controller
     {
         //
         $cidade = Cidades::find($id);
-        if(!$cidade){
-            return response(['message'=>'Cidades não encontrada!'], 404);
+        if (!$cidade) {
+            return response(['message' => 'Cidades não encontrada!'], 404);
         }
         $cidade->regiao_id = $request->regiao_id;
         $cidade->cidade = $request->cidade;

@@ -18,10 +18,28 @@ class estadoController extends Controller
     public function index()
     {
         //
-        $estados = Estados::all();
-        return $estados;
+        $query = DB::table('estados')
+       ->select('estados.*')
+       ->orderBy('estados.estado', 'asc');
 
+   // Adiciona os filtros conforme os parâmetros passados
+   /*
+   if (request('estado')) {
+       $query->where('estados.estado', 'LIKE', '%' . request('estado') . '%');
+   }*/
+
+   $estados = $query->get();
+   // Processamento dos dados para personalizar a resposta
+   $dadosPersonalizados = [];
+
+   foreach ($estados as $estado) {
+       $dadosPersonalizados[] = [
+           'id' => $estado->id,
+           'estado' => $estado->estado,
+       ];
     }
+    return $dadosPersonalizados;
+}
 
     /**
      * Show the form for creating a new resource.
@@ -48,7 +66,8 @@ class estadoController extends Controller
         $estados->estado = $request->estado;
 
         $estados->save();
-        return "Estado Cadastrado";
+        return response(['message'=> 'Estado cadastrado com sucesso!'], 200);
+
     }
 
     /**

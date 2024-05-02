@@ -71,12 +71,14 @@ class planosAnuciantesController extends Controller
     $data_hoje = Carbon::now();
     $data_vecimento = $data_hoje->addDays($plano->dias_publicacao);
 
+    //return $plano->quantidade_anuncios;
+
     $planosAnunciantes = new PlanosAnunciantes;
     $planosAnunciantes->plano_id = $request->plano_id;
     $planosAnunciantes->anunciante_id = $request->anunciante_id;
     $planosAnunciantes->status = $request->status;
-    $planosAnunciantes->limite_anuncio = $request->limite_anuncio;
-    $planosAnunciantes->anuncio_restante = $request->limite_anuncio;
+    $planosAnunciantes->limite_anuncio = $plano->quantidade_anuncios;
+    $planosAnunciantes->anuncio_restante = $planosAnunciantes->limite_anuncio;
 
 
 
@@ -118,8 +120,6 @@ class planosAnuciantesController extends Controller
         $planosAnunciantes->plano_id = $request->plano_id;
         $planosAnunciantes->anunciante_id = $request->anunciante_id;
         $planosAnunciantes->status = $request->status;
-        $planosAnunciantes->limite_anuncio = $request->limite_anuncio;
-        $planosAnunciantes->anuncio_restante = $request->limite_anuncio;
         $planosAnunciantes->data_vencimento = $request->data_vencimento;
         $planosAnunciantes->save();
 
@@ -128,8 +128,20 @@ class planosAnuciantesController extends Controller
 
     public function destroy($id)
     {
-        //
-        PlanosAnunciantes::destroy($id);
-        return response(['message'=>'Plano do Anunciante, eliminado com sucesso!'], 200);
+        $plano = PlanosAnunciantes::with('anuncios')->find($id);
+
+        if (!$plano) {
+            return response(['message' => 'Plano do Anunciante não encontrado.'], 404);
+        }
+
+        // Verifica se existem anúncios vinculados ao plano
+        if ($plano->anuncios->isNotEmpty()) {
+            return response(['message' => 'Não é possível eliminar o plano, pois ele está vinculado a um ou mais anúncios.'], 400);
+        }
+
+        $plano->delete();
+        return response(['message' => 'Plano do Anunciante eliminado com sucesso!'], 200);
     }
+
+
 }

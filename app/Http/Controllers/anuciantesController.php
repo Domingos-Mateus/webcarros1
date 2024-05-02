@@ -41,7 +41,8 @@ class anuciantesController extends Controller
         //'usuario_id.cidade as cidade',
         'cidade_principal.id as cidade_id',
         'cidade_comercial.cidade as cidade_Comercial',
-        'cidade_comercial.id as cidade_comercial_id'
+        'cidade_comercial.id as cidade_comercial_id',
+        'users.id as user_id'
     );
 
     if (request('nome_empresa')) {
@@ -105,6 +106,7 @@ foreach ($anunciantes as $anunciante) {
         'status' => $anunciante->status,
         'observacao' => $anunciante->observacao,
         'foto' => $anunciante->foto ? env('URL_BASE_SERVIDOR') . $anunciante->foto : null,
+        'user_id' => $anunciante->user_id,
         // Adicione mais campos personalizados conforme necessário
     ];
 }

@@ -16,7 +16,8 @@ class categoriaOpcionaisController extends Controller
     public function index()
     {
         //
-        $catgoriasOpcionais = CategoriaOpcionais::all();
+        //$catgoriasOpcionais = CategoriaOpcionais::all();
+        $catgoriasOpcionais = CategoriaOpcionais::orderBy('nome', 'asc')->get();
         return $catgoriasOpcionais;
     }
 

@@ -16,32 +16,30 @@ class categoriasController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        // Começa a construir a consulta ao banco de dados
-        $query = DB::table('categorias')
-            ->select('categorias.*');
-        // Executa a consulta aleatóriamente
-        $categorias = $query->get();
-        // Processamento dos dados para personalizar a resposta
-        $dadosPersonalizados = [];
+{
+    // Começa a construir a consulta ao banco de dados
+    $query = DB::table('categorias')
+        ->select('categorias.*')
+        ->orderBy('nome', 'asc');
 
+    // Executa a consulta
+    $categorias = $query->get();
 
-
-        foreach ($categorias as $categoria) {
-            $dadosPersonalizados[] = [
-                'id' => $categoria->id,
-                'nome' => $categoria->nome,
-                'descricao' => $categoria->descricao,
-                'foto_categoria' => $categoria->foto_categoria ? env('URL_BASE_SERVIDOR') . '/' . $categoria->foto_categoria : null,
-                // Adicione mais campos personalizados conforme necessário
-            ];
-        }
-
-
-
-        // Retorna a resposta JSON com os dados personalizados
-        return response()->json($dadosPersonalizados);
+    // Processamento dos dados para personalizar a resposta
+    $dadosPersonalizados = [];
+    foreach ($categorias as $categoria) {
+        $dadosPersonalizados[] = [
+            'id' => $categoria->id,
+            'nome' => $categoria->nome,
+            'descricao' => $categoria->descricao,
+            'foto_categoria' => $categoria->foto_categoria ? env('URL_BASE_SERVIDOR') . '/' . $categoria->foto_categoria : null,
+        ];
     }
+
+    // Retorna a resposta JSON com os dados personalizados
+    return response()->json($dadosPersonalizados);
+}
+
 
 
     /**

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Anunciantes;
 use Illuminate\Http\Request;
 use App\Models\User;
+use DB;
 use Illuminate\Support\Facades\Auth;
 
 class userController extends Controller
@@ -16,24 +17,39 @@ class userController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
-    $anunciante = Anunciantes::where('usuario_id',$user->id)->first(); // Usando o relacionamento definido no modelo User
+        $query = DB::table('users')
+            ->leftJoin('anunciantes', 'anunciantes.usuario_id', '=', 'users.id')
+            ->select(
+                'users.id',
+                'users.name',
+                'users.email',
+                'users.activo',
+                'users.remember_token',
+                'users.created_at',
+                'users.updated_at',
+                'anunciantes.id as anunciante_id'  // Adiciona o ID do anunciante associado se existir
+            );
 
-    // Preparar os dados a serem retornados
-    $data = [
-        'id' => $user->id,
-        'name' => $user->name,
-        'email' => $user->email,
-        'activo' => $user->activo,
-        'remember_token' => $user->remember_token,
-        'created_at' => $user->created_at,
-        'updated_at' => $user->updated_at,
-        'anunciante_id' => $anunciante ? $anunciante->id : null
-    ];
+        $users = $query->get();
+        $dadosPersonalizados = [];
+        foreach ($users as $user) {
+            $dadosPersonalizados[] = [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'activo' => $user->activo,
+                'remember_token' => $user->remember_token,
+                'created_at' => $user->created_at,
+                'updated_at' => $user->updated_at,
+                'anunciante_id' => $user->anunciante_id  // Adiciona o ID do anunciante ao array
+            ];
+        }
 
-    // Retorna os dados em formato JSON
-    return response()->json($data);
+        return response()->json($dadosPersonalizados);
     }
+
+
+
 
     public function usuarioLogado()
     {
@@ -42,28 +58,25 @@ class userController extends Controller
         return $user;
     }
 
-
     public function anuncianteLogado()
-{
-    $user = Auth::user();
-    $anunciante = Anunciantes::where('usuario_id',$user->id)->first(); // Usando o relacionamento definido no modelo User
+    {
+        $user = Auth::user();
+        $anunciante = Anunciantes::where('usuario_id', $user->id)->first(); // Usando o relacionamento definido no modelo User
+        // Preparar os dados a serem retornados
+        $data = [
+            'anunciante_id' => $anunciante ? $anunciante->id : null,
+            'name' => $user->name,
+            'email' => $user->email,
+            'activo' => $user->activo,
+            'remember_token' => $user->remember_token,
+            'created_at' => $user->created_at,
+            'updated_at' => $user->updated_at,
+            'id_usuario' => $user->id
+        ];
 
-
-    // Preparar os dados a serem retornados
-    $data = [
-        'id' => $user->id,
-        'name' => $user->name,
-        'email' => $user->email,
-        'activo' => $user->activo,
-        'remember_token' => $user->remember_token,
-        'created_at' => $user->created_at,
-        'updated_at' => $user->updated_at,
-        'anunciante_id' => $anunciante ? $anunciante->id : null
-    ];
-
-    // Retorna os dados em formato JSON
-    return response()->json($data);
-}
+        // Retorna os dados em formato JSON
+        return response()->json($data);
+    }
 
 
 

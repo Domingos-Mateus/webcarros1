@@ -9,9 +9,9 @@ use App\Http\Controllers\appController;
 
 
 Route::get('/anuncios/listar_anuncios', 'App\Http\Controllers\anunciosController@index');
+Route::get('/anuncios/listar_anuncios_destaques', 'App\Http\Controllers\anunciosController@indexDestaque');
 Route::get('/anuncios/contadorContacto/{id}', 'App\Http\Controllers\anunciosController@contadorContato');
 Route::get('/anuncios/contadorMensagem/{id}', 'App\Http\Controllers\anunciosController@contadorMensagem');
-Route::get('/anuncios/listar_anunciosAdmin', 'App\Http\Controllers\anunciosController@anuncioAdmin');
 Route::get('/anuncios/visualizar_anuncios/{id}', 'App\Http\Controllers\anunciosController@show');
 
 Route::get('/categorias/listar_categorias', 'App\Http\Controllers\categoriasController@index');
@@ -30,6 +30,8 @@ Route::get('/cidade/listar_cidades', 'App\Http\Controllers\cidadeController@inde
 Route::post('/estados/registar_estados', 'App\Http\Controllers\estadoController@store');
 Route::get('/transmissao/listar_transmissao', 'App\Http\Controllers\transmissaoController@index');
 Route::get('/combustivel/listar_combustivel', 'App\Http\Controllers\combustivelController@index');
+Route::get('/categoria_opcionais/listar_categoria_opcionais', 'App\Http\Controllers\categoriaOpcionaisController@index');
+
 
 
 
@@ -82,6 +84,11 @@ Route::post('/anuncios/registar_anuncios', 'App\Http\Controllers\anunciosControl
 Route::post('/anuncios/uploadFoto1_anuncios/{id}', 'App\Http\Controllers\anunciosController@uploadFoto');
 Route::put('/editar_anuncios/update/{id}', 'App\Http\Controllers\anunciosController@update');
 Route::get('/eliminar_anuncios/{id}', 'App\Http\Controllers\anunciosController@destroy');
+
+//Listar anuncios de seus respectivos anunciantes
+Route::get('/anuncios/listar_anunciosAdminSuper', 'App\Http\Controllers\anunciosController@anuncioAdminSuper');
+Route::get('/anuncios/listar_anunciosAdmin', 'App\Http\Controllers\anunciosController@anuncioAdmin');
+
 
 Route::delete('/anuncios/eliminar_foto1/{id}', 'App\Http\Controllers\anunciosController@destroyFoto1');
 Route::delete('/anuncios/eliminar_foto2/{id}', 'App\Http\Controllers\anunciosController@destroyFoto2');
@@ -216,7 +223,6 @@ Route::get('/eliminar_seguranca/{id}', 'App\Http\Controllers\segurancaController
 
 
 //Categorias Opcionais
-Route::get('/categoria_opcionais/listar_categoria_opcionais', 'App\Http\Controllers\categoriaOpcionaisController@index');
 Route::post('/categoria_opcionais/registar_categoria_opcionais', 'App\Http\Controllers\categoriaOpcionaisController@store');
 Route::get('/categoria_opcionais/visualizar_categoria_opcionais/{id}', 'App\Http\Controllers\categoriaOpcionaisController@show');
 Route::put('/editar_categoria_opcionais/update/{id}', 'App\Http\Controllers\categoriaOpcionaisController@update');
@@ -240,7 +246,6 @@ Route::post('logout', [AuthController::class, 'logout']);
 //login
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout']);
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

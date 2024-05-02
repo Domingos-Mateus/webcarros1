@@ -17,32 +17,37 @@ class opcionaisController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        //
-        $query = DB::table('opcionais')
-        ->join('categoria_opcionais','categoria_opcionais.id','opcionais.categoria_opcional_id')
-        ->select('opcionais.*', 'categoria_opcionais.nome as nome_categoria','categoria_opcionais.id as id_categorias');
-  // Adiciona os filtros conforme os parâmetros passados
-  /*
-  if (request('nome_categoria')) {
-    $query->where('categoria_opcionais.nome_categoria', 'LIKE', '%' . request('nome_categoria') . '%');
-}
-*/
+{
+    // Inicia a construção da consulta ao banco de dados
+    $query = DB::table('opcionais')
+        ->join('categoria_opcionais', 'categoria_opcionais.id', '=', 'opcionais.categoria_opcional_id')
+        ->select('opcionais.*', 'categoria_opcionais.nome as nome_categoria', 'categoria_opcionais.id as id_categorias')
+        ->orderBy('opcionais.nome', 'asc'); // Corrigido para especificar que 'nome' é de 'opcionais'
 
-$opcionais = $query->get();
-$dadosPersonalizados = [];
-
-foreach ($opcionais as $opcional) {
-    // Personalize os campos conforme necessário
-    $dadosPersonalizados[] = [
-        'id' => $opcional->id,
-        'categoria_opcional' => $opcional->nome_categoria,
-        'categoria_opcional_id' => $opcional->id_categorias,
-        'nome' => $opcional->nome,
-    ];
-}
-return response()->json($dadosPersonalizados);
+    // Filtro dinâmico para 'nome_categoria' (caso exista no request)
+    if ($nomeCategoria = request('nome_categoria')) {
+        $query->where('categoria_opcionais.nome', 'LIKE', '%' . $nomeCategoria . '%');
     }
+
+    // Executa a consulta
+    $opcionais = $query->get();
+    $dadosPersonalizados = [];
+
+    // Processamento dos dados para personalizar a resposta
+    foreach ($opcionais as $opcional) {
+        $dadosPersonalizados[] = [
+            'id' => $opcional->id,
+            'nome_categoria' => $opcional->nome_categoria,
+            'categoria_opcional_id' => $opcional->id_categorias,
+            'nome' => $opcional->nome,
+            // Adicione mais campos conforme necessário
+        ];
+    }
+
+    // Retorna a resposta JSON com os dados personalizados
+    return response()->json($dadosPersonalizados);
+}
+
 
     /**
      * Show the form for creating a new resource.

@@ -17,7 +17,7 @@ class corController extends Controller
     public function index()
     {
         //
-        $cor = Cor::all();
+        $cor = Cor::orderBy('cor', 'asc')->get();
         return $cor;
     }
 

@@ -60,7 +60,7 @@ class planosController extends Controller
 
         $planos->save();
 
-       
+
 
         return $planos;
     }
@@ -134,7 +134,7 @@ class planosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request)
+    public function destroy($id)
     {
         //
         Planos::destroy($id);

@@ -16,50 +16,45 @@ class marcasController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        //
-       // Começa a construir a consulta ao banco de dados
-       $query = DB::table('marcas')
-       ->join('tipos_veiculos','tipos_veiculos.id','marcas.tipo_veiculo_id')
-       ->select('marcas.*','tipos_veiculos.id as id_tipos_veiculo','tipos_veiculos.tipo_veiculo' );
+    public function index(Request $request)
+{
+    // Começa a construir a consulta ao banco de dados
+    $query = DB::table('marcas')
+        ->join('tipos_veiculos', 'tipos_veiculos.id', '=', 'marcas.tipo_veiculo_id')
+        ->select('marcas.*', 'tipos_veiculos.id as tipo_veiculo_id', 'tipos_veiculos.tipo_veiculo')
+        ->orderBy('marcas.nome_marca', 'asc');
 
-   // Adiciona os filtros conforme os parâmetros passados
-   if (request('nome_marca')) {
-       $query->where('marcas.nome_marca', 'LIKE', '%' . request('nome_marca') . '%');
-   }
+    // Adiciona os filtros conforme os parâmetros passados
+    if ($request->has('nome_marca')) {
+        $query->where('marcas.nome_marca', 'LIKE', '%' . $request->nome_marca . '%');
+    }
 
+    if ($request->has('tipo_veiculo_id')) {
+        $query->where('marcas.tipo_veiculo_id', $request->tipo_veiculo_id);
+    }
 
-   if (request('tipo_veiculo_id')) {
-       $query->where('marcas.tipo_veiculo_id', request('tipo_veiculo_id'));
-   }
+    if ($request->has('tipo_veiculo')) {
+        $query->where('tipos_veiculos.tipo_veiculo', 'LIKE', '%' . $request->tipo_veiculo . '%');
+    }
 
-   if (request('tipo_veiculo')) {
-    $query->where('tipos_veiculos.tipo_veiculo', 'LIKE', '%' . request('tipo_veiculo') . '%');
+    // Executa a consulta
+    $marcas = $query->get();
+
+    // Processamento dos dados para personalizar a resposta
+    $dadosPersonalizados = $marcas->map(function ($marca) {
+        return [
+            'id' => $marca->id,
+            'tipo_veiculo_id' => $marca->tipo_veiculo_id,
+            'tipo_veiculo' => $marca->tipo_veiculo,
+            'nome_marca' => $marca->nome_marca,
+            'descricao' => $marca->descricao ?? 'N/A', // Assume descrição opcional
+        ];
+    });
+
+    // Retorna a resposta JSON com os dados personalizados
+    return response()->json($dadosPersonalizados);
 }
 
-
-   // Executa a consulta aleatóriamente
-   $marcas = $query->get();
-   // Processamento dos dados para personalizar a resposta
-   $dadosPersonalizados = [];
-
-   foreach ($marcas as $marca) {
-       $dadosPersonalizados[] = [
-           'id' => $marca->id,
-           'tipo_veiculo_id' => $marca->tipo_veiculo_id,
-           'tipo_veiculo' => $marca->tipo_veiculo,
-           'nome_marca' => $marca->nome_marca,
-           'descricao' => $marca->descricao,
-
-       ];
-   }
-
-
-
-   // Retorna a resposta JSON com os dados personalizados
-   return response()->json($dadosPersonalizados);
-    }
 
     /**
      * Show the form for creating a new resource.
