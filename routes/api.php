@@ -9,7 +9,9 @@ use App\Http\Controllers\appController;
 
 
 Route::get('/anuncios/listar_anuncios', 'App\Http\Controllers\anunciosController@index');
+Route::get('/anuncios/listar_anuncios_aprovados', 'App\Http\Controllers\anunciosController@anunciosAprovados');
 Route::get('/anuncios/listar_anuncios_destaques', 'App\Http\Controllers\anunciosController@indexDestaque');
+Route::get('/anuncios/listar_anuncios_vetrine', 'App\Http\Controllers\anunciosController@indexVetrine');
 Route::get('/anuncios/contadorContacto/{id}', 'App\Http\Controllers\anunciosController@contadorContato');
 Route::get('/anuncios/contadorMensagem/{id}', 'App\Http\Controllers\anunciosController@contadorMensagem');
 Route::get('/anuncios/visualizar_anuncios/{id}', 'App\Http\Controllers\anunciosController@show');

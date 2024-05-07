@@ -79,7 +79,9 @@ class cidadeController extends Controller
         $cidade->cidade = $request->cidade;
 
         $cidade->save();
-        return "Cidade Cadastrada";
+
+        return response(['message' => 'Cidade Cadastrada com sucesso!'], 404);
+
     }
 
     /**
