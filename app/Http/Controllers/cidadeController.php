@@ -29,6 +29,12 @@ class cidadeController extends Controller
         if (request('regiao')) {
             $query->where('regioes.regiao', 'LIKE', '%' . request('regiao') . '%');
         }
+        if (request('regiao_id')) {
+            $query->where('cidades.regiao_id', 'LIKE', '%' . request('regiao_id') . '%');
+        }
+        if (request('id_estado')) {
+            $query->where('estados.id_estado', 'LIKE', '%' . request('id_estado') . '%');
+        }
         if (request('cidade')) {
             $query->where('cidades.cidade', 'LIKE', '%' . request('cidade') . '%');
         }
@@ -45,7 +51,7 @@ class cidadeController extends Controller
                 'id' => $cidade->id,
                 'regiao' => $cidade->regiao,
                 'cidade' => $cidade->cidade,
-                'id_regiao' => $cidade->id_regiao,
+                'regiao_id' => $cidade->regiao_id,
                 'nome_regiao' => $cidade->regiao,
                 'id_estado' => $cidade->id_estado,
                 'nome_estado' => $cidade->estado,
