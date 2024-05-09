@@ -33,6 +33,7 @@ Route::post('/estados/registar_estados', 'App\Http\Controllers\estadoController@
 Route::get('/transmissao/listar_transmissao', 'App\Http\Controllers\transmissaoController@index');
 Route::get('/combustivel/listar_combustivel', 'App\Http\Controllers\combustivelController@index');
 Route::get('/categoria_opcionais/listar_categoria_opcionais', 'App\Http\Controllers\categoriaOpcionaisController@index');
+Route::get('/regiao/listar_regiao', 'App\Http\Controllers\regiaoController@index');
 
 
 
@@ -187,7 +188,7 @@ Route::get('/eliminar_estado/{id}', 'App\Http\Controllers\estadoController@destr
 
 
 //Regiao
-Route::get('/regiao/listar_regiao', 'App\Http\Controllers\regiaoController@index');
+
 Route::post('/regiao/registar_regiao', 'App\Http\Controllers\regiaoController@store');
 Route::get('/regiao/visualizar_regiao/{id}', 'App\Http\Controllers\regiaoController@show');
 Route::put('/editar_regiao/update/{id}', 'App\Http\Controllers\regiaoController@update');

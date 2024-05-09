@@ -71,8 +71,29 @@ class AuthController extends Controller
     			'anunciante_id'=>$anunciante->id ?? null
     	];
 
-    	return response($response, 200);
-    	}
+    	// Verifica o perfil do usuário e redireciona conforme o necessário
+        switch ($user->perfil) {
+            case 'superadmin':
+                return response($response, 200);
+                //return $user->perfil;
+                //$response['redirect'] = route('superadmin.dashboard');
+                break;
+            case 'admin':
+                return response($response, 200);
+                //return $user->perfil;
+
+                //$response['redirect'] = route('admin.dashboard');
+                break;
+            default:
+
+            return 'não está autenticado';
+
+                //$response['redirect'] = route('home');
+                break;
+        }
+
+        return response($response, 200);
+    }
 
     }
 
