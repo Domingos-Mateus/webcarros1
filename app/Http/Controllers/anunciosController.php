@@ -15,7 +15,6 @@ use App\Models\Cidades;
 use App\Models\Combustivel;
 use App\Models\Cor;
 use App\Models\Transmissao;
-use App\Models\Confortos;
 use App\Models\Fabricantes;
 use App\Models\Opcionais;
 use App\Models\PlanosAnunciantes;
@@ -85,31 +84,46 @@ class anunciosController extends Controller
             )
             ->where('anunciantes.status', '=', 1); // Filtra apenas anunciantes ativos (status = 1);
 
-// Obtém as datas de início e fim da requisição, se fornecidas
-$dataInicio = request('data_inicio'); // Exemplo: '12/06/2023'
-$dataFim = request('data_fim'); // Exemplo: '11/09/2023'
+        // Obtém as datas de início e fim da requisição, se fornecidas
+        $dataInicio = request('data_inicio'); // Exemplo: '12/06/2023'
+        $dataFim = request('data_fim'); // Exemplo: '11/09/2023'
 
-// Verifica se ambas as datas foram fornecidas
-if (!empty($dataInicio) && !empty($dataFim)) {
-    $dataInicioFormatada = DateTime::createFromFormat('d/m/Y', $dataInicio);
-    $dataFimFormatada = DateTime::createFromFormat('d/m/Y', $dataFim);
+        // Verifica se ambas as datas foram fornecidas
+        if (!empty($dataInicio) && !empty($dataFim)) {
+            $dataInicioFormatada = DateTime::createFromFormat('d/m/Y', $dataInicio);
+            $dataFimFormatada = DateTime::createFromFormat('d/m/Y', $dataFim);
 
-    // Verifica se as datas convertidas são válidas
-    if ($dataInicioFormatada && $dataFimFormatada) {
-        $dataInicioFormatada = $dataInicioFormatada->format('Y-m-d');
-        $dataFimFormatada = $dataFimFormatada->format('Y-m-d');
+            // Verifica se as datas convertidas são válidas
+            if ($dataInicioFormatada && $dataFimFormatada) {
+                $dataInicioFormatada = $dataInicioFormatada->format('Y-m-d');
+                $dataFimFormatada = $dataFimFormatada->format('Y-m-d');
 
-        // Certifica-se de que a data de início não é posterior à data de fim
-        if ($dataInicioFormatada > $dataFimFormatada) {
-            return response()->json(['error' => 'A data de fim não pode ser anterior à data de início.'], 400);
+                // Certifica-se de que a data de início não é posterior à data de fim
+                if ($dataInicioFormatada > $dataFimFormatada) {
+                    return response()->json(['error' => 'A data de fim não pode ser anterior à data de início.'], 400);
+                }
+
+                // Aplica o filtro de intervalo de datas
+                $query->whereBetween('anuncios.created_at', [$dataInicioFormatada, $dataFimFormatada]);
+            } else {
+                return response()->json(['error' => 'Formato de data inválido.'], 400);
+            }
         }
 
-        // Aplica o filtro de intervalo de datas
-        $query->whereBetween('anuncios.created_at', [$dataInicioFormatada, $dataFimFormatada]);
-    } else {
-        return response()->json(['error' => 'Formato de data inválido.'], 400);
-    }
-}
+        // Filtro de preço
+        if (request()->has(['preco_min', 'preco_max'])) {
+            $query->whereBetween('anuncios.valor_preco', [request('preco_min'), request('preco_max')]);
+        }
+
+        // Filtro de ano de modelo
+        if (request()->has(['ano_modelo_min', 'ano_modelo_max'])) {
+            $query->whereBetween('anuncios.ano_modelo', [request('ano_modelo_min'), request('ano_modelo_max')]);
+        }
+
+        // Filtro de quilometragem
+        if (request()->has(['quilometragem_min', 'quilometragem_max'])) {
+            $query->whereBetween('anuncios.km', [request('quilometragem_min'), request('quilometragem_max')]);
+        }
 
         if (request('tipo_veiculo')) {
             $query->where('tipos_veiculos.tipo_veiculo', 'LIKE', '%' . request('tipo_veiculo') . '%');
@@ -317,31 +331,46 @@ if (!empty($dataInicio) && !empty($dataFim)) {
             ->where('anuncios.status_publicacao', '=', 2)
             ->where('anunciantes.status', '=', 1);
 
-// Obtém as datas de início e fim da requisição, se fornecidas
-$dataInicio = request('data_inicio'); // Exemplo: '12/06/2023'
-$dataFim = request('data_fim'); // Exemplo: '11/09/2023'
+        // Obtém as datas de início e fim da requisição, se fornecidas
+        $dataInicio = request('data_inicio'); // Exemplo: '12/06/2023'
+        $dataFim = request('data_fim'); // Exemplo: '11/09/2023'
 
-// Verifica se ambas as datas foram fornecidas
-if (!empty($dataInicio) && !empty($dataFim)) {
-    $dataInicioFormatada = DateTime::createFromFormat('d/m/Y', $dataInicio);
-    $dataFimFormatada = DateTime::createFromFormat('d/m/Y', $dataFim);
+        // Verifica se ambas as datas foram fornecidas
+        if (!empty($dataInicio) && !empty($dataFim)) {
+            $dataInicioFormatada = DateTime::createFromFormat('d/m/Y', $dataInicio);
+            $dataFimFormatada = DateTime::createFromFormat('d/m/Y', $dataFim);
 
-    // Verifica se as datas convertidas são válidas
-    if ($dataInicioFormatada && $dataFimFormatada) {
-        $dataInicioFormatada = $dataInicioFormatada->format('Y-m-d');
-        $dataFimFormatada = $dataFimFormatada->format('Y-m-d');
+            // Verifica se as datas convertidas são válidas
+            if ($dataInicioFormatada && $dataFimFormatada) {
+                $dataInicioFormatada = $dataInicioFormatada->format('Y-m-d');
+                $dataFimFormatada = $dataFimFormatada->format('Y-m-d');
 
-        // Certifica-se de que a data de início não é posterior à data de fim
-        if ($dataInicioFormatada > $dataFimFormatada) {
-            return response()->json(['error' => 'A data de fim não pode ser anterior à data de início.'], 400);
+                // Certifica-se de que a data de início não é posterior à data de fim
+                if ($dataInicioFormatada > $dataFimFormatada) {
+                    return response()->json(['error' => 'A data de fim não pode ser anterior à data de início.'], 400);
+                }
+
+                // Aplica o filtro de intervalo de datas
+                $query->whereBetween('anuncios.created_at', [$dataInicioFormatada, $dataFimFormatada]);
+            } else {
+                return response()->json(['error' => 'Formato de data inválido.'], 400);
+            }
         }
 
-        // Aplica o filtro de intervalo de datas
-        $query->whereBetween('anuncios.created_at', [$dataInicioFormatada, $dataFimFormatada]);
-    } else {
-        return response()->json(['error' => 'Formato de data inválido.'], 400);
-    }
-}
+        // Filtro de preço
+        if (request()->has(['preco_min', 'preco_max'])) {
+            $query->whereBetween('anuncios.valor_preco', [request('preco_min'), request('preco_max')]);
+        }
+
+        // Filtro de ano de modelo
+        if (request()->has(['ano_modelo_min', 'ano_modelo_max'])) {
+            $query->whereBetween('anuncios.ano_modelo', [request('ano_modelo_min'), request('ano_modelo_max')]);
+        }
+
+        // Filtro de quilometragem
+        if (request()->has(['quilometragem_min', 'quilometragem_max'])) {
+            $query->whereBetween('anuncios.km', [request('quilometragem_min'), request('quilometragem_max')]);
+        }
 
         if (request('tipo_veiculo')) {
             $query->where('tipos_veiculos.tipo_veiculo', 'LIKE', '%' . request('tipo_veiculo') . '%');
@@ -545,9 +574,9 @@ if (!empty($dataInicio) && !empty($dataFim)) {
                 'transmissaos.transmissao',
                 'transmissaos.id as id_transmissao',
             )
-            ->where('anuncios.destaque_busca','=', 1)
+            ->where('anuncios.destaque_busca', '=', 1)
             ->where('anuncios.status_publicacao', '=', 2)
-            ->where('anunciantes.status', '=', 1)// Filtra apenas anúncios na vitrine
+            ->where('anunciantes.status', '=', 1) // Filtra apenas anúncios na vitrine
             ->inRandomOrder() // Ordenação aleatória dos resultados
             ->limit(12);
 
@@ -746,9 +775,9 @@ if (!empty($dataInicio) && !empty($dataFim)) {
                 'transmissaos.transmissao',
                 'transmissaos.id as id_transmissao',
             )
-            ->where('anuncios.vitrine','=', 1)
+            ->where('anuncios.vitrine', '=', 1)
             ->where('anuncios.status_publicacao', '=', 2)
-            ->where('anunciantes.status', '=', 1)// Filtra apenas anúncios na vitrine
+            ->where('anunciantes.status', '=', 1) // Filtra apenas anúncios na vitrine
             ->inRandomOrder() // Ordenação aleatória dos resultados
             ->limit(12);
 

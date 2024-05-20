@@ -242,10 +242,6 @@ Route::get('/eliminar_opcionais/{id}', 'App\Http\Controllers\opcionaisController
 Route::post('logout', [AuthController::class, 'logout']);
 }); // Fim da verificação de autenticação
 
-
-
-
-
 //login
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -254,9 +250,6 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-
-
-
 
 // buscar endereço por CEP
 Route::get('/verificar_cep/{id}', [appController::class,'verificar_cep']);
