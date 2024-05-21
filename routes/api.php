@@ -76,6 +76,8 @@ Route::delete('/noticias/eliminar_foto_capa/{id}', 'App\Http\Controllers\noticia
 Route::get('/anunciantes/listar_anuciantes', 'App\Http\Controllers\anuciantesController@index');
 Route::post('/anunciantes/registar_anuciantes', 'App\Http\Controllers\anuciantesController@store');
 Route::post('/anunciantes/uploadFoto_anuciantes/{id}', 'App\Http\Controllers\anuciantesController@uploadFoto');
+Route::post('/anunciantes/banner_loja_anuciantes/{id}', 'App\Http\Controllers\anuciantesController@uploadBannerLoja');
+Route::post('/anunciantes/banner_loja_movel_anuciantes/{id}', 'App\Http\Controllers\anuciantesController@uploadBannerLojaMovel');
 Route::get('/anunciantes/visualizar_anuciantes/{id}', 'App\Http\Controllers\anuciantesController@show');
 Route::put('/editar_anuciantes/update/{id}', 'App\Http\Controllers\anuciantesController@update');
 Route::get('/eliminar_anuciantes/{id}', 'App\Http\Controllers\anuciantesController@destroy');

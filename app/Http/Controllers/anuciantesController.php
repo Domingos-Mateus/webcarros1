@@ -11,7 +11,7 @@ use App\Models\Cidades;
 
 use File;
 use DB;
-
+use Illuminate\Support\Facades\Storage;
 
 class anuciantesController extends Controller
 {
@@ -32,86 +32,88 @@ class anuciantesController extends Controller
             ->join('users', 'users.id', '=', 'anunciantes.usuario_id')
             ->join('cidades as cidade_comercial', 'cidade_comercial.id', '=', 'anunciantes.cidade_comercial_id')
             ->select(
-        'anunciantes.*',
-        'estados.estado as estado',
-        'estados.id as estado_id',
-        'regioes.regiao as regiao',
-        'regioes.id as regiao_id',
-        'cidade_principal.cidade as cidade',
-        //'usuario_id.cidade as cidade',
-        'cidade_principal.id as cidade_id',
-        'cidade_comercial.cidade as cidade_Comercial',
-        'cidade_comercial.id as cidade_comercial_id',
-        'users.id as user_id'
-    );
+                'anunciantes.*',
+                'estados.estado as estado',
+                'estados.id as estado_id',
+                'regioes.regiao as regiao',
+                'regioes.id as regiao_id',
+                'cidade_principal.cidade as cidade',
+                //'usuario_id.cidade as cidade',
+                'cidade_principal.id as cidade_id',
+                'cidade_comercial.cidade as cidade_Comercial',
+                'cidade_comercial.id as cidade_comercial_id',
+                'users.id as user_id'
+            );
 
-    if (request('nome_empresa')) {
-        $query->where('anunciantes.nome_empresa', 'LIKE', '%' . request('nome_empresa') . '%');
-    }
-    if (request('tipo_anunciante')) {
-        $query->where('anunciantes.tipo_anunciante', 'LIKE', '%' . request('tipo_anunciante') . '%');
-    }
-    if (request('estado')) {
-        $query->where('estados.estado', 'LIKE', '%' . request('estado') . '%');
-    }
-    if (request('regiao')) {
-        $query->where('regioes.regiao', 'LIKE', '%' . request('regiao') . '%');
-    }
-    if (request('cidade')) {
-        $query->where('cidade_comercial.cidade', 'LIKE', '%' . request('cidade') . '%');
-    }
-    if (request('status')) {
-        $query->where('anunciantes.status', request('status'));
-    }
-
-
-$anunciantes = $query->get();
-
-$dadosPersonalizados = [];
-
-foreach ($anunciantes as $anunciante) {
-    $dadosPersonalizados[] = [
-        'id' => $anunciante->id,
-        'nome_empresa' => $anunciante->nome_empresa,
-        'Pessoal_responsavel' => $anunciante->pessoal_responsavel,
-        'tipo_anunciante' => $anunciante->tipo_anunciante,
-        'cnpj' => $anunciante->cnpj,
-        'telefone' => $anunciante->telefone,
-        'celular' => $anunciante->celular,
-        'whatsapp' => $anunciante->whatsapp,
-        'site' => $anunciante->site,
-        'email' => $anunciante->email,
-        'password' => $anunciante->password,
-        'cep' => $anunciante->cep,
-        'endereco' => $anunciante->endereco,
-        'numero' => $anunciante->numero,
-        'complemento' => $anunciante->complemento,
-        'bairro' => $anunciante->bairro,
-        'cep_comercial' => $anunciante->cep_comercial,
-        'endereco_comercial' => $anunciante->endereco_comercial,
-        'numero_comercial' => $anunciante->numero_comercial,
-        'complemento_comercial' => $anunciante->complemento_comercial,
-        'bairro_comercial' => $anunciante->bairro_comercial,
+        if (request('nome_empresa')) {
+            $query->where('anunciantes.nome_empresa', 'LIKE', '%' . request('nome_empresa') . '%');
+        }
+        if (request('tipo_anunciante')) {
+            $query->where('anunciantes.tipo_anunciante', 'LIKE', '%' . request('tipo_anunciante') . '%');
+        }
+        if (request('estado')) {
+            $query->where('estados.estado', 'LIKE', '%' . request('estado') . '%');
+        }
+        if (request('regiao')) {
+            $query->where('regioes.regiao', 'LIKE', '%' . request('regiao') . '%');
+        }
+        if (request('cidade')) {
+            $query->where('cidade_comercial.cidade', 'LIKE', '%' . request('cidade') . '%');
+        }
+        if (request('status')) {
+            $query->where('anunciantes.status', request('status'));
+        }
 
 
+        $anunciantes = $query->get();
 
-        'regiao_id' => $anunciante->regiao_id,
-        'regiao' => $anunciante->regiao,
-        'estado_id' => $anunciante->estado_id,
-        'estado' => $anunciante->estado,
-        'cidade_id' => $anunciante->cidade_id,
-        'cidade' => $anunciante->cidade,
-        'cidade_comercial_id' => $anunciante->cidade_comercial_id,
-        'cidade_comericial' => $anunciante->cidade_Comercial,
-        'status' => $anunciante->status,
-        'observacao' => $anunciante->observacao,
-        'foto' => $anunciante->foto ? env('URL_BASE_SERVIDOR') . $anunciante->foto : null,
-        'user_id' => $anunciante->user_id,
-        // Adicione mais campos personalizados conforme necessário
-    ];
-}
+        $dadosPersonalizados = [];
 
-return response()->json($dadosPersonalizados);
+        foreach ($anunciantes as $anunciante) {
+            $dadosPersonalizados[] = [
+                'id' => $anunciante->id,
+                'nome_empresa' => $anunciante->nome_empresa,
+                'Pessoal_responsavel' => $anunciante->pessoal_responsavel,
+                'tipo_anunciante' => $anunciante->tipo_anunciante,
+                'cnpj' => $anunciante->cnpj,
+                'telefone' => $anunciante->telefone,
+                'celular' => $anunciante->celular,
+                'whatsapp' => $anunciante->whatsapp,
+                'site' => $anunciante->site,
+                'email' => $anunciante->email,
+                'password' => $anunciante->password,
+                'cep' => $anunciante->cep,
+                'endereco' => $anunciante->endereco,
+                'numero' => $anunciante->numero,
+                'complemento' => $anunciante->complemento,
+                'bairro' => $anunciante->bairro,
+                'cep_comercial' => $anunciante->cep_comercial,
+                'endereco_comercial' => $anunciante->endereco_comercial,
+                'numero_comercial' => $anunciante->numero_comercial,
+                'complemento_comercial' => $anunciante->complemento_comercial,
+                'bairro_comercial' => $anunciante->bairro_comercial,
+
+
+
+                'regiao_id' => $anunciante->regiao_id,
+                'regiao' => $anunciante->regiao,
+                'estado_id' => $anunciante->estado_id,
+                'estado' => $anunciante->estado,
+                'cidade_id' => $anunciante->cidade_id,
+                'cidade' => $anunciante->cidade,
+                'cidade_comercial_id' => $anunciante->cidade_comercial_id,
+                'cidade_comericial' => $anunciante->cidade_Comercial,
+                'status' => $anunciante->status,
+                'observacao' => $anunciante->observacao,
+                'foto' => $anunciante->foto ? env('URL_BASE_SERVIDOR') . $anunciante->foto : null,
+                'banner_loja' => $anunciante->banner_loja ? env('URL_BASE_SERVIDOR') . $anunciante->banner_loja : null,
+                'banner_loja_movel' => $anunciante->banner_loja_movel ? env('URL_BASE_SERVIDOR') . $anunciante->banner_loja_movel : null,
+                'user_id' => $anunciante->user_id,
+                // Adicione mais campos personalizados conforme necessário
+            ];
+        }
+
+        return response()->json($dadosPersonalizados);
     }
 
 
@@ -140,23 +142,23 @@ return response()->json($dadosPersonalizados);
         $cidade = Cidades::find($request->cidade_id);
 
 
-        if(!$estado){
-            return response(['message'=> 'O Estado selecionado não existe'], 404);
+        if (!$estado) {
+            return response(['message' => 'O Estado selecionado não existe'], 404);
         }
-        if(!$regiao){
-            return response(['message'=> 'A Regiao selecionada não existe'], 404);
+        if (!$regiao) {
+            return response(['message' => 'A Regiao selecionada não existe'], 404);
         }
-        if(!$cidade){
-            return response(['message'=> 'A Cidade selecionada não existe'], 404);
+        if (!$cidade) {
+            return response(['message' => 'A Cidade selecionada não existe'], 404);
         }
 
         // Verifica se o email já existe na tabela de anunciantes
-    $emailExistente = Anunciantes::where('email', $request->email)->exists();
+        $emailExistente = Anunciantes::where('email', $request->email)->exists();
 
-    // Se o email já existe, retorna uma mensagem em JSON
-    if ($emailExistente) {
-        return response()->json(['mensagem' => 'Este email já existe no banco de dados'], 409); // 409 é o código de status para conflito
-    }
+        // Se o email já existe, retorna uma mensagem em JSON
+        if ($emailExistente) {
+            return response()->json(['mensagem' => 'Este email já existe no banco de dados'], 409); // 409 é o código de status para conflito
+        }
 
 
         $anunciantes = new Anunciantes;
@@ -194,51 +196,124 @@ return response()->json($dadosPersonalizados);
         //return $anunciantes;
     }
 
+    //Carregar foto
     public function uploadFoto(Request $request, $id)
-{
-    // Busca o anunciante pelo ID
-    $anunciante = Anunciantes::find($id);
-
-    // Verifica se o anunciante existe
-    if (!$anunciante) {
-        return response(['message' => 'Anunciante não encontrado'], 404);
-    }
-
-    // Verifica se o request contém um arquivo de foto
-    if ($request->hasFile('foto')) {
-        $file = $request->file('foto');
-
-        // Define as extensões de arquivo permitidas
-        $allowedExtensions = ['png', 'jpg', 'jpeg', 'webp'];
-        $extension = $file->getClientOriginalExtension();
-
-        // Verifica se a extensão do arquivo é permitida
-        if (!in_array($extension, $allowedExtensions)) {
-            return response(['message' => 'Extensão de arquivo não suportada'], 400);
+    {
+        $anunciante = Anunciantes::find($id);
+        if (!$anunciante) {
+            return response()->json(['message' => 'Anunciante não encontrado'], 404);
         }
 
-        // Define o nome do arquivo
-        $filename = 'fotoPerfil' . $anunciante->id . '.' . $extension;
+        if ($request->hasFile('foto')) {
+            $file = $request->file('foto');
+            $extension = $file->getClientOriginalExtension();
+            $allowedExtensions = ['png', 'jpg', 'jpeg', 'webp'];
 
-        // Verifica se o anunciante já possui uma foto e exclui a foto antiga
-        if ($anunciante->foto) {
-            // Remove a foto antiga
-            if (file_exists($anunciante->foto)) {
-                unlink($anunciante->foto);
+            if (!in_array($extension, $allowedExtensions)) {
+                return response()->json(['message' => 'Extensão de arquivo não suportada'], 400);
+            }
+
+            $filename = 'fotoPerfil' . $anunciante->id . '_' . time() . '.' . $extension;
+
+            if ($anunciante->foto && file_exists($anunciante->foto)) {
+                try {
+                    unlink($anunciante->foto);
+                } catch (\Exception $e) {
+                    return response()->json(['message' => 'Erro ao excluir a foto antiga'], 500);
+                }
+            }
+
+            $file->move(public_path('uploads/anunciantes/imagens'), $filename);
+            $anunciante->foto = 'uploads/anunciantes/imagens/' . $filename;
+            $anunciante->save();
+        }
+
+        return response()->json(['message' => 'Foto do Anunciante enviada com sucesso'], 200);
+    }
+
+
+    //use Illuminate\Http\Request;
+    //use App\Models\Anunciantes;
+    //use Illuminate\Support\Facades\Storage;
+
+    public function uploadBannerLoja(Request $request, $id)
+    {
+        $anunciante = Anunciantes::find($id);
+        if (!$anunciante) {
+            return response()->json(['message' => 'Anunciante não encontrado'], 404);
+        }
+
+        $validatedData = $request->validate([
+            'banner_loja' => 'required|file|mimes:jpg,jpeg,png,webp|max:2048', // Limita o tamanho do arquivo a 2MB
+        ]);
+
+        $file = $request->file('banner_loja');
+        $filename = 'banner_loja' . $anunciante->id . '_' . time() . '.' . $file->getClientOriginalExtension();
+
+        // Verifica e exclui a foto antiga se existir
+        if ($anunciante->banner_loja && Storage::exists($anunciante->banner_loja)) {
+            try {
+                Storage::delete($anunciante->banner_loja);
+            } catch (\Exception $e) {
+                return response()->json(['message' => 'Falha ao deletar o arquivo antigo'], 500);
             }
         }
 
-        // Move a nova foto para a pasta
-        $file->move('uploads/anunciantes/imagens/', $filename);
+        // Tenta mover a nova foto para a pasta de uploads
+        try {
+            $path = $file->storeAs('uploads/anunciantes/loja', $filename);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Falha ao salvar o arquivo'], 500);
+        }
 
-        // Atualiza o caminho da foto do anunciante
-        $anunciante->foto = 'uploads/anunciantes/imagens/' . $filename;
+        // Atualiza o caminho da foto no registro do anunciante
+        $anunciante->banner_loja = $path;
         $anunciante->save();
+
+        return response()->json(['message' => 'Foto do banner da Loja enviada com sucesso'], 200);
     }
 
-    // Retorna a resposta de sucesso
-    return response()->json(['message' => 'Foto do Anunciante enviada com sucesso'], 200);
-}
+
+
+    public function uploadBannerLojaMovel(Request $request, $id)
+    {
+        $anunciante = Anunciantes::find($id);
+        if (!$anunciante) {
+            return response(['message' => 'Anunciante não encontrado'], 404);
+        }
+
+        if ($request->hasFile('banner_loja_movel')) {
+            $file = $request->file('banner_loja_movel');
+
+            $allowedExtensions = ['png', 'jpg', 'jpeg', 'webp'];
+            $extension = $file->getClientOriginalExtension();
+
+            if (!in_array($extension, $allowedExtensions)) {
+                return response(['message' => 'Extensão de arquivo não suportada'], 400);
+            }
+
+            // Define o nome do arquivo
+            $filename = 'banner_loja_movel' . $anunciante->id . '.' . $extension;
+
+            // Verifica se o anunciante já possui uma banner_loja_movel e exclui a banner_loja_movel antiga
+            if ($anunciante->banner_loja_movel) {
+                // Remove a banner_loja_movel antiga
+                if (file_exists($anunciante->banner_loja_movel)) {
+                    unlink($anunciante->banner_loja_movel);
+                }
+            }
+
+            // Move a nova banner_loja_movel para a pasta
+            $file->move('uploads/anunciantes/loja_movel/', $filename);
+
+            // Atualiza o caminho da banner_loja_movel do anunciante
+            $anunciante->banner_loja_movel = 'uploads/anunciantes/loja_movel/' . $filename;
+            $anunciante->save();
+        }
+
+        // Retorna a resposta de sucesso
+        return response()->json(['message' => 'banner_loja_movel do Anunciante enviada com sucesso'], 200);
+    }
 
     /**
      * Display the specified resource.
@@ -251,45 +326,47 @@ return response()->json($dadosPersonalizados);
         //
         $anunciante = Anunciantes::find($id);
         $dadosPersonalizados = [];
-        if(!$anunciante){
-            return response(['message'=>'Anunciante não encontrado'], 404);
+        if (!$anunciante) {
+            return response(['message' => 'Anunciante não encontrado'], 404);
         }
 
 
         $estado = Estados::find($anunciante->estado_id);
         $regiao = Regioes::find($anunciante->regiao_id);
         $cidade = Cidades::find($anunciante->cidade_id);
-            // Personalize os campos conforme necessário
-            $dadosPersonalizados[] = [
-                'id' => $anunciante->id,
-                'nome_empresa' => $anunciante->nome_empresa,
-                'pessoal_anunciante' => $anunciante->pessoal_anunciante,
-                'tipo_anunciante' => $anunciante->tipo_anunciante,
-                'cnpj' => $anunciante->cnpj,
-                'telefone' => $anunciante->telefone,
-                'celular' => $anunciante->celular,
-                'whatsapp' => $anunciante->whatsapp,
-                'email' => $anunciante->email,
-                'site' => $anunciante->site,
-                'cep' => $anunciante->cep,
-                'endereco' => $anunciante->endereco,
-                'numero' => $anunciante->numero,
-                'complemento' => $anunciante->complemento,
-                'bairro' => $anunciante->bairro,
-                'cep_comercial' => $anunciante->cep_comercial,
-                'endereco_comercial' => $anunciante->endereco_comercial,
-                'numero_comercial' => $anunciante->numero_comercial,
-                'complemento_comercial' => $anunciante->complemento_comercial,
-                'bairro_comercial' => $anunciante->bairro_comercial,
-                'regiao' => $regiao->regiao,
-                'estado' => $estado->estado,
-                'cidade' => $cidade->cidade,
-                'status' => $anunciante->status,
-                'observacao' => $anunciante->observacao,
-                'foto' => $anunciante->foto ? env('URL_BASE_SERVIDOR') . $anunciante->foto : null,
-                // Adicione mais campos personalizados conforme necessário
-            ];
-            return response()->json($dadosPersonalizados);
+        // Personalize os campos conforme necessário
+        $dadosPersonalizados[] = [
+            'id' => $anunciante->id,
+            'nome_empresa' => $anunciante->nome_empresa,
+            'pessoal_anunciante' => $anunciante->pessoal_anunciante,
+            'tipo_anunciante' => $anunciante->tipo_anunciante,
+            'cnpj' => $anunciante->cnpj,
+            'telefone' => $anunciante->telefone,
+            'celular' => $anunciante->celular,
+            'whatsapp' => $anunciante->whatsapp,
+            'email' => $anunciante->email,
+            'site' => $anunciante->site,
+            'cep' => $anunciante->cep,
+            'endereco' => $anunciante->endereco,
+            'numero' => $anunciante->numero,
+            'complemento' => $anunciante->complemento,
+            'bairro' => $anunciante->bairro,
+            'cep_comercial' => $anunciante->cep_comercial,
+            'endereco_comercial' => $anunciante->endereco_comercial,
+            'numero_comercial' => $anunciante->numero_comercial,
+            'complemento_comercial' => $anunciante->complemento_comercial,
+            'bairro_comercial' => $anunciante->bairro_comercial,
+            'regiao' => $regiao->regiao,
+            'estado' => $estado->estado,
+            'cidade' => $cidade->cidade,
+            'status' => $anunciante->status,
+            'observacao' => $anunciante->observacao,
+            'foto' => $anunciante->foto ? env('URL_BASE_SERVIDOR') . $anunciante->foto : null,
+            'banner_loja' => $anunciante->banner_loja ? env('URL_BASE_SERVIDOR') . $anunciante->banner_loja : null,
+            'banner_loja_movel' => $anunciante->banner_loja_movel ? env('URL_BASE_SERVIDOR') . $anunciante->banner_loja_movel : null,
+            // Adicione mais campos personalizados conforme necessário
+        ];
+        return response()->json($dadosPersonalizados);
     }
 
     /**
@@ -314,8 +391,8 @@ return response()->json($dadosPersonalizados);
     {
         //
         $anunciantes = Anunciantes::find($id);
-        if(!$anunciantes){
-            return response(['message'=>'Anunciante não encontrado'], 404);
+        if (!$anunciantes) {
+            return response(['message' => 'Anunciante não encontrado'], 404);
         }
         $anunciantes->nome_empresa = $request->nome_empresa;
         $anunciantes->pessoal_responsavel = $request->pessoal_responsavel;
@@ -357,38 +434,31 @@ return response()->json($dadosPersonalizados);
     {
         //
         Anunciantes::destroy($id);
-        return response(['message'=>'Anunciante Eliminado com sucesso'], 200);
+        return response(['message' => 'Anunciante Eliminado com sucesso'], 200);
     }
 
     public function destroyFoto($id)
-{
-    $anunciantes = Anunciantes::find($id);
+    {
+        $anunciantes = Anunciantes::find($id);
 
-    if (!$anunciantes) {
-        return response()->json(['message' => 'Anunciantes não encontrado'], 404);
+        if (!$anunciantes) {
+            return response()->json(['message' => 'Anunciantes não encontrado'], 404);
+        }
+
+        // Para achar o caminho da foto
+        $pathFoto = public_path() .  $anunciantes->foto;
+        // Verificar se o arquivo existe
+        if (File::exists($pathFoto)) {
+            // Deletar o arquivo
+            File::delete($pathFoto);
+
+            // Atualizar ou zerar a coluna da foto no banco de dados
+            $anunciantes->foto = '';
+            $anunciantes->save();
+
+            return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
+        } else {
+            return response()->json(['message' => 'Foto não encontrada'], 404);
+        }
     }
-
-    // Para achar o caminho da foto
-    $pathFoto = public_path() .  $anunciantes->foto;
-    // Verificar se o arquivo existe
-    if (File::exists($pathFoto)) {
-        // Deletar o arquivo
-        File::delete($pathFoto);
-
-        // Atualizar ou zerar a coluna da foto no banco de dados
-        $anunciantes->foto = '';
-        $anunciantes->save();
-
-        return response()->json(['message' => 'Foto eliminada com sucesso'], 200);
-
-    }
-
-    else {
-        return response()->json(['message' => 'Foto não encontrada'], 404);
-    }
-
-
-}
-
-
 }
