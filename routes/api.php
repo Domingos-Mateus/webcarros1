@@ -75,12 +75,13 @@ Route::delete('/noticias/eliminar_foto_capa/{id}', 'App\Http\Controllers\noticia
 //Anuciantes
 Route::get('/anunciantes/listar_anuciantes', 'App\Http\Controllers\anuciantesController@index');
 Route::post('/anunciantes/registar_anuciantes', 'App\Http\Controllers\anuciantesController@store');
-Route::post('/anunciantes/uploadFoto_anuciantes/{id}', 'App\Http\Controllers\anuciantesController@uploadFoto');
+Route::post('/anunciantes/uploadFoto_anuciantes/{id}', 'App\Http\Controllers\anuciantesController@uploadFotoAnunciantes');
 Route::post('/anunciantes/banner_loja_anuciantes/{id}', 'App\Http\Controllers\anuciantesController@uploadBannerLoja');
-Route::post('/anunciantes/banner_loja_movel_anuciantes/{id}', 'App\Http\Controllers\anuciantesController@uploadBannerLojaMovel');
+Route::post('/anunciantes/ /{id}', 'App\Http\Controllers\anuciantesController@uploadBannerLojaMovel');
 Route::get('/anunciantes/visualizar_anuciantes/{id}', 'App\Http\Controllers\anuciantesController@show');
 Route::put('/editar_anuciantes/update/{id}', 'App\Http\Controllers\anuciantesController@update');
-Route::get('/eliminar_anuciantes/{id}', 'App\Http\Controllers\anuciantesController@destroy');
+Route::delete('/eliminar_anuciante/{id}', 'App\Http\Controllers\anuciantesController@destroy');
+
 Route::delete('/anunciantes/eliminar_foto/{id}', 'App\Http\Controllers\anuciantesController@destroyFoto');
 
 
@@ -89,10 +90,12 @@ Route::post('/anuncios/registar_anuncios', 'App\Http\Controllers\anunciosControl
 Route::post('/anuncios/uploadFoto1_anuncios/{id}', 'App\Http\Controllers\anunciosController@uploadFoto');
 Route::put('/editar_anuncios/update/{id}', 'App\Http\Controllers\anunciosController@update');
 Route::get('/eliminar_anuncios/{id}', 'App\Http\Controllers\anunciosController@destroy');
+Route::get('/anuncios/detalhar_anucios/{id}', 'App\Http\Controllers\anunciosController@detalhar');
 
 //Listar anuncios de seus respectivos anunciantes
 Route::get('/anuncios/listar_anunciosAdminSuper', 'App\Http\Controllers\anunciosController@anuncioAdminSuper');
 Route::get('/anuncios/listar_anunciosAdmin', 'App\Http\Controllers\anunciosController@anuncioAdmin');
+Route::get('/anuncios/eliminar/{id}', 'App\Http\Controllers\anunciosController@destroy');
 
 
 Route::delete('/anuncios/eliminar_foto1/{id}', 'App\Http\Controllers\anunciosController@destroyFoto1');

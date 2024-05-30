@@ -26,8 +26,8 @@ class Anunciantes extends Model
             $usuario->password = Hash::make($anunciante->password);
             $usuario->save();
 
-            $anunciante->usuario_id = $usuario->id;
-            $anunciante->save();
+            //$anunciante->usuario_id = $usuario->id;
+            //$anunciante->save();
         });
     }
 

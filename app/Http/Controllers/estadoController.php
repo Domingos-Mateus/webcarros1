@@ -35,6 +35,7 @@ class estadoController extends Controller
    foreach ($estados as $estado) {
        $dadosPersonalizados[] = [
            'id' => $estado->id,
+           'uf' => $estado->uf,
            'estado' => $estado->estado,
        ];
     }
