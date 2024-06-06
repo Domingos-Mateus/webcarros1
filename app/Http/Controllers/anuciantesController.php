@@ -9,9 +9,10 @@ use App\Models\Anuncios;
 use App\Models\Estados;
 use App\Models\Regioes;
 use App\Models\Cidades;
-
+use App\Models\User;
 use File;
 use DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 class anuciantesController extends Controller
@@ -153,7 +154,6 @@ class anuciantesController extends Controller
             return response()->json(['mensagem' => 'Este email já existe no banco de dados'], 409); // 409 é o código de status para conflito
         }
 
-
         $anunciantes = new Anunciantes;
         $anunciantes->nome_empresa = $request->nome_empresa;
         $anunciantes->pessoal_responsavel = $request->pessoal_responsavel;
@@ -185,84 +185,94 @@ class anuciantesController extends Controller
         $anunciantes->save();
 
 
+        $usuario = new User();
+        $usuario->name = $anunciantes->nome_empresa;
+        $usuario->email = $anunciantes->email;
+        $usuario->password = Hash::make($anunciantes->password);
+        $usuario->save();
+
+        $anunciantes->usuario_id = $usuario->id;
+        $anunciantes->save();
+
+
         return response()->json(['mensagem' => 'Anunciante cadastrado com sucesso'], 201);
         //return $anunciantes;
     }
 
 
     public function uploadFotoAnunciantes(Request $request, $id)
-{
-    $anunciante = Anunciantes::find($id);
-    if (!$anunciante) {
-        return response(['message' => 'Anunciante não encontrado'], 404);
-    }
-
-    if ($request->hasFile('foto')) {
-        // Excluir o arquivo antigo, se existir
-        if ($anunciante->foto && file_exists(public_path($anunciante->foto))) {
-            unlink(public_path($anunciante->foto));
+    {
+        $anunciante = Anunciantes::find($id);
+        if (!$anunciante) {
+            return response(['message' => 'Anunciante não encontrado'], 404);
         }
-        // Processar o novo arquivo
-        $file = $request->file('foto');
-        $extension = $file->getClientOriginalExtension();
-        $filename = time() . '.' . $extension;
-        $file->move('uploads/anunciantes/perfil/', $filename);
-        $anunciante->foto = 'uploads/anunciantes/perfil/' . $filename;
-        $anunciante->save();
-    }
 
-    return response()->json(['message' => 'Foto do anunciante enviada com sucesso'], 200);
-}
+        if ($request->hasFile('foto')) {
+            // Excluir o arquivo antigo, se existir
+            if ($anunciante->foto && file_exists(public_path($anunciante->foto))) {
+                unlink(public_path($anunciante->foto));
+            }
+            // Processar o novo arquivo
+            $file = $request->file('foto');
+            $extension = $file->getClientOriginalExtension();
+            $filename = time() . '.' . $extension;
+            $file->move('uploads/anunciantes/perfil/', $filename);
+            $anunciante->foto = 'uploads/anunciantes/perfil/' . $filename;
+            $anunciante->save();
+        }
+
+        return response()->json(['message' => 'Foto do anunciante enviada com sucesso'], 200);
+    }
 
 
     public function uploadBannerLoja(Request $request, $id)
-{
-    $anunciante = Anunciantes::find($id);
-    if (!$anunciante) {
-        return response(['message' => 'Anunciante não encontrado'], 404);
-    }
-
-    if ($request->hasFile('banner_loja')) {
-        // Excluir o arquivo antigo, se existir
-        if ($anunciante->banner_loja && file_exists(public_path($anunciante->banner_loja))) {
-            unlink(public_path($anunciante->banner_loja));
+    {
+        $anunciante = Anunciantes::find($id);
+        if (!$anunciante) {
+            return response(['message' => 'Anunciante não encontrado'], 404);
         }
-        // Processar o novo arquivo
-        $file = $request->file('banner_loja');
-        $extension = $file->getClientOriginalExtension();
-        $filename = time() . '.' . $extension;
-        $file->move('uploads/anunciantes/loja/', $filename);
-        $anunciante->banner_loja = 'uploads/anunciantes/loja/' . $filename;
-        $anunciante->save();
-    }
 
-    return response()->json(['message' => 'Foto da loja do anunciante enviada com sucesso'], 200);
-}
+        if ($request->hasFile('banner_loja')) {
+            // Excluir o arquivo antigo, se existir
+            if ($anunciante->banner_loja && file_exists(public_path($anunciante->banner_loja))) {
+                unlink(public_path($anunciante->banner_loja));
+            }
+            // Processar o novo arquivo
+            $file = $request->file('banner_loja');
+            $extension = $file->getClientOriginalExtension();
+            $filename = time() . '.' . $extension;
+            $file->move('uploads/anunciantes/loja/', $filename);
+            $anunciante->banner_loja = 'uploads/anunciantes/loja/' . $filename;
+            $anunciante->save();
+        }
+
+        return response()->json(['message' => 'Foto da loja do anunciante enviada com sucesso'], 200);
+    }
 
 
     public function uploadBannerLojaMovel(Request $request, $id)
-{
-    $anunciante = Anunciantes::find($id);
-    if (!$anunciante) {
-        return response(['message' => 'Anunciante não encontrado'], 404);
-    }
-
-    if ($request->hasFile('banner_loja_movel')) {
-        // Excluir o arquivo antigo, se existir
-        if ($anunciante->banner_loja_movel && file_exists(public_path($anunciante->banner_loja_movel))) {
-            unlink(public_path($anunciante->banner_loja_movel));
+    {
+        $anunciante = Anunciantes::find($id);
+        if (!$anunciante) {
+            return response(['message' => 'Anunciante não encontrado'], 404);
         }
-        // Processar o novo arquivo
-        $file = $request->file('banner_loja_movel');
-        $extension = $file->getClientOriginalExtension();
-        $filename = time() . '.' . $extension;
-        $file->move('uploads/anunciantes/loja_movel/', $filename);
-        $anunciante->banner_loja_movel = 'uploads/anunciantes/loja_movel/' . $filename;
-        $anunciante->save();
-    }
 
-    return response()->json(['message' => 'Foto da loja movel do anunciante enviada com sucesso'], 200);
-}
+        if ($request->hasFile('banner_loja_movel')) {
+            // Excluir o arquivo antigo, se existir
+            if ($anunciante->banner_loja_movel && file_exists(public_path($anunciante->banner_loja_movel))) {
+                unlink(public_path($anunciante->banner_loja_movel));
+            }
+            // Processar o novo arquivo
+            $file = $request->file('banner_loja_movel');
+            $extension = $file->getClientOriginalExtension();
+            $filename = time() . '.' . $extension;
+            $file->move('uploads/anunciantes/loja_movel/', $filename);
+            $anunciante->banner_loja_movel = 'uploads/anunciantes/loja_movel/' . $filename;
+            $anunciante->save();
+        }
+
+        return response()->json(['message' => 'Foto da loja movel do anunciante enviada com sucesso'], 200);
+    }
 
 
     /**
@@ -311,9 +321,9 @@ class anuciantesController extends Controller
             'cidade' => $cidade->cidade,
             'status' => $anunciante->status,
             'observacao' => $anunciante->observacao,
-            'foto' => $anunciante->foto ? env('URL_BASE_SERVIDOR') . $anunciante->foto : null,
-            'banner_loja' => $anunciante->banner_loja ? env('URL_BASE_SERVIDOR') . $anunciante->banner_loja : null,
-            'banner_loja_movel' => $anunciante->banner_loja_movel ? env('URL_BASE_SERVIDOR') . $anunciante->banner_loja_movel : null,
+            'foto' => $anunciante->foto ? env('URL_BASE_SERVIDOR') . '/' . $anunciante->foto : null,
+            'banner_loja' => $anunciante->banner_loja ? env('URL_BASE_SERVIDOR') . '/' . $anunciante->banner_loja : null,
+            'banner_loja_movel' => $anunciante->banner_loja_movel ? env('URL_BASE_SERVIDOR') . '/' . $anunciante->banner_loja_movel : null,
             // Adicione mais campos personalizados conforme necessário
         ];
         return response()->json($dadosPersonalizados);
@@ -381,13 +391,13 @@ class anuciantesController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-{
-   $anuncios = Anuncios::where('anunciante_id',$id)->delete();
-   return $anuncios;
+    {
+        $anuncios = Anuncios::where('anunciante_id', $id)->delete();
+        return $anuncios;
 
 
-    return response(['message' => 'Anunciante e usuário relacionado eliminados com sucesso'], 200);
-}
+        return response(['message' => 'Anunciante e usuário relacionado eliminados com sucesso'], 200);
+    }
 
 
 

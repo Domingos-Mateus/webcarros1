@@ -16,19 +16,18 @@ class Anunciantes extends Model
         // seus campos aqui
     ];
 
-    protected static function booted()
+    /* protected static function booted()
     {
-        static::created(function ($anunciante) {
+        static::creating(function ($anunciante) {
             // Crie uma conta de usuário
             $usuario = new User();
             $usuario->name = $anunciante->nome_empresa;
             $usuario->email = $anunciante->email;
             $usuario->password = Hash::make($anunciante->password);
-            $usuario->save();
 
-            //$anunciante->usuario_id = $usuario->id;
-            //$anunciante->save();
+            $usuario->save();
+            $anunciante->usuario_id = $usuario->id;
         });
-    }
+    } */
 
 }

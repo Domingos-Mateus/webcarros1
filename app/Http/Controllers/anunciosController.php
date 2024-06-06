@@ -86,8 +86,8 @@ class anunciosController extends Controller
         ->where('anunciantes.status', '=', 1);
 
     // Filtragem adicional
-    if (request('opcionais_id')) {
-        $opcionais = request('opcionais_id');
+    if ($opcionais = request('opcionais_id')) {
+        $opcionais = json_decode($opcionais);
         if (is_array($opcionais)) {
             $query->where(function($query) use ($opcionais) {
                 foreach ($opcionais as $opcional) {
@@ -96,6 +96,7 @@ class anunciosController extends Controller
             });
         }
     }
+
 
     // Obtém as datas de início e fim da requisição, se fornecidas
     $dataInicio = request('data_inicio');
@@ -189,6 +190,9 @@ class anunciosController extends Controller
     }
     if (request('vitrine')) {
         $query->where('anuncios.vitrine', request('vitrine'));
+    }
+    if (request('destaque_busca')) {
+        $query->where('anuncios.destaque_busca', request('destaque_busca'));
     }
 
     $query->orderByRaw('CASE WHEN anuncios.destaque_busca = 1 THEN 0 ELSE 1 END, RAND()');
@@ -2143,21 +2147,25 @@ class anunciosController extends Controller
         $dadosPersonalizados[] = [
             'id' => $anuncio->id,
             'tipo_veiculo' => $tipo_veiculo->tipo_veiculo,
+            'id_marca' => $marca->id,
             'marca' => $marca->nome_marca,
+            'id_modelo' => $modelo->id,
             'modelo' => $modelo->nome_modelo,
             'numero_cliques' => $anuncio->numero_cliques,
             'numero_cliques_contato' => $anuncio->numero_cliques_contato,
             'numero_cliques_mensagem' => $anuncio->numero_cliques_mensagem,
             'situacao_veiculo' => $anuncio->situacao_veiculo,
+            'id_anunciante' => $anunciante->id,
             'anunciantes' => $anunciante->pessoal_responsavel,
             'telefone' => $anunciante->telefone,
             'celular' => $anunciante->celular,
             'whatsapp' => $anunciante->whatsapp,
             'email' => $anunciante->email,
-            'foto_anunciante' => $anunciante->foto ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto : null,
-            'banner_loja' => $anunciante->banner_loja ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->banner_loja : null,
-            'banner_loja_movel' => $anunciante->banner_loja_movel ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->banner_loja_movel : null,
-            'categoria_id' => $categoria->nome,
+            'foto' => $anunciante->foto ? env('URL_BASE_SERVIDOR') . '/' . $anunciante->foto : null,
+            'banner_loja' => $anunciante->banner_loja ? env('URL_BASE_SERVIDOR') . '/' . $anunciante->banner_loja : null,
+            'banner_loja_movel' => $anunciante->banner_loja_movel ? env('URL_BASE_SERVIDOR') . '/' . $anunciante->banner_loja_movel : null,
+            'categoria_id' => $categoria->id,
+            'categoria' => $categoria->nome,
             'data_inicio' => $anuncio->data_inicio,
             'data_fim' => $anuncio->data_fim,
             'ordenacao' => $anuncio->ordenacao,
@@ -2169,11 +2177,13 @@ class anunciosController extends Controller
             'destaque_busca' => $anuncio->destaque_busca,
             'estado' => $estado->estado,
             'uf' => $estado->uf,
+            'cidade_id' => $cidade->id,
             'cidade' => $cidade->cidade,
             'empresa' => $anunciante->nome_empresa,
             'tipo_preco' => $anuncio->tipo_preco,
             'valor_preco' => $anuncio->valor_preco,
             'mostrar_preco' => $anuncio->mostrar_preco,
+            'fabricante_id' => $fabricante->id,
             'fabricante' => $fabricante->fabricante,
             'ano_fabricacao' => $anuncio->ano_fabricacao,
             'ano_modelo' => $anuncio->ano_modelo,
@@ -2182,8 +2192,11 @@ class anunciosController extends Controller
             'portas' => $anuncio->portas,
             'cilindros' => $anuncio->cilindros,
             'motor' => $anuncio->motor,
+            'cor_id' => $cor->id,
             'cor' => $cor->cor,
+            'transmissao_id' => $transmissao->id,
             'transmissao' => $transmissao->transmissao,
+            'combustivel_id' => $combustivel->id,
             'combustivel' => $combustivel->combustivel,
             'placa' => $anuncio->placa,
             'km' => $anuncio->km,
@@ -2268,21 +2281,25 @@ class anunciosController extends Controller
         $dadosPersonalizados[] = [
             'id' => $anuncio->id,
             'tipo_veiculo' => $tipo_veiculo->tipo_veiculo,
+            'marca_id' => $marca->id,
             'marca' => $marca->nome_marca,
+            'modelo_id' => $modelo->id,
             'modelo' => $modelo->nome_modelo,
             'numero_cliques' => $anuncio->numero_cliques,
             'numero_cliques_contato' => $anuncio->numero_cliques_contato,
             'numero_cliques_mensagem' => $anuncio->numero_cliques_mensagem,
             'situacao_veiculo' => $anuncio->situacao_veiculo,
+            'anunciante_id' => $anunciante->id,
             'anunciantes' => $anunciante->pessoal_responsavel,
             'telefone' => $anunciante->telefone,
             'celular' => $anunciante->celular,
             'whatsapp' => $anunciante->whatsapp,
             'email' => $anunciante->email,
-            'foto_anunciante' => $anunciante->foto ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto : null,
-            'banner_loja' => $anunciante->banner_loja ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->banner_loja : null,
-            'banner_loja_movel' => $anunciante->banner_loja_movel ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->banner_loja_movel : null,
-            'categoria_id' => $categoria->nome,
+            'foto' => $anunciante->foto ? env('URL_BASE_SERVIDOR') . '/' . $anunciante->foto : null,
+            'banner_loja' => $anunciante->banner_loja ? env('URL_BASE_SERVIDOR') . '/' . $anunciante->banner_loja : null,
+            'banner_loja_movel' => $anunciante->banner_loja_movel ? env('URL_BASE_SERVIDOR') . '/' . $anunciante->banner_loja_movel : null,
+            'categoria_id' => $categoria->id,
+            'categoria' => $categoria->nome,
             'data_inicio' => $anuncio->data_inicio,
             'data_fim' => $anuncio->data_fim,
             'ordenacao' => $anuncio->ordenacao,
@@ -2292,13 +2309,16 @@ class anunciosController extends Controller
             'vendido' => $anuncio->vendido,
             'vitrine' => $anuncio->vitrine,
             'destaque_busca' => $anuncio->destaque_busca,
+            'estado_id' => $estado->id,
             'estado' => $estado->estado,
             'uf' => $estado->uf,
+            'cidade_id' => $cidade->id,
             'cidade' => $cidade->cidade,
             'empresa' => $anunciante->nome_empresa,
             'tipo_preco' => $anuncio->tipo_preco,
             'valor_preco' => $anuncio->valor_preco,
             'mostrar_preco' => $anuncio->mostrar_preco,
+            'fabricante_id' => $fabricante->id,
             'fabricante' => $fabricante->fabricante,
             'ano_fabricacao' => $anuncio->ano_fabricacao,
             'ano_modelo' => $anuncio->ano_modelo,
@@ -2307,8 +2327,11 @@ class anunciosController extends Controller
             'portas' => $anuncio->portas,
             'cilindros' => $anuncio->cilindros,
             'motor' => $anuncio->motor,
+            'cor_id' => $cor->id,
             'cor' => $cor->cor,
+            'transmissao_id' => $transmissao->id,
             'transmissao' => $transmissao->transmissao,
+            'combustivel_id' => $combustivel->id,
             'combustivel' => $combustivel->combustivel,
             'placa' => $anuncio->placa,
             'km' => $anuncio->km,
