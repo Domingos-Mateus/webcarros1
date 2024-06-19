@@ -194,6 +194,9 @@ class anunciosController extends Controller
     if (request('destaque_busca')) {
         $query->where('anuncios.destaque_busca', request('destaque_busca'));
     }
+    if (request('anunciante_id')) {
+        $query->where('anuncios.anunciante_id', request('anunciante_id'));
+    }
 
     $query->orderByRaw('CASE WHEN anuncios.destaque_busca = 1 THEN 0 ELSE 1 END, RAND()');
 
@@ -230,7 +233,7 @@ class anunciosController extends Controller
             'foto_anunciante' => $anuncio->foto_anunciante ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->foto_anunciante : null,
             'banner_loja' => $anuncio->banner_loja ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->banner_loja : null,
             'banner_loja_movel' => $anuncio->banner_loja_movel ? env('URL_BASE_SERVIDOR') . '/' . $anuncio->banner_loja_movel : null,
-            'id_anunciante' => $anuncio->id_anunciantes,
+            'anunciante_id' => $anuncio->anunciante_id,
             'nome_categoria' => $anuncio->nome_categoria,
             'id_categoria' => $anuncio->id_categoria,
             'data_inicio' => $anuncio->data_inicio,
